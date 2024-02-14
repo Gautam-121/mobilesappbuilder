@@ -65,7 +65,6 @@ const eventTimerConfig = {
           admin: {
             date: {
               pickerAppearance: "dayOnly",
-              displayFormat: "d MMM yyy",
             },
           },
           validate: async (val, { operation }) => {
@@ -82,6 +81,7 @@ const eventTimerConfig = {
             date: {
               pickerAppearance: "timeOnly",
               displayFormat: "h:mm:ss a",
+              timeIntervals:"45"
             },
           },
         },

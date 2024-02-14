@@ -167,9 +167,9 @@ const start = async () => {
       });
     }
 
-    const localIp = "192.168.1.74"
+    const localIp = "192.168.1.135"
   
-    app.listen(PORT,localIp ,() => {
+    app.listen(PORT , localIp ,() => {
       console.log(`Server running at http://${localIp}:${process.env.PORT}`);
     });
     

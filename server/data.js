@@ -3406,3 +3406,210 @@ const shopifyStoreDetail = {
 "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdG9yZV9pZCI6ODYwNzg0MjMzNDAsImNsaWVudF9uYW1lIjoicG9ydGFsX29uZV9tb2JpbGUiLCJleHAiOjE3MDcyMTMxNzN9.PItu_G8UkwWFtLFtHbQm0onzZhL5ylPMG0hSn5fA5Ak"
 
 "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdG9yZV9pZCI6ODYwNzg0MjMzNDAsImNsaWVudF9uYW1lIjoicG9ydGFsX29uZV9tb2JpbGUiLCJleHAiOjE3MDcyMTY2MjR9.OIWt1JKnC3YmYjuV_9zn-KNg2_U378vYur7bhM4B5tQ"
+
+
+
+const selectedVideo = {
+  id: "24f56bb7b59",
+  videoSrc: "blob:http://localhost:5173/970cdff2-7423-415a-a60c-7b0b79ae7f84",
+  questions: [
+    {
+      time: 5.3,
+      id: "34f576ba47a",
+      question: "Question for video 1",
+      answers: [
+        {
+          id: "232fb28d34f",
+          answer: "Video 1",
+          subVideo: {
+            id: "f56bb7b59d1",
+            videoSrc:
+              "blob:http://localhost:5173/83562887-3c18-43b1-9d69-c20dea3c1e48",
+            questions: [
+              {
+                time: 4.1,
+                id: "5a0fcfd22bf",
+                question: "Question for video 2",
+                answers: [
+                  {
+                    id: "63115abe5a0",
+                    answer: "Video 1",
+                    subVideo: {
+                      id: "9d14b63b4b1",
+                      videoSrc:
+                        "blob:http://localhost:5173/2e3f830e-e4bd-4014-befc-a3d1af22e2d5",
+                      questions: [
+                        {
+                          time: "2.7",
+                          id: "e6425f7e4e1",
+                          question: "Question for video 6",
+                          answers: [
+                            {
+                              id: "8865e6425f7",
+                              answer: "answer1",
+                            },
+                            {
+                              id: "5e6425f7e4e",
+                              answer: "answer2",
+                            },
+                          ],
+                          multiple: true,
+                          skip: true,
+                        },
+                      ],
+                    },
+                    subVideoIndex: 5,
+                  },
+                  {
+                    id: "e5a0fcfd22b",
+                    answer: "Video 2",
+                    subVideo: {
+                      id: "14b63b4b188",
+                      videoSrc:
+                        "blob:http://localhost:5173/a920da0f-1811-4926-8e4f-5320ec53c032",
+                      questions: [
+                        {
+                          time: 5.3,
+                          id: "b4b18865e64",
+                          question: "Question for video 7",
+                          answers: [
+                            {
+                              id: "63b4b18865e",
+                              answer: "answer1",
+                            },
+                            {
+                              id: "3b4b18865e6",
+                              answer: "answer1",
+                            },
+                          ],
+                          multiple: true,
+                          skip: true,
+                        },
+                      ],
+                    },
+                    subVideoIndex: 6,
+                  },
+                ],
+                multiple: true,
+                skip: true,
+              },
+            ],
+          },
+          subVideoIndex: 1,
+        },
+        {
+          id: "d34f576ba47",
+          answer: "Video 2",
+          subVideo: {
+            id: "6bb7b59d14b",
+            videoSrc:
+              "blob:http://localhost:5173/5a4b255a-0c6b-4f83-9dc3-544d6a4691b3",
+            questions: [
+              {
+                time: 7.7,
+                id: "0d480d04663",
+                question: "Question for video 3",
+                answers: [
+                  {
+                    id: "c62ab2310d4",
+                    answer: "Video 1",
+                    subVideo: {
+                      id: "b7b59d14b63",
+                      videoSrc:
+                        "blob:http://localhost:5173/1f14ee07-7874-483c-aa23-80838ee7dfca",
+                      questions: [
+                        {
+                          time: 4.4,
+                          id: "f7620d133ed",
+                          question: "Question for video 4",
+                          answers: [
+                            {
+                              id: "6158f7620d1",
+                              answer: "answer1",
+                            },
+                            {
+                              id: "8f7620d133e",
+                              answer: "answer2",
+                            },
+                          ],
+                          multiple: true,
+                          skip: true,
+                        },
+                      ],
+                    },
+                    subVideoIndex: 3,
+                  },
+                  {
+                    id: "10d480d0466",
+                    answer: "Video 2",
+                    subVideo: {
+                      id: "b59d14b63b4",
+                      videoSrc:
+                        "blob:http://localhost:5173/a0e79c72-7fc5-435d-b21e-001074d35443",
+                      questions: [
+                        {
+                          time: 1.7,
+                          id: "4e1a6158f76",
+                          question: "Question for video 5",
+                          answers: [
+                            {
+                              id: "5f7e4e1a615",
+                              answer: "answer1",
+                            },
+                            {
+                              id: "e4e1a6158f7",
+                              answer: "answer2",
+                            },
+                          ],
+                          multiple: true,
+                          skip: true,
+                        },
+                      ],
+                    },
+                    subVideoIndex: 4,
+                  },
+                ],
+                multiple: "false",
+                skip: "false",
+              },
+            ],
+          },
+          subVideoIndex: 2,
+        },
+      ],
+      multiple: true,
+      skip: true,
+    },
+  ],
+};
+
+const object = [
+  {
+    id: "24f56bb7b59",
+    file: {},
+  },
+  {
+    id: "f56bb7b59d1",
+    file: {},
+  },
+  {
+    id: "6bb7b59d14b",
+    file: {},
+  },
+  {
+    id: "b7b59d14b63",
+    file: {},
+  },
+  {
+    id: "b59d14b63b4",
+    file: {},
+  },
+  {
+    id: "9d14b63b4b1",
+    file: {},
+  },
+  {
+    id: "14b63b4b188",
+    file: {},
+  },
+];
