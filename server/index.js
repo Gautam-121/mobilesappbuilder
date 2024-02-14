@@ -35,6 +35,7 @@ const isDev = process.env.NODE_ENV === "dev";
 
 // Register all webhook handlers
 webhookRegistrar();
+console.log("Enter inside index")
 
 const app = express();
 app.use(cors(
