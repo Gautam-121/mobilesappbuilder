@@ -40,7 +40,8 @@ const createBrandingApp = async (req, res, next) => {
 
 const getBrandingApp = async (req, res, next) => {
     try {
-        if(!req.params.shop_id){
+
+        if(!req.params.shopId){
             return res.status(400).json({
                 success: false,
                 message: "Shop_id is missing"
@@ -49,13 +50,13 @@ const getBrandingApp = async (req, res, next) => {
     
         const brandingData = await Payload.find({
             collection: 'brandingTheme',
-            where: {shopId: { equals: `gid://shopify/Shop/${req.params.shop_id}`},},
+            where: {shopId: { equals: `gid://shopify/Shop/${req.params.shopId}`},},
         })
 
         if(brandingData.docs.length === 0){
             return res.status(400).json({
               success: false,
-              message: "Shop_id is Wrong"
+              message: "No data found with shopId: " + req.params.shopId
             })
           }
     
@@ -85,7 +86,7 @@ const getBrandingAppWeb = async (req, res, next) => {
     const brandingData = await Payload.find({
       collection: "brandingTheme",
       where: {
-        shopId: { equals: "gid://shopify/Shop/81447387454" || req.shop_id},
+        shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454"},
         themeId: { equals: req.params.themeId },
       },
       depth:0

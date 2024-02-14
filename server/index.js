@@ -37,7 +37,13 @@ const isDev = process.env.NODE_ENV === "dev";
 webhookRegistrar();
 
 const app = express();
-app.use(cors())
+app.use(cors(
+  {
+      origin: ["https://deploy-mern-frontend.vercel.app"],
+      methods: ["POST", "GET" , "PUT"],
+      credentials: true
+  }
+));
 // app.use(fileUpload({
 //   useTempFiles: true
 // }))
@@ -45,6 +51,7 @@ app.use(cors())
 
 const start = async () => {
   try {
+
     await payload.init({
       secret: process.env.PAYLOAD_SECRET,
       express: app,
@@ -111,7 +118,7 @@ const start = async () => {
     app.use(csp);
     app.use(isShopActive)
     // If you're making changes to any of the routes, please make sure to add them in `./client/vite.config.cjs` or it'll not work.
-    app.use("/apps" ,  router); //Verify user route requests
+    app.use("/apps", router); //Verify user route requests
     app.use("/proxy_route", verifyProxy, proxyRouter); //MARK:- App Proxy routes
   
     app.post("/gdpr/:topic", verifyHmac, async (req, res) => {
@@ -167,10 +174,8 @@ const start = async () => {
       });
     }
 
-    const localIp = "192.168.1.135"
-  
-    app.listen(PORT , localIp ,() => {
-      console.log(`Server running at http://${localIp}:${process.env.PORT}`);
+    app.listen(PORT,() => {
+      console.log(`Server running at http://localhost:${process.env.PORT}`);
     });
     
   } catch (error) {

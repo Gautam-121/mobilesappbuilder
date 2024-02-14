@@ -1,0 +1,23 @@
+/* imageChecker.css */
+
+.star {
+    position: absolute;
+    top: 10px; /* Adjust this value to position the star vertically */
+    left: 10px; /* Adjust this value to position the star horizontally */
+    width: 20px; /* Adjust the size of the star */
+    height: 20px; /* Adjust the size of the star */
+    background-color: #ffd700; /* Golden color */
+    clip-path: polygon(
+      50% 0%,
+      61% 35%,
+      98% 35%,
+      68% 57%,
+      79% 91%,
+      50% 70%,
+      21% 91%,
+      32% 57%,
+      2% 35%,
+      39% 35%
+    );
+  }
+  

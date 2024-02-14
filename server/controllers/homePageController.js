@@ -120,9 +120,10 @@ const getHomePage = async (req, res, next) => {
     if (homeData.docs.length === 0) {
       return res.status(400).json({
         success: false,
-        message: "shopId is Wrong"
+        message: "No data found with shopId: "+ req.params.shopId
       })
     }
+
     // Update the homeData.docs[0].homeData array
     homeData.docs[0].homeData = homeData.docs[0].homeData.map((value) => {
       if (value.featureType === "banner" || value.featureType === "categories") {
@@ -148,7 +149,6 @@ const getHomePage = async (req, res, next) => {
 }
 
 const getHomePageByWeb = async (req , res , next)=>{
-
   try {
 
     if(!req.params.themeId){
@@ -161,7 +161,7 @@ const getHomePageByWeb = async (req , res , next)=>{
     const homeData = await Payload.find({
       collection: 'homePage',
       where: {
-        shopId: { equals: "gid://shopify/Shop/81447387454" || req.shop_id},
+        shopId: { equals:req.shop_id || "gid://shopify/Shop/81447387454"},
         themeId: { equals: req.params.themeId}
       },
       depth: 1
@@ -383,7 +383,7 @@ const updateHomePage = async (req, res, next) => {
     const homeData = await Payload.update({
       collection: "homePage",
       where: {
-        shopId: { equals: req.shop_id || "gid://shopify/Shop/814473874890"},
+        shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454"},
         themeId: { equals: req.params.themeId },
       },
       data: {

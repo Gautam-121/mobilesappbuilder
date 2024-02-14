@@ -1,11 +1,12 @@
 import React from 'react';
 import "./SelectedTheme.css";
 import { HiQrCode } from "react-icons/hi2";
+import image_placeholder from "../../../assets/images/image_placeholder.png";
+import ImageChecker from '../../../components/image-checker/ImageChecker';
 
 const SelectedTheme = (props) => {
 
     const theTheme = props?.selectedTheme;
-    console.log("thetheme: ", theTheme);
 
     return (
         <div className='theme-main-div'>
@@ -18,7 +19,7 @@ const SelectedTheme = (props) => {
                         <div>Live</div>
                     </div>
 
-                    <div className='them-name-text'><span>{theTheme.themeName}</span></div>
+                    <div className='them-name-text'><span>{theTheme?.name}</span></div>
                     {/* <div><p>Last saved: {props.themeUpdatedAt}</p></div> */}
                     <div className='update-date'><span>Last saved: Feb 5, 2024 at 3:31 pm</span></div>
 
@@ -33,30 +34,9 @@ const SelectedTheme = (props) => {
 
             </div>
 
-
-
             <div className='side-image-div'>
-                <div className='images-grid-div'>
-                    <div className='images-row'>
-                        <div>
-                            <img src={theTheme.image} className='images' />
-                        </div>
-                        {/* <div>
-                            <img src="https://styletribute.com/cdn/shop/products/7d90c442cde121a07a9f4e6356adcd36.jpg?v=1695377771&width=600" className='images' />
-                        </div> */}
-                    </div>
-
-                    {/* <div className='images-row'>
-                        <div>
-                            <img src="https://styletribute.com/cdn/shop/products/7d90c442cde121a07a9f4e6356adcd36.jpg?v=1695377771&width=600" className='images' />
-                        </div>
-                        <div>
-                            <img src="https://styletribute.com/cdn/shop/products/7d90c442cde121a07a9f4e6356adcd36.jpg?v=1695377771&width=600" className='images' />
-                        </div>
-                    </div> */}
-
-
-                </div>
+                
+                <ImageChecker src={theTheme} cardImageCss={'images'} />
 
             </div>
 

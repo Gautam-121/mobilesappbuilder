@@ -6,19 +6,34 @@ import SelectedTheme from './SelectedTheme/SelectedTheme';
 // import "./Home.scss";
 import appImage from "../../assets/images/ascend.jpg"
 import useFetch from "../../hooks/useFetch";
+import image_placeholder from "../../assets/images/image_placeholder.png"
+import ImageChecker from '../../components/image-checker/ImageChecker';
+import blueSTImage from "../../assets/images/blue.jpg"
 
+
+import onemobile_img from "../../assets/images/onemobile_img.png"
 
 
 const Home = () => {
 
     const fetch = useFetch();
 
-    // useEffect(async () => {
+    const [themeData, setThemeData] = useState();
+    const [selectedTheme, setSelectedTheme] = useState();
 
-    //     const res = await fetch("/api/getAllTheme"); //fetch instance of useFetch()
-    //     const data = await res.json();
-    //     console.log("themes: ", data);
-    // })
+    useEffect(() => {
+
+        async function fetchData() {
+            const res = await fetch("/api/getAllTheme"); //fetch instance of useFetch()
+            const data = await res.json();
+            setThemeData(data?.data);
+            setSelectedTheme(data?.data[0]);
+        }
+
+        fetchData();
+
+
+    }, []);
 
 
 
@@ -28,11 +43,6 @@ const Home = () => {
     { image: { appImage }, themeName: 'RiseUp', category: 'Free', desc: 'A sense of growth and advancement, elevating businesses in various industries.' },
     { image: { appImage }, themeName: 'Growth', category: 'General', desc: 'A sense of growth and advancement, elevating businesses in various industries.' },
     { image: { appImage }, themeName: 'Home', category: 'Free', desc: 'A sense of growth and advancement, elevating businesses in various industries.' }]
-
-
-    const [selectedTheme, setSelectedTheme] = useState(cards[0]);
-
-    console.log("selectedtheme: ", selectedTheme);
 
 
     return (
@@ -55,7 +65,7 @@ const Home = () => {
 
             <div className='selected-theme-main-div'>
 
-                <SelectedTheme selectedTheme={selectedTheme && selectedTheme} />
+                <SelectedTheme selectedTheme={selectedTheme} />
 
             </div>
 
@@ -77,28 +87,44 @@ const Home = () => {
 
                 <div className='theme-card-container'>
                     {
-                        cards?.map((res, index) => {
+                        themeData?.map((res, index) => {
 
                             return (
                                 <>
                                     <div className='theme-card' key={index}>
+                                        <div style={{ position: 'relative' }}>
+                                            {res?.type === 'payment' && (
+                                                <div className="star"></div>
+                                            )}
+                                        </div>
+
+
                                         <div className='the-card-image-div'>
-                                            <img src={appImage} alt="apps-images" className='card-images' />
+                                            <ImageChecker src={res} cardImageCss={'card-images'} cardImageDivCss={'the-card-image-div'} />
                                         </div>
                                         <div className='name-category-div'>
                                             <div className='name-and-desc'>
-                                                <span className='theme-name'>{res?.themeName}</span>
-                                                <span className='category-name'>{res?.category}</span>
+                                                <span className='theme-name'>{res?.name}</span>
+                                                <span className='category-name'>{res?.plan}</span>
                                             </div>
 
 
-                                            <span>{res?.desc}</span>
+                                            <span>{res?.description.split(' ').slice(0, 10).join(' ') + ".."}</span>
                                         </div>
 
-                                        {res?.category.toLocaleLowerCase() === 'free' ?
-                                            <div className='buttons-div'>
-                                                <button className='card-buttons' onClick={()=>setSelectedTheme(res)}>Publish</button>
-                                                <button className='card-buttons'>Customize</button>
+                                        {res?.type.toLocaleLowerCase() === 'free' ?
+                                            <div className='buttons-price-div'>
+                                                <div className='buttons-div'>
+
+                                                    <button className='card-buttons' onClick={() => setSelectedTheme(res)}>Publish</button>
+                                                    <button className='card-buttons'>Customize</button>
+
+                                                </div>
+
+
+                                                <span>{res?.price ? <span style={{ color: 'green' }}>Rs.{res?.price}</span> : <span style={{ color: 'grey' }}>{res?.type}</span>}</span>
+
+
                                             </div>
                                             : <div className='buttons-div'>
                                                 <button className='card-buttons'>Upgrade</button> <button className='card-buttons'>Try for free</button>
@@ -112,6 +138,20 @@ const Home = () => {
 
                 </div>
 
+            </div>
+
+
+            <div className='contactus-main-div'>
+                <div className='contactus-side-main-div'>
+                    <div className='contactus-unique'><span>Need a unique theme?</span></div>
+                    <div><span>Let's talk more about a custom-designed theme for your own business.</span></div>
+                    <button className='card-buttons'>contact now!</button>
+
+                </div>
+
+                <div className='contactus-side-image'>
+                    <img src={onemobile_img} alt="contactus-image" className='contactus-image'/>
+                </div>
             </div>
 
 

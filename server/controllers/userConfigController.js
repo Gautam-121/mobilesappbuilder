@@ -8,37 +8,6 @@ const updateUserThemeDetail = async (req, res, next) => {
     console.log("Enter Inside the Page")
     const data = req.body.themeId;
 
-    const shop = req.query.shop || "renergii.myshopify.com";
-    const shopifyGraphQLEndpoint = `https://${shop || "renergii.myshopify.com"}/admin/api/2023-04/graphql.json`;
-
-    const graphqlQuery = `
-    query MyQuery {
-      collections(first: 1) {
-        nodes {
-          id
-          title
-          image {
-            height
-            src
-            url
-          }
-        }
-      }
-    }
-  `;
-    const axiosShopifyConfig = {
-      headers: {
-        "Content-Type": "application/json",
-        "X-Shopify-Access-Token": req.accessToken || "shpua_761d3e29150e5c4321daa39c9f3627c3",
-      },
-    };
-
-    const fetchCollections = await shopifyApiData(shopifyGraphQLEndpoint , graphqlQuery , axiosShopifyConfig)
-
-    const collections = fetchCollections?.data?.data?.collections?.nodes[0];
-
-    console.log(collections)
-
     if (!data) {
       return res.status(200).json({
         success: false,
@@ -92,6 +61,37 @@ const updateUserThemeDetail = async (req, res, next) => {
 
     console.log("Enter Inside the Page No 57")
 
+    const shop = req.query.shop || "renergii.myshopify.com";
+    const shopifyGraphQLEndpoint = `https://${shop || "renergii.myshopify.com"}/admin/api/2023-04/graphql.json`;
+
+    const graphqlQuery = `
+    query MyQuery {
+      collections(first: 1) {
+        nodes {
+          id
+          title
+          image {
+            height
+            src
+            url
+          }
+        }
+      }
+    }
+  `;
+    const axiosShopifyConfig = {
+      headers: {
+        "Content-Type": "application/json",
+        "X-Shopify-Access-Token": req.accessToken || "shpua_761d3e29150e5c4321daa39c9f3627c3",
+      },
+    };
+
+    const fetchCollections = await shopifyApiData(shopifyGraphQLEndpoint , graphqlQuery , axiosShopifyConfig)
+
+    const collections = fetchCollections?.data?.data?.collections?.nodes[0];
+
+    console.log(collections)
+
     const homeData = await Payload.find({
       collection: "homePage",
       where: { themeId: { equals: data } },
@@ -113,8 +113,6 @@ const updateUserThemeDetail = async (req, res, next) => {
     });
 
     console.log("Enter Inside the Page No 72")
-
-
 
     for(val of homeData?.docs[0].homeData){
       if (val.featureType === "banner") {
@@ -194,7 +192,7 @@ const updateUserThemeDetail = async (req, res, next) => {
     await Payload.create({
       collection: "homePage",
       data: {
-        shopId: req.shop_id || "gid://shopify/Shop/81447387454",
+        shopId: req.shop_id ||"gid://shopify/Shop/81447387454",
         themeId: data,
         homeData: homeData?.docs[0].homeData,
       },

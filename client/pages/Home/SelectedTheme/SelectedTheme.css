@@ -99,6 +99,7 @@
     padding: 6px 8px 6px 8px;
     box-shadow: 1px 1px 1px #e7e2e2; 
     cursor: pointer;
+
 }
 
 
@@ -106,27 +107,94 @@
     background-color: #f1f1f1;
     border: 1px solid #f1f1f1;
     border-radius: 8px;
-    width: 40vw;
-    padding: 12px;
-
+    width: 35vw;
+    text-align: center;
+    
 }
 
 
-
-.images-grid-div{
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-}
-.images-row{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 20px;
-}
 
 .images{
-    width: 150px;
-    height: 110px;
+    width: auto;
+    height: 230px;
+    /* width: 150px;
+    height: 120px; */
 }
+
+
+@media (max-width: 768px) {
+
+    .theme-name-main-div {
+        order: 2; /* Move theme-name-main-div below side-image-div */
+    }
+
+    .buttons-main-div {
+        float: left;
+        order: 3; /* Move buttons-main-div at the bottom */
+    }
+
+    .side-image-div {
+        width: 83vw;
+        order: -1;
+        margin-bottom: 20px;
+         /* Move side-image-div above theme-name-main-div */
+    }
+
+    .images{
+        width: auto;
+        height: auto;
+        /* width: 150px;
+        height: 120px; */
+        
+    }
+
+
+    .theme-main-div{
+        display: flex;
+        flex-direction: column;
+       
+        border: 1px solid white;
+        border-radius: 12px;
+        background-color: white;
+        margin-top: 5px;
+        height: auto;
+        
+    }
+
+
+    .left-main-card-div{
+        gap: 35px;
+        align-items: flex-start;
+        justify-content: flex-start;  
+    }
+
+    
+
+
+  
+  }
+  
+  @media (max-width: 480px) {
+    .theme-name-main-div {
+        order: 2; /* Move theme-name-main-div below side-image-div */
+    }
+
+    .buttons-main-div {
+        order: 3; /* Move buttons-main-div at the bottom */
+    }
+
+    .side-image-div {
+        order: -1;
+        margin-bottom: 20px;
+         /* Move side-image-div above theme-name-main-div */
+    }
+
+
+    .images{
+        width: auto;
+        height: 130px;
+        /* width: 150px;
+        height: 120px; */
+    }
+
+  }
