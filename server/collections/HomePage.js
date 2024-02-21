@@ -56,6 +56,7 @@ const homePage = {
           label: "Relation",
           type: 'relationship',
           hasMany: false,
+          required: true,
           relationTo: ["announcementBanner" ,"banner" , "collection" ,"product" , "eventTimer", "social" ,"paragraph" , "video"]
         },
       ],

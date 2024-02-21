@@ -28,7 +28,7 @@ const featuredCollectionConfig = {
           name: "collection_id",
           label:"CollectionId",
           type: "text",
-          required: true,
+          defaultValue: undefined
         },
       ],
     },

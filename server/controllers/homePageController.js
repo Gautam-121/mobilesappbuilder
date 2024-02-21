@@ -129,7 +129,7 @@ const getHomePage = async (req, res, next) => {
       if (value.featureType === "banner" || value.featureType === "categories") {
         return { ...value, data: value.data.value.data };
       } 
-      else if (value.featureType === "announcement" ||value.featureType === "productGroup") {
+      else {
         return { ...value, data: value.data.value };
       }
     });
@@ -137,7 +137,10 @@ const getHomePage = async (req, res, next) => {
     return res.status(200).json({
       success: true,
       message: "Send Successfully",
-      data: homeData.docs[0]
+      data: {
+        ...homeData.docs[0],
+        themeId:homeData.docs[0]?.themeId.id
+      }
     })
 
   } catch (error) {

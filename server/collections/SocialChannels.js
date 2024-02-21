@@ -21,7 +21,7 @@ const socialChannelConfig = {
         {
           name: "profileUrl",
           type: "text",
-          required: true
+          defaultValue: undefined
         },
         {
           name: "isVisible",

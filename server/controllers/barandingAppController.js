@@ -51,6 +51,7 @@ const getBrandingApp = async (req, res, next) => {
         const brandingData = await Payload.find({
             collection: 'brandingTheme',
             where: {shopId: { equals: `gid://shopify/Shop/${req.params.shopId}`},},
+            depth:req.query.depth || 0
         })
 
         if(brandingData.docs.length === 0){
@@ -63,7 +64,7 @@ const getBrandingApp = async (req, res, next) => {
         return res.status(200).json({
             success: true,
             message: "Data Send Successfully",
-            data: brandingData
+            data: brandingData.docs[0]
         })
     } catch (error) {
         return res.status(500).json({

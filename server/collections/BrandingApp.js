@@ -32,12 +32,6 @@ const brandingThemeConfig = {
       defaultValue: "#ffffff"
     },
     {
-      name: "launchScreenImageUrl",
-      label:"Launch Screen Image",
-      type: "text",
-      defaultValue: undefined,
-    },
-    {
       name: "launchScreenBgColor",
       label:"Launch Screen Background Color",
       type: "text",

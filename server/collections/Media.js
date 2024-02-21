@@ -1,9 +1,16 @@
 const { CollectionConfig } = require("payload/types");
 
 const Media = {
-  slug: "media",
+  slug: 'media',
+  access: {
+    read: () => true,
+  },
   upload:true,
-  fields: [],
+  labels:{
+    singular:'media',
+    plural:'medias'
+  },
+ fields:[],
 };
 
 module.exports = Media;

@@ -11,7 +11,7 @@ const featuredProductConfig = {
       label:"Title",
       type: "text",
       maxLength: 30,
-      defaultValue: undefined,
+      defaultValue: "New Arrivals",
     },
     {
       name: "productGroupId",

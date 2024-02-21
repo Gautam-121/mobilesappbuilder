@@ -24,9 +24,10 @@ const tabMenuConfig = {
             name: "redirect_page",
             type: "select",
             options: ["home", "search" , "cart" , "account" , "order"],
+            required: true
         },
         {
-          name: "order",
+          name: "position",
           type: "number",
           unique: true,
           required: true

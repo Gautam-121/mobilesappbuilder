@@ -24,7 +24,8 @@ const bannerImageConfig = {
         {
           name: "imageUrl",
           label:"Image",
-          type: "text",
+          type: "relationship",
+          relationTo: "media"
         },
         {
           name: "bannerType",

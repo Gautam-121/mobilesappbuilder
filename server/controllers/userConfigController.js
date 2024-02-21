@@ -117,6 +117,11 @@ const updateUserThemeDetail = async (req, res, next) => {
     for(val of homeData?.docs[0].homeData){
       if (val.featureType === "banner") {
         console.log("Enter in Banner")
+
+        val?.data?.value?.data.forEach(element => {
+          element.imageUrl = element.imageUrl.id
+        });
+
         const banner = await Payload.create({
           collection: "banner",
           data: {
@@ -179,6 +184,66 @@ const updateUserThemeDetail = async (req, res, next) => {
           value: collection.id,
         }
         console.log("collection" , val)
+      }
+      else if(val.featureType === "text_paragraph"){
+
+        console.log("Enter in text_paragraph")
+        const text_paragraph = await Payload.create({
+          collection: "paragraph",
+          data: val?.data?.value
+        });
+
+        val.data = {
+          relationTo: "paragraph",
+          value: text_paragraph.id,
+        }
+
+        console.log("text_paragrapg" , val)
+      }
+      else if(val.featureType === "countdown"){
+
+        console.log("Enter in countdown")
+        const eventTimer = await Payload.create({
+          collection: "eventTimer",
+          data: val?.data?.value
+        });
+
+        val.data = {
+          relationTo: "eventTimer",
+          value: eventTimer.id,
+        }
+
+        console.log("eventTimer" , val)
+      }
+      else if(val.featureType === "social_channel"){
+
+        console.log("Enter in social_channel")
+        const social = await Payload.create({
+          collection: "social",
+          data: val?.data?.value
+        });
+
+        val.data = {
+          relationTo: "social",
+          value: social.id,
+        }
+
+        console.log("social" , val)
+      }
+      else if(val.featureType === "video"){
+
+        console.log("Enter in video")
+        const social = await Payload.create({
+          collection: "video",
+          data: val?.data?.value
+        });
+
+        val.data = {
+          relationTo: "video",
+          value: video.id,
+        }
+
+        console.log("video" , val)
       }
     }
 

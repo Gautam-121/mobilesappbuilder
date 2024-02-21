@@ -20,8 +20,8 @@ const emptyCartPageDetailConfig = {
         {
             name:"image_url",
             label:"Image",
-            type:"text",
-            defaultValue:"https:\/\/static-mobile.onecommerce.io\/images\/icon\/1701773380_icon-cart.png"
+            type:"relationship",
+            relationTo: "media"
         }
       ]
     },
