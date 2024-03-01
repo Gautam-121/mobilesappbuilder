@@ -4,6 +4,12 @@ const socialChannelConfig = {
   slug: "social",
   fields: [
     {
+      name: "data",
+      label: "Data",
+      type: "array",
+      required: true,
+      fields: [
+    {
       name : "blockTitle",
       label: "Channel Title",
       type: "text",
@@ -31,6 +37,8 @@ const socialChannelConfig = {
       ]
     }
   ],
-};
+}
+  ]}
+  ;
 
 module.exports = socialChannelConfig;
