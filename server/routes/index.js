@@ -29,9 +29,9 @@ router.get("/api/getProductByCollectionId", verifyRequest ,  getProductByCollect
 
 router.get("/api/getHomePage/:shopId", getHomePage)
 
-router.get("/api/getHomePageByShop/:themeId", verifyRequest ,  getHomePageByWeb)
+router.get("/api/getHomePageByShop/:themeId" ,  getHomePageByWeb)
 
-router.put("/api/updateHomePage/:themeId", verifyRequest ,  updateHomePage)
+router.put("/api/updateHomePage/:themeId" ,  updateHomePage)
 
 /*--------------------------BrandingPageRouter--------------------------------------------------*/
 
@@ -39,9 +39,9 @@ router.put("/api/updateHomePage/:themeId", verifyRequest ,  updateHomePage)
 
 router.get("/api/getBrandingPage/:shopId", getBrandingApp)
 
-router.get("/api/getBrandingPageByShop/:themeId"  , verifyRequest ,  getBrandingAppWeb)
+router.get("/api/getBrandingPageByShop/:themeId"  ,  getBrandingAppWeb)
 
-router.put("/api/updateBrandingPage/:branding_id" , verifyRequest , updateBrandingApp)
+router.put("/api/updateBrandingPage/:branding_id"  , updateBrandingApp)
 
 /*----------------------------------------------------------------------------------------*/
 
@@ -62,15 +62,15 @@ router.get("/api/getOtherScreenDetailByWeb" , getOtherScreenPageDetailByWeb)
 
 router.get("/api/getOtherScreen/:shopId", getOtherScreen)
 
-router.put("/api/updateUserThemeDetail" , verifyRequest , updateUserThemeDetail)
+router.put("/api/updateUserThemeDetail"  , updateUserThemeDetail)
 
-router.get("/api/getTabMenuDataByWeb/:themeId" , verifyRequest , getTabMenuDataByWeb);
+router.get("/api/getTabMenuDataByWeb/:themeId"  , getTabMenuDataByWeb);
 
 router.get("/api/getTabMenu/:shopId" , getTabMenu);
 
-router.get("/api/getAllTheme", verifyRequest ,  getAllTheme)
+router.get("/api/getAllTheme" ,  getAllTheme)
 
-router.get("/api/geThemeById/:themeId", verifyRequest , getThemeById)
+router.get("/api/geThemeById/:themeId" , getThemeById)
 
 
 module.exports = router;
