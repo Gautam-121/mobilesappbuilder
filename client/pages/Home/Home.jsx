@@ -59,7 +59,7 @@ const Home = () => {
 
     const [selectedTheme, setSelectedTheme] = useState();
 
-    const fetchAllThemeApi = "/getAllTheme";
+    const fetchAllThemeApi = "https://appbuilder.xircular.io/apps/api/getAllTheme";
 
 
     useEffect(() => {
@@ -75,6 +75,8 @@ const Home = () => {
         // }
 
         // fetchData();
+
+
 
         axios.get(fetchAllThemeApi)
             .then(res=> console.log("fetched themes: ", res.data))
