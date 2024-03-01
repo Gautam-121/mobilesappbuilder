@@ -6,6 +6,12 @@ import { usePath, useRoutes } from "raviger";
 import routes from "./Routes";
 import ApolloClientProvider from "./providers/ApolloClientProvider";
 import AppBridgeProvider from "./providers/AppBridgeProvider";
+import {Provider} from 'react-redux';
+import store from "./store/store";
+
+
+
+
 const appBridgeConfig = {
   apiKey: process.env.SHOPIFY_API_KEY,
   host: new URL(location).searchParams.get("host"),
@@ -17,28 +23,29 @@ export default function App() {
   const RouteComponents = useRoutes(routes);
 
   return (
-
+<Provider store={store}>
     <PolarisProvider
       i18n={translations}
       features={{ polarisSummerEditions2023: true }}
     >
       <AppBridgeProvider>
-        {/* <NavigationMenu
+        <NavigationMenu
           navigationLinks={[
             {
-              label: "Fetch Data",
-              destination: "/debug/data",
+              label: "App Design",
+              destination: "/app-design",
             },
-            {
-              label: "Billing API",
-              destination: "/debug/billing",
-            },
+            // {
+            //   label: "Billing API",
+            //   destination: "/debug/billing",
+            // },
           ]}
           matcher={(link) => currentPath === link.destination}
-        /> */}
+        />
         <ApolloClientProvider>{RouteComponents}</ApolloClientProvider>
       </AppBridgeProvider>
     </PolarisProvider>
+  </Provider>
    
   );
 }

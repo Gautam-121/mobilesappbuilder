@@ -1,0 +1,9 @@
+1) how to add navmenu on the side:
+    1.1) add a route in the Route.jsx
+    1.2) add new naviagtion lable and links under App.jsx
+
+2) Redux-toolkit:
+    -> Wrapped the components in the Data.jsx file
+    -> find the slice files under store folder
+    -> have added selectTheme slice in the Home.jsx file.
+    

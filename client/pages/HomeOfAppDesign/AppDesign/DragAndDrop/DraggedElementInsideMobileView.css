@@ -1,0 +1,35 @@
+
+
+.DraggedElementInsideMobileView-elements-div{
+    border: 2px solid blue;
+    padding: 10px;
+
+}
+
+.DraggedElementInsideMobileView-dragging{
+    border: 1px solid #ebebeb;
+    padding: 10px;
+}
+
+
+/* on hover buttons for the dragged elements */
+
+.DraggedElementInsideMobileView-buttons-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .draggable-main-div{
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: rgba(0,0,0,0.16) 0px 1px 4px;
+    width: 100%;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 20px;
+    touch-action: none;
+}

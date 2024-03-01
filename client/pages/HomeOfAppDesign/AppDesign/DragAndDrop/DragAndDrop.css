@@ -1,0 +1,386 @@
+.drop-box {
+    background-color: white;
+    border: 8px solid #1a2025;
+    border-radius: 50px;
+    height: 700px;
+    width: 350px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+
+
+    overflow: scroll;
+    position: relative;
+
+    /* scrollbar-width: none; */
+    overflow: auto;
+}
+
+.dnd-container {
+    display: flex;
+
+
+}
+
+.dnd-column {
+    padding: 10px;
+}
+
+.dnd-column1 {
+    flex-grow: 1;
+    /* Takes up 1/4 of the available space */
+    border-right: 1px solid #ebebeb;
+    display: flex;
+    flex-direction: column;
+    width: 10%;
+
+
+}
+
+.dnd-column2 {
+
+    /* Takes up 2/4 of the available space */
+    border-right: 1px solid #ebebeb;
+    flex-grow: 0;
+
+}
+
+
+
+
+.dnd-column1-main-div {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    gap: 20px;
+}
+
+.dnd-design-blocks-div {
+    height: 310px;
+    overflow-y: hidden;
+    position: relative;
+
+    scrollbar-width: none;
+}
+
+.dnd-scroll-content {
+    overflow-y: scroll;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    gap: 20px;
+
+
+}
+
+.dnd-column2 {
+    overflow: scroll;
+    height: 420px;
+
+    padding: 50px;
+    background-color: #f9f9f9;
+
+}
+
+
+.scrolable-mobile-view {
+
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 20px;
+
+
+    /* gap: 5px; */
+
+}
+
+
+.dnd-column2::-webkit-scrollbar {
+    background-color: transparent;
+
+    width: 2px;
+    border-radius: 3px;
+
+}
+
+.drop-box::-webkit-scrollbar {
+    background-color: transparent;
+
+    width: 2px;
+    border-radius: 3px;
+
+}
+
+
+
+.dnd-scroll-content::-webkit-scrollbar {
+    background-color: transparent;
+
+    width: 2px;
+    border-radius: 3px;
+
+}
+
+
+.dnd-design-blocks-div:hover {
+    overflow-y: scroll;
+}
+
+
+.dnd-design-block-header-div {
+
+    border-bottom: 1px solid #ebebeb;
+    display: flex;
+    margin-left: -25px;
+    margin-right: -10px;
+    flex-direction: column;
+    gap: 5px;
+    padding: 10px 0px 18px 25px;
+}
+
+
+.dnd-header-design-text {
+    font-size: 16px;
+    font-weight: bold;
+    color: #2f3942;
+}
+
+.dnd-header-second-text {
+    color: #585656;
+}
+
+
+.dnd-devider {
+
+    bottom: 0;
+    margin-left: -25px;
+    margin-right: -10px;
+}
+
+
+
+
+.dnd-element-skeleton-div {
+    display: flex;
+    flex-grow: 1;
+    justify-content: space-around;
+
+    background-color: #ebebeb;
+    padding: 5px;
+    
+
+}
+
+
+.dnd-element-skeleton {
+    background-color: white;
+    padding: 2px 30px;
+
+}
+
+
+/* for banner slider announcement  */
+
+.slider-dots {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px; /* Adjust as needed */
+}
+
+.slider-dot {
+    width: 10px; /* Diameter of the dots */
+    height: 10px;
+    border-radius: 50%;
+    background-color: #ccc; /* Color of the dots */
+    margin: 0 5px; /* Spacing between the dots */
+}
+
+
+
+.dnd-banner-slider-skeleton-main-div{
+    display: flex;
+    flex-grow: 1;
+    justify-content: space-between;
+
+    background-color: #ffffff;
+    padding: 5px;
+
+    text-align: center;
+
+}
+.dnd-banner-slider-skeleton{
+
+    background-color: #ebebeb;
+    text-align: center;
+    border: 1px solid #ebebeb;
+    border-radius: 4px;
+   
+}
+
+
+.banner-placeholder-image-placeholders{
+    width: 78px;
+    height: 60px;
+    opacity: 0.8;
+
+}
+
+
+
+.banner-image-placeholders{
+    width: auto;
+    height: 150px;
+    opacity: 0.5;
+}
+
+
+
+.dnd-collection-card-grid-slider-skeleton-main-div{
+
+    display: flex;
+    flex-grow: 1;
+    justify-content: space-between;
+
+    background-color: #ffffff;
+    padding: 5px;
+
+    text-align: center;
+
+}
+
+.dnd-collection-card-grid-slider-skeleton{
+
+    border: 1px solid #ebebeb;
+    padding: 16px;
+    background-color: #ebebeb;
+    color: #979292;
+
+}
+
+
+
+
+.dnd-design-block-element-parent-div {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.dnd-element-name {
+    color: #2f3942;
+    font-weight: bold;
+}
+
+
+
+.dnd-design-the-element-div {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+
+}
+
+
+.dnd-internet-msg-div {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+    position: absolute;
+    /* or fixed */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+}
+
+
+.dnd-internet-msg-div>h1 {
+
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+
+
+}
+
+element.style {
+    background-color: white;
+    color: var(--p-color-text);
+}
+
+
+
+.dnd-element-with-buttons {
+    position: relative;
+    cursor: pointer;
+    
+}
+
+.hidden::after {
+    content: ''; /* Add content to the pseudo-element */
+    position: absolute; /* Position the pseudo-element */
+    top: 0;
+    left: 0;
+    width: 100%; /* Cover the entire width of the parent */
+    height: 100%; /* Cover the entire height of the parent */
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+    z-index: 1; /* Ensure the backdrop appears behind the element */
+  }
+
+
+
+
+.dnd-column3 {
+    /* flex-grow: 1; */
+    /* Takes up 1/4 of the available space */
+
+    overflow-y: scroll;
+    height: 420px;
+
+    background-color: #f9f9f9;
+
+}
+
+
+
+
+
+
+
+.dnd-column3::-webkit-scrollbar {
+    background-color: transparent;
+
+    width: 0px;
+    border-radius: 0px;
+
+}
+
+
+
+.dnd-announcement-main-div::-webkit-scrollbar {
+    background-color: transparent;
+
+    width: 0px;
+    border-radius: 0px;
+
+}
+
+
+.dnd-announcement-main-div:hover {
+    overflow-y: hidden;
+}
+
+
+
+
+/* desiging palette*/
+
+.dnd-announcement-dragged-user-element-parent-div{
+    padding: 10px;
+}
