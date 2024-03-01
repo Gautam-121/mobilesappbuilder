@@ -38,6 +38,7 @@ webhookRegistrar();
 console.log("Enter inside index")
 
 const app = express();
+app.use(cors());
 app.use(cors(
   {
       // origin: ["https://deploy-mern-frontend.vercel.app"],
@@ -49,7 +50,6 @@ app.use(cors(
 // app.use(fileUpload({
 //   useTempFiles: true
 // }))
-
 
 const start = async () => {
   try {
