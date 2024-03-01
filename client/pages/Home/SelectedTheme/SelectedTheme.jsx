@@ -4,9 +4,41 @@ import { HiQrCode } from "react-icons/hi2";
 import image_placeholder from "../../../assets/images/image_placeholder.png";
 import ImageChecker from '../../../components/image-checker/ImageChecker';
 
+import { useAppBridge, useNavigate } from '@shopify/app-bridge-react';
+import { Fullscreen } from '@shopify/app-bridge/actions';
+
+
+import { config } from 'process';
+
+import {useDispatch} from "react-redux";
+import { goFullScreen } from '../../../store/fullScreenSlice';
+
 const SelectedTheme = (props) => {
 
+    const dispatch = useDispatch();
+
+	const navigate = useNavigate();
+
     const theTheme = props?.selectedTheme;
+
+    const app = useAppBridge();
+
+    const fullscreen = Fullscreen.create(app);
+
+
+
+
+    const customize = () => {
+
+        navigate('/app-design/customize');
+
+        fullscreen.dispatch(Fullscreen.Action.ENTER);
+
+        dispatch(goFullScreen());
+    }
+
+
+
 
     return (
         <div className='theme-main-div'>
@@ -27,7 +59,7 @@ const SelectedTheme = (props) => {
 
                 <div className='buttons-main-div'>
 
-                    <button className='customize-button-div'>Customize</button>
+                    <button className='customize-button-div' onClick={() => { customize() }}>Customize</button>
                     <button className='preview-button-div'><HiQrCode /> Preview on mobile</button>
 
                 </div>
@@ -35,7 +67,7 @@ const SelectedTheme = (props) => {
             </div>
 
             <div className='side-image-div'>
-                
+
                 <ImageChecker src={theTheme} cardImageCss={'images'} />
 
             </div>

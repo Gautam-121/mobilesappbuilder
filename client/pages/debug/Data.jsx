@@ -1,11 +1,15 @@
-import Home from "../Home/Home"
+import Home from "../Home/Home";
+
 
 const GetData = () => {
+
+
   return (
     <>
-      <div>
+      {/* <Provider store={store}>
           <Home />
-      </div>
+      </Provider> */}
+      <Home />
     </>
   );
 };

@@ -14,26 +14,75 @@ import blueSTImage from "../../assets/images/blue.jpg"
 import onemobile_img from "../../assets/images/onemobile_img.png"
 
 
+import {useDispatch, useSelector} from "react-redux";
+import { selectTheme} from '../../store/themeSlice';
+import { useAppBridge, useNavigate } from '@shopify/app-bridge-react';
+import { Fullscreen } from '@shopify/app-bridge/actions';
+
+import axios from 'axios';
+
+
 const Home = () => {
+
+    //if appDesignPageRefreshedState then enter fullsccreen
+
+    const isAppDesignPageRefreshed = useSelector(state => state.appDesignPageRefreshedSlice);
+
+    console.log("isAppDesignPageRefreshed: ",isAppDesignPageRefreshed);
+
+    const dispatch = useDispatch();
+
+    //t check if the appdesign page was refreshed and to enter fullscreen
+    const isFullScreen = useSelector(state => state.fullScreenMode);
+
+
+    useEffect(() => {
+        // Dispatch action to enter fullscreen mode if it's true in Redux state
+        if (isAppDesignPageRefreshed) {
+          fullscreen.dispatch(Fullscreen.Action.ENTER);
+        }
+        
+      }, [isAppDesignPageRefreshed]);
+
+
+    
+    const navigate = useNavigate();
+    
+    const app = useAppBridge();
+
+    const fullscreen = Fullscreen.create(app);
+
 
     const fetch = useFetch();
 
     const [themeData, setThemeData] = useState();
+
     const [selectedTheme, setSelectedTheme] = useState();
+
+    const fetchAllThemeApi = "/getAllTheme";
+
 
     useEffect(() => {
 
-        async function fetchData() {
-            const res = await fetch("/api/getAllTheme"); //fetch instance of useFetch()
-            const data = await res.json();
-            setThemeData(data?.data);
-            setSelectedTheme(data?.data[0]);
-        }
+        // async function fetchData() {
+        //     const res = await fetch("/api/getAllTheme"); //fetch instance of useFetch()
+        //     const data = await res.json();
+        //     console.log("theThemeData: ", data);
 
-        fetchData();
+
+        //     setThemeData(data?.data);
+        //     setSelectedTheme(data?.data[0]);
+        // }
+
+        // fetchData();
+
+        axios.get(fetchAllThemeApi)
+            .then(res=> console.log("fetched themes: ", res.data))
+            .catch(error=> console.log("error while fetching themes: ", error));
 
 
     }, []);
+
 
 
 
@@ -43,6 +92,15 @@ const Home = () => {
     { image: { appImage }, themeName: 'RiseUp', category: 'Free', desc: 'A sense of growth and advancement, elevating businesses in various industries.' },
     { image: { appImage }, themeName: 'Growth', category: 'General', desc: 'A sense of growth and advancement, elevating businesses in various industries.' },
     { image: { appImage }, themeName: 'Home', category: 'Free', desc: 'A sense of growth and advancement, elevating businesses in various industries.' }]
+
+
+
+    const selectTheTheme = (theme)=>{
+        //dispatch a selectTheme action
+        dispatch(selectTheme(theme));
+    }
+
+
 
 
     return (
@@ -116,7 +174,7 @@ const Home = () => {
                                             <div className='buttons-price-div'>
                                                 <div className='buttons-div'>
 
-                                                    <button className='card-buttons' onClick={() => setSelectedTheme(res)}>Publish</button>
+                                                    <button className='card-buttons' onClick={() => selectTheTheme(res)}>Publish</button>
                                                     <button className='card-buttons'>Customize</button>
 
                                                 </div>

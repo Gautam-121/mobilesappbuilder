@@ -7,15 +7,31 @@ function useFetch() {
   const app = useAppBridge();
   const fetchFunction = authenticatedFetch(app);
 
+  const appOrigin = "139.5.190.56";
+
   return async (uri, options) => {
 
-    console.log(`https://${appOrigin}/apps${uri}`)
+
+    // console.log(`http://${appOrigin}/apps${uri}`);
+
+    // const response = await fetchFunction(
+    //   uri.startsWith("/")
+    //     ? `http://${appOrigin}/apps${uri}`
+    //     : `http://${appOrigin}/apps/${uri}`,
+    //   options
+    // );
+
+
+    //UNCOMMENT THIS FOR HTTPS
+    // console.log(`https://${appOrigin}/apps${uri}`);
+    
     const response = await fetchFunction(
       uri.startsWith("/")
         ? `https://${appOrigin}/apps${uri}`
         : `https://${appOrigin}/apps/${uri}`,
       options
     );
+    
     if (
       response.headers.get("X-Shopify-API-Request-Failure-Reauthorize") === "1"
     ) {

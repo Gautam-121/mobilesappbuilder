@@ -1,0 +1,39 @@
+.dnd-elements-with-buttons-row {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    text-align: center;
+    position: absolute;
+    
+    gap: 5px;
+    padding: 5px;
+    background-color: #161614;
+    border: 1px solid #161614;
+    border-radius: 10px;
+    top: 40%; /* Adjust this value to position the buttons */
+    left: 50%;
+    transform: translateX(-50%);
+    visibility: hidden;
+    max-width: 100px; /* Adjust the max-width as needed */
+  }
+  
+  .dnd-element-with-buttons:hover .dnd-elements-with-buttons-row {
+    visibility: visible;
+  }
+
+
+  .dnd-element-action-buttons {
+    background-color: transparent;
+    border: none;
+    text-align: center;
+    color: white;
+    cursor: pointer;
+    padding: 7px 5px 5px 5px;
+    width: 30px; /* Fixed width */
+    height: 30px; /* Fixed height */
+  }
+  
+  .dnd-element-action-buttons:hover {
+    background-color: #2e2e2c;
+    border-radius: 5px;
+  }
