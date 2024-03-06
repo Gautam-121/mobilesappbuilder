@@ -23,11 +23,16 @@ const activeStoresConfig = {
       defaultValue:undefined
     },
     {
+      name:"storefront_access_token",
+      type:"text",
+      defaultValue:undefined
+    },
+    {
       name: "isActive",
       type: "checkbox",
       defaultValue: false,
     }
-  ],
+  ]
 };
 
 module.exports = activeStoresConfig;

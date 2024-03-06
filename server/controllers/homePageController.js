@@ -102,7 +102,6 @@ const createHomePage = async (req, res, next) => {
 };
 
 const getHomePage = async (req, res, next) => {
-
   try {
 
     if (!req.params.shopId) {
@@ -172,15 +171,10 @@ const getHomePageByWeb = async (req , res , next)=>{
       })
     }
 
+    // Update the homeData.docs[0].homeData array
     homeData.docs[0].homeData = homeData.docs[0].homeData.map((value) => {
-      console.log("enter")
-      if (value.featureType === "banner" || value.featureType === "categories") {
-        return { ...value, data: value.data.value };
-      } 
-      else if (value.featureType === "announcement" ||value.featureType === "productGroup") {
-        return { ...value, data: value.data.value };
-      }
-    });
+      return { ...value, data: value.data.value.data };
+  })
 
     return res.status(200).json({
       success: true,
