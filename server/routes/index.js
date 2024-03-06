@@ -6,22 +6,30 @@ const {getProduct,getCollection,getProductByCollectionId} = require('../controll
 const {createBrandingApp,getBrandingApp,getBrandingAppWeb,updateBrandingApp} = require("../controllers/barandingAppController.js")
 const {uploadImages} = require("../controllers/ImageUploadController.js")
 const {createProductDetailPage , createCartDetailPage , createAccountDetailPage , getOtherScreenPageDetailByWeb , getOtherScreen} = require("../controllers/otherScreenController.js")
-const {updateUserThemeDetail} = require("../controllers/userConfigController.js")
+const {updateStoreDetail , getStoreDetail} = require("../controllers/storeDetailController.js")
 const {getTabMenuDataByWeb , getTabMenu} = require("../controllers/tabNavigationController.js")
 const {getAllTheme , getThemeById} = require("../controllers/themeController.js")
 
 const router = Router();
 
+/*---------------------------StoreDetail--------------------------------------------------- */
+
+// get Store Detail
+router.get("/api/storeDetail/:shopId" , getStoreDetail  )
+
+// Update Store Detail
+router.put("/api/updateUserThemeDetail"  , updateStoreDetail)
+
 /*---------------------------ShopifyRouter-------------------------------------------------- */
 
 //FETCH SHOPIFY STORE PRODUCT
-router.get("/api/getProduct" , verifyRequest ,  getProduct)
+router.get("/api/getProduct"  ,  getProduct)
 
 //FETCH SHOPIFY STORE COLLECTION
-router.get("/api/getCollection" , verifyRequest , getCollection)
+router.get("/api/getCollection"  , getCollection)
 
 //FETCH SHOPIFY STORE PRODUCT BY COLLECTION
-router.get("/api/getProductByCollectionId", verifyRequest ,  getProductByCollectionId)
+router.get("/api/getProductByCollectionId",  getProductByCollectionId)
 
 /*----------------------------HomePageRouter-------------------------------------------------- */
 
@@ -61,8 +69,6 @@ router.post("/api/createAccountDetail" , createAccountDetailPage)
 router.get("/api/getOtherScreenDetailByWeb" , getOtherScreenPageDetailByWeb)
 
 router.get("/api/getOtherScreen/:shopId", getOtherScreen)
-
-router.put("/api/updateUserThemeDetail"  , updateUserThemeDetail)
 
 router.get("/api/getTabMenuDataByWeb/:themeId"  , getTabMenuDataByWeb);
 

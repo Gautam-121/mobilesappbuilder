@@ -3,6 +3,8 @@ const payload = require('payload');
 
 const isShopActive = async (req, res, next) => {
 
+  console.log("isAvailable")
+
   const { shop, host } = req.query;
 
   if (!shop) {
@@ -16,6 +18,8 @@ const isShopActive = async (req, res, next) => {
       shopName: { equals: shop},
     }
   })
+
+  console.log("isAvailable" , isShopAvaialble)
 
   if (isShopAvaialble.docs?.length === 0 || !isShopAvaialble.docs[0].isActive) {
 

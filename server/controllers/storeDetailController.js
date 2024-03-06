@@ -2,7 +2,7 @@ const Payload = require("payload");
 const {shopifyApiData} = require("../utils/generalFunctions.js")
 
 
-const updateUserThemeDetail = async (req, res, next) => {
+const updateStoreDetail = async (req, res, next) => {
   try {
 
     console.log("Enter Inside the Page")
@@ -305,5 +305,41 @@ const updateUserThemeDetail = async (req, res, next) => {
   }
 };
 
+const getStoreDetail = async(req,res,next)=>{
+  try {
 
-module.exports = {updateUserThemeDetail}
+    if (!req.params.shopId) {
+      return res.status(400).json({
+        success: false,
+        message: "Shop_id is Missing"
+      })
+    }
+  
+    const store = await Payload.find({
+      collection: 'activeStores',
+      where: { shopId: { equals: `gid://shopify/Shop/${req.params.shopId}` }},
+    })
+  
+    if (store.docs.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "No data found with shopId: "+ req.params.shopId
+      })
+    }
+
+  return res.status(200).json({
+      success: true,
+      message: "Data Send Successfully",
+      data: store.docs[0]
+  })
+  
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message
+    })
+  }
+}
+
+
+module.exports = {updateStoreDetail , getStoreDetail}
