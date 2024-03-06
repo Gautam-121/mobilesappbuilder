@@ -5,7 +5,11 @@
     border-radius: 30px;
     padding:10px;
     overflow: scroll;
-}
+    background: white;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    }
 .mobilePreviewContainer::-webkit-scrollbar{
     width: 5px;
     display: none;

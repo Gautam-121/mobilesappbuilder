@@ -1,4 +1,5 @@
 .dnd{
-    display:flex;
+    display: flex;
     gap: 20px;
+    background: rgba(235, 235, 235, 1);
 }

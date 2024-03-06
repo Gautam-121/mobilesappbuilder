@@ -54,7 +54,7 @@ export default function AnnouncementBar(props) {
   };
   const stylesObject = {
     border: "1px solid grey",
-    margin: "5px",
+    // margin: "5px",
     padding: "10px",
     borderRadius: "5px",
     cursor: "pointer",

@@ -47,6 +47,7 @@ export default function ComponentsList() {
                     addComponents={() => addComponents(ele)}
                     key={ele.id}
                     gridItems={ele}
+                    text= "Vertical Collection Grid"
                   />
                 );
               else
@@ -56,6 +57,7 @@ export default function ComponentsList() {
                     addComponents={() => addComponents(ele)}
                     key={ele.id}
                     gridItems={ele}
+                    text= "Horizontal Collection Grid"
                   />
                 );
 

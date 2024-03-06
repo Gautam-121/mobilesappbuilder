@@ -8,12 +8,13 @@ export default function HorizontalCollectionGrid({
   addComponents,
   handleEdit,
   draggable,
+  text
 }) {
   const dragRef = useRef(null);
 
   const horizontalCollectionstyle = {
     border: "1px solid grey",
-    margin: "5px",
+    // margin: "5px",
     padding: "10px",
     borderRadius: "5px",
     cursor: "pointer",
@@ -45,7 +46,7 @@ export default function HorizontalCollectionGrid({
     e.dataTransfer.setData("text/plain", JSON.stringify(newElement));
     // Create a new div element
     const dragImage = document.createElement("div");
-    dragImage.textContent = gridItems.layoutType; // Set content or customize as needed
+    dragImage.textContent = text; // Set content or customize as needed
     dragImage.style.cssText = `
       position: absolute;
       pointer-events: none;
@@ -78,7 +79,7 @@ export default function HorizontalCollectionGrid({
       onDragStart={draggable ? handleDragStart : undefined}
       onDragEnd={(e) => e.preventDefault()}
     >
-      <div>{gridItems.layoutType}</div>
+      <strong>{text}</strong>
 
       <div className="collection-grid" style={horizontalCollectionstyle}>
         <div style={horizontalCollectionGridstyle}>

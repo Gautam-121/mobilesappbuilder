@@ -6,13 +6,14 @@ export default function VerticalCollectionGrid({
   addComponents,
   handleEdit,
   draggable,
+  text
 }) {
 
   const dragRef = useRef(null);
 
   const verticalCollectionstyle = {
     border: "1px solid grey",
-    margin: "5px",
+    // margin: "5px",
     padding: "10px",
     borderRadius: "5px",
     cursor: "pointer",
@@ -42,7 +43,7 @@ export default function VerticalCollectionGrid({
     e.dataTransfer.setData('text/plain', JSON.stringify(newElement))
     // Create a new div element
     const dragImage = document.createElement('div');
-    dragImage.textContent = gridItems.layoutType; // Set content or customize as needed
+    dragImage.textContent = text; // Set content or customize as needed
     dragImage.style.cssText = `
       position: absolute;
       pointer-events: none;
@@ -74,7 +75,7 @@ export default function VerticalCollectionGrid({
     onDragStart={draggable ? handleDragStart : undefined}
        onDragEnd={(e)=>e.preventDefault()}
     >
-      <div>{gridItems.layoutType}</div>
+      <strong>{text}</strong>
       <div className="collection-grid" style={verticalCollectionstyle}>
         {gridItems.data.map((item, subIndex) => (
           <p key={subIndex} style={verticalCollectionGridstyle}>

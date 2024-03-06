@@ -1,7 +1,12 @@
 .ComponentListContainer{
     width: 20rem;
-    border: 1px solid black;
-    /* height: 10rem; */
+    border: 1px solid rgba(204, 204, 204, 1);
+    min-height: 100%;
+    background: white;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 10px;
 }
 .announcementBar{
     border: 1px solid grey;
