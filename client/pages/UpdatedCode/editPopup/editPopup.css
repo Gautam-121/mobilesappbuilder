@@ -1,0 +1,12 @@
+.editPopupContainer {
+  position: absolute;
+  top: 2rem;
+  /* height: 15rem; */
+  width: 20rem;
+  left: 60%;
+  background-color: gainsboro;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid;
+}

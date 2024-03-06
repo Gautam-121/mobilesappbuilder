@@ -1,0 +1,38 @@
+@keyframes moveLeftToRight {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+  
+  @keyframes moveRightToLeft {
+    0% {
+      transform: translateX(100%);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+  
+  .moveLeftToRight {
+    /* animation: moveLeftToRight 2s linear infinite alternate !important; */
+    animation: moveLeftToRight;
+    white-space: nowrap; /* Prevent text from wrapping to the next line */
+    animation-duration: 2s;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: unset;
+    animation-direction: normal;
+    display: inline-block;
+  }
+  
+  .moveRightToLeft {
+    animation: moveRightToLeft ;
+    white-space: nowrap; /* Prevent text from wrapping to the next line */
+    animation-duration: 2s;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: unset;
+    animation-direction: normal;
+    display: inline-block;
+  }

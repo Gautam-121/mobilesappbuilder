@@ -1,0 +1,12 @@
+.ComponentListContainer{
+    width: 20rem;
+    border: 1px solid black;
+    /* height: 10rem; */
+}
+.announcementBar{
+    border: 1px solid grey;
+    margin :5px;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
