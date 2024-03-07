@@ -26,7 +26,7 @@ export default function HorizontalCollectionGrid({
     gridTemplateColumns: "repeat(2, 1fr)",
     gap: "4px",
     textAlign: "center",
-    paddingBottom: "20px",
+    // paddingBottom: "20px",
   };
 
   const horizonalComponentElemstyle = {

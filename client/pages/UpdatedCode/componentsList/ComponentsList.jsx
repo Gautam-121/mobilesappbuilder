@@ -11,6 +11,7 @@ import "./componentList.css";
 import { data } from "../data/data";
 import VerticalCollectionGrid from "../components/announcementBar/VerticalCollectiongrid";
 import Textparagraph from "../components/announcementBar/Textparagraph";
+import Video from "../components/announcementBar/Video"
 
 export default function ComponentsList() {
   const [componentListArray, setComponentListArray] = useRecoilState(
@@ -91,6 +92,16 @@ export default function ComponentsList() {
                       element={ele}
                     />
                   );
+
+                  case "video":
+                    return (
+                      <Video
+                      gridItems={ele}
+                        draggable={true}
+                        text="Video"
+                        element={ele}
+                      />
+                    );
 
             default:
               return null; // If featureType doesn't match any case, render nothing

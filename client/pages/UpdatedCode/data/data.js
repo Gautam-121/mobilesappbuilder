@@ -120,6 +120,24 @@ export const data = [{
   ]
 },
 
+{
+  id:7,
+  isVisible: true,
+  featureType: "video",
+  layoutType: "horizontal",
+  data: [
+    {
+      title: "Coffee Promotional",
+      videoUrl: "https://youtu.be/nyDnQQSUfL0?si=GXuNlh99XHMlb_db",
+      mute: true,
+      autoPlay: false,
+      fullWidth: true,
+      loop: false,
+      showPlayback: true
+    }
+  ]
+}
+
 
 
 ]
