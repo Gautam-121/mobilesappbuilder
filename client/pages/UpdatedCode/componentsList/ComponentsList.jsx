@@ -1,6 +1,8 @@
 import "./componentList.css";
 import AnnouncementBar from '../components/announcementBar/AnnouncementBar'
 import HorizontalCollectionGrid from "../components/announcementBar/HorizontalCollectionGrid";
+import Horizontalproductgrid from "../components/announcementBar/Horizontalproductgrid";
+import Verticalproductgrid from "../components/announcementBar/Verticalproductgrid";
 // import CollectionSlider from './components/announcementBar/Collectionslider'
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { componentListArrayAtom } from "../recoil/store";
@@ -60,6 +62,25 @@ export default function ComponentsList() {
                     text= "Horizontal Collection Grid"
                   />
                 );
+
+                case "productGroup":
+              if (ele.layoutType === "vertical_grid")
+                return (
+                  <Verticalproductgrid
+                  draggable={true}
+                    gridItems={ele}
+                    text= "Vertical product Grid"
+                  />
+                );
+              else
+                return (
+                  <Horizontalproductgrid
+                  draggable={true}
+                  gridItems={ele}
+                    text= "Horizontal product Grid"
+                  />
+                );
+
 
             default:
               return null; // If featureType doesn't match any case, render nothing
