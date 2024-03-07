@@ -83,7 +83,7 @@ export default function HorizontalCollectionGrid({
 
       <div className="collection-grid" style={horizontalCollectionstyle}>
         <div style={horizontalCollectionGridstyle}>
-          {gridItems.data.map((item, index) => (
+          {gridItems.data.data.map((item, index) => (
             <p key={index} style={horizonalComponentElemstyle}>
               {item.title}
             </p>

@@ -6,21 +6,7 @@ export default function AnnouncementBar(props) {
   const dragRef = useRef(null);
 
   const handleDragStart = (e) => {
-    // Use JSON.stringify to serialize the object for drag-and-drop
-    // e.dataTransfer.setData('text/plain', JSON.stringify({
-    //   isVisible: "true",
-    //   layoutType: "horizontal",
-    //   featureType: "announcement",
-    //   data: [
-    //     {
-    //       message: "Up to 50% off New Arrivals",
-    //       textColor: "#000000",
-    //       backgroundColor: "#FE6100",
-    //       animationType: "moveLeftToRight",
-    //     },
-    //   ],
-    //   id: uid(),
-    // }));
+
    const newElement = {...props.element}
    newElement.id=uid()
 
