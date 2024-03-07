@@ -1,8 +1,36 @@
-export const data = [{
+export const data = [
+  {
+    id:1,
+    featureType: "banner",
+    layoutType: "horizontal",
+    data: [
+      {
+        isVisible: true,
+        bannerType: "product",
+        actionUrl: null,
+        imageUrl: 1
+      },
+      {
+        isVisible: true,
+        bannerType: "category",
+        actionUrl: null,
+        imageUrl: 2
+      },
+      {
+        isVisible: true,
+        bannerType: "marketing",
+        actionUrl: null,
+        imageUrl: 3
+      }
+    ]
+  },
+  
+  
+  {
   isVisible: "true",
   layoutType: "horizontal",
   featureType: "announcement",
-  id: 1,
+  id: 2,
   data: 
     {
       message: "Up to 50% off New Arrivals",
@@ -13,7 +41,7 @@ export const data = [{
   
 },
 {
-  id:2,
+  id:3,
   isVisible: true,
   featureType: "categories",
   layoutType: "vertical_grid",
@@ -31,7 +59,7 @@ export const data = [{
   ],
 },
 {
-  id:3,
+  id:4,
   isVisible: true,
   featureType: "categories",
   layoutType: "horizontal_grid",
@@ -60,7 +88,7 @@ export const data = [{
 },
 
 {
-  id:4,
+  id:5,
   isVisible: true,
   featureType: "productGroup",
   layoutType: "vertical_grid",
@@ -78,7 +106,7 @@ export const data = [{
    ]
 },
 {
-  id:5,
+  id:6,
   isVisible: true,
   featureType: "productGroup",
   layoutType: "horizontal_grid",
@@ -108,7 +136,7 @@ export const data = [{
   ]
 },
 {
-  id:6,
+  id:7,
   isVisible: true,
   featureType: "text_paragraph",
   layoutType: "horizontal",
@@ -121,7 +149,7 @@ export const data = [{
 },
 
 {
-  id:7,
+  id:8,
   isVisible: true,
   featureType: "video",
   layoutType: "horizontal",

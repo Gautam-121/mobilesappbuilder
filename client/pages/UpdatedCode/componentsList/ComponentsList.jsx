@@ -12,6 +12,7 @@ import { data } from "../data/data";
 import VerticalCollectionGrid from "../components/announcementBar/VerticalCollectiongrid";
 import Textparagraph from "../components/announcementBar/Textparagraph";
 import Video from "../components/announcementBar/Video"
+import Banner from "../components/announcementBar/Banner";
 
 export default function ComponentsList() {
   const [componentListArray, setComponentListArray] = useRecoilState(
@@ -33,6 +34,17 @@ export default function ComponentsList() {
       <div className="ComponentListContainer">
         {data.map((ele) => {
           switch (ele.featureType) {
+           
+
+            case "banner":
+              return (
+                <Banner
+                 draggable={true}
+                  text="Banner"
+                  element={ele}
+                />
+              );
+
             case "announcement":
               return (
                 <AnnouncementBar
@@ -43,6 +55,9 @@ export default function ComponentsList() {
                   element={ele}
                 />
               );
+
+           
+
             case "categories":
               if (ele.layoutType === "vertical_grid")
                 return (
