@@ -35,7 +35,7 @@
     "@payloadcms/richtext-slate": "^1.4.0",
     "@reduxjs/toolkit": "^2.2.1",
     "@shopify/app-bridge": "^3.7.10",
-    "@shopify/app-bridge-react": "^4.0.0",
+    "@shopify/app-bridge-react": "^3.7.9",
     "@shopify/polaris": "^12.20.0",
     "@shopify/polaris-icons": "^8.7.0",
     "@shopify/shopify-api": "^9.4.1",
