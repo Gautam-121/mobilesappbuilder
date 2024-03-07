@@ -8,6 +8,7 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import { useEffect } from "react";
 import DraggableVerticalCollectionGrid from "../draggableComponents/DraggableVerticalCollectionGrid";
 import DraggableHorizontalCollectionGrid from "../draggableComponents/DraggableHorizontalCollectionGrid";
+import DraggableTextParagraph from "../draggableComponents/DraggableTextParagraph";
 
 export default function MobilePreview() {
   const [componentListArray, setComponentListArray] = useRecoilState(
@@ -57,33 +58,6 @@ export default function MobilePreview() {
         onDrop={handleDrop}
         onDragOver={handleDragOver}
       >
-        {/* {componentListArray.map((ele, index) => {
-          if (ele.featureType === "announcement") {
-            return (
-              <DraggableAnnouncementBar
-                key={ele.id}
-                id={ele.id}
-                index={index}
-                moveComponent={moveComponent}
-                handleEdit={() => handleEditButtonClick(ele.id)}
-                textColor={ele.data[0].textColor}
-                backgroundColor={ele.data[0].backgroundColor}
-                animationType={ele.data[0].animationType}
-                style={ele.style}
-                text={ele.data[0].message}
-                data={ele}
-              />
-            );
-          }
-          else if(ele.featureType === "categories"){
-            if(ele.categories==="horizontal_grid"){
-              return(
-               < HorizontalCollectionGrid key={ele.id}/>
-              )
-            }
-          }
-          return null;
-        })} */}
         {componentListArray.map((ele, index) => {
           switch (ele.featureType) {
             case "announcement":
@@ -123,6 +97,16 @@ export default function MobilePreview() {
                     gridItems={ele}
                   />
                 );
+                case "text_paragraph":
+                  return(
+                    <DraggableTextParagraph
+                    key={ele.id}
+                    gridItems={ele}
+                    index={index}
+                    moveComponent={moveComponent}
+                    handleEdit={() => handleEditButtonClick(ele.id)}
+                    />
+                  )
             default:
               return null;
           }

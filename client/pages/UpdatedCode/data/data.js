@@ -45,46 +45,51 @@ export const data = [
   isVisible: true,
   featureType: "categories",
   layoutType: "vertical_grid",
-  data: [
-    {
-      title: "1",
-      imageUrl: null,
-      collection_id: "1",
-    },
-    {
-      title: "2",
-      imageUrl: null,
-      collection_id: "2",
-    },
-  ],
+  data:{
+    data: [
+      {
+        title: "1",
+        imageUrl: null,
+        collection_id: "1",
+      },
+      {
+        title: "2",
+        imageUrl: null,
+        collection_id: "2",
+      },
+    ],
+  }
 },
 {
   id:4,
   isVisible: true,
   featureType: "categories",
   layoutType: "horizontal_grid",
-  data: [
-    {
-      title: "1",
-      imageUrl: null,
-      collection_id: "1",
-    },
-    {
-      title: "2",
-      imageUrl: null,
-      collection_id: "2",
-    },
-    {
-      title: "3",
-      imageUrl: null,
-      collection_id: "2",
-    },
-    {
-      title: "4",
-      imageUrl: null,
-      collection_id: "2",
-    },
-  ],
+  data: {
+   data: [
+      {
+        title: "1",
+        imageUrl: null,
+        collection_id: "1",
+      },
+      {
+        title: "2",
+        imageUrl: null,
+        collection_id: "2",
+      },
+      {
+        title: "3",
+        imageUrl: null,
+        collection_id: "2",
+      },
+      {
+        title: "4",
+        imageUrl: null,
+        collection_id: "2",
+      },
+    ]
+  }
+  
 },
 
 {

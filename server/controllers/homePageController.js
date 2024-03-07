@@ -180,7 +180,7 @@ console.log("entered")
     // Update the homeData.docs[0].homeData array
     homeData.docs[0].homeData = homeData.docs[0].homeData.map((value) => {
       if (value.featureType === "banner" || value.featureType === "categories") {
-        return { ...value, data: value.data.value.data };
+        return { ...value, data: value.data.value };
       } 
       else {
         return { ...value, data: value.data.value };
