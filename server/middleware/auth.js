@@ -156,6 +156,7 @@ const authMiddleware = (app) => {
       const { shop } = session;
       
       console.log("SessionDetail" , session)
+      
       const result = await payload.find({
         collection: 'activeStores',
         where: {

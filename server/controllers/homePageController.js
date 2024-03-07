@@ -125,8 +125,13 @@ const getHomePage = async (req, res, next) => {
 
     // Update the homeData.docs[0].homeData array
     homeData.docs[0].homeData = homeData.docs[0].homeData.map((value) => {
+      if (value.featureType === "banner" || value.featureType === "categories") {
         return { ...value, data: value.data.value.data };
-    })
+      } 
+      else {
+        return { ...value, data: [value.data.value] };
+      }
+    });
 
     return res.status(200).json({
       success: true,
@@ -173,8 +178,13 @@ const getHomePageByWeb = async (req , res , next)=>{
 
     // Update the homeData.docs[0].homeData array
     homeData.docs[0].homeData = homeData.docs[0].homeData.map((value) => {
-      return { ...value, data: value.data.value.data };
-  })
+      if (value.featureType === "banner" || value.featureType === "categories") {
+        return { ...value, data: value.data.value.data };
+      } 
+      else {
+        return { ...value, data: value.data.value };
+      }
+    });
 
     return res.status(200).json({
       success: true,

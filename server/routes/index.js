@@ -6,7 +6,7 @@ const {getProduct,getCollection,getProductByCollectionId} = require('../controll
 const {createBrandingApp,getBrandingApp,getBrandingAppWeb,updateBrandingApp} = require("../controllers/barandingAppController.js")
 const {uploadImages} = require("../controllers/ImageUploadController.js")
 const {createProductDetailPage , createCartDetailPage , createAccountDetailPage , getOtherScreenPageDetailByWeb , getOtherScreen} = require("../controllers/otherScreenController.js")
-const {updateStoreDetail , getStoreDetail} = require("../controllers/storeDetailController.js")
+const {updateStoreDetail , getStoreDetail, getStoreDetailByWeb} = require("../controllers/storeDetailController.js")
 const {getTabMenuDataByWeb , getTabMenu} = require("../controllers/tabNavigationController.js")
 const {getAllTheme , getThemeById} = require("../controllers/themeController.js")
 
@@ -14,22 +14,24 @@ const router = Router();
 
 /*---------------------------StoreDetail--------------------------------------------------- */
 
-// get Store Detail
+// get Store Detail By Mobile
 router.get("/api/storeDetail/:shopId" , getStoreDetail  )
 
+router.get("/api/shop/detail" , verifyRequest ,  getStoreDetailByWeb)
+
 // Update Store Detail
-router.put("/api/updateUserThemeDetail"  , updateStoreDetail)
+router.put("/api/updateUserThemeDetail"  , verifyRequest ,  updateStoreDetail)
 
 /*---------------------------ShopifyRouter-------------------------------------------------- */
 
 //FETCH SHOPIFY STORE PRODUCT
-router.get("/api/getProduct"  ,  getProduct)
+router.get("/api/getProduct"  , verifyRequest ,   getProduct)
 
 //FETCH SHOPIFY STORE COLLECTION
-router.get("/api/getCollection"  , getCollection)
+router.get("/api/getCollection"  , verifyRequest ,  getCollection)
 
 //FETCH SHOPIFY STORE PRODUCT BY COLLECTION
-router.get("/api/getProductByCollectionId",  getProductByCollectionId)
+router.get("/api/getProductByCollectionId", verifyRequest ,   getProductByCollectionId)
 
 /*----------------------------HomePageRouter-------------------------------------------------- */
 
@@ -37,9 +39,9 @@ router.get("/api/getProductByCollectionId",  getProductByCollectionId)
 
 router.get("/api/getHomePage/:shopId", getHomePage)
 
-router.get("/api/getHomePageByShop/:themeId" ,  getHomePageByWeb)
+router.get("/api/getHomePageByShop/:themeId" , verifyRequest ,   getHomePageByWeb)
 
-router.put("/api/updateHomePage/:themeId" ,  updateHomePage)
+router.put("/api/updateHomePage/:themeId" , verifyRequest ,  updateHomePage)
 
 /*--------------------------BrandingPageRouter--------------------------------------------------*/
 
@@ -47,9 +49,9 @@ router.put("/api/updateHomePage/:themeId" ,  updateHomePage)
 
 router.get("/api/getBrandingPage/:shopId", getBrandingApp)
 
-router.get("/api/getBrandingPageByShop/:themeId"  ,  getBrandingAppWeb)
+router.get("/api/getBrandingPageByShop/:themeId"  , verifyRequest ,  getBrandingAppWeb)
 
-router.put("/api/updateBrandingPage/:branding_id"  , updateBrandingApp)
+router.put("/api/updateBrandingPage/:branding_id"  , verifyRequest ,  updateBrandingApp)
 
 /*----------------------------------------------------------------------------------------*/
 
@@ -70,13 +72,13 @@ router.get("/api/getOtherScreenDetailByWeb" , getOtherScreenPageDetailByWeb)
 
 router.get("/api/getOtherScreen/:shopId", getOtherScreen)
 
-router.get("/api/getTabMenuDataByWeb/:themeId"  , getTabMenuDataByWeb);
+router.get("/api/getTabMenuDataByWeb/:themeId"  , verifyRequest , getTabMenuDataByWeb);
 
 router.get("/api/getTabMenu/:shopId" , getTabMenu);
 
-router.get("/api/getAllTheme" ,  getAllTheme)
+router.get("/api/getAllTheme" , verifyRequest ,   getAllTheme)
 
-router.get("/api/geThemeById/:themeId" , getThemeById)
+router.get("/api/geThemeById/:themeId" , verifyRequest , getThemeById)
 
 
 module.exports = router;

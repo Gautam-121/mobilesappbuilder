@@ -3,7 +3,7 @@ const { CollectionConfig } = require("payload/types");
 const activeStoresConfig = {
   slug: "activeStores",
   admin: {
-    useAsTitle: "shopName",
+    useAsTitle: "shopId",
   },
   fields: [
     {
