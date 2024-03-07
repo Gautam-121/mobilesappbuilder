@@ -145,12 +145,12 @@ export const data = [
   isVisible: true,
   featureType: "text_paragraph",
   layoutType: "horizontal",
-  data: [
+  data: 
     {
       content: "Welcome to our online store, your one-stop shop for all your needs.",
     
     },
-  ]
+  
 },
 
 {

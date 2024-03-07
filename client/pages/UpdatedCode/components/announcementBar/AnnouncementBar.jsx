@@ -47,7 +47,8 @@ export default function AnnouncementBar(props) {
     backgroundColor: props.backgroundColor?props.backgroundColor:"#ffffff",
     color: props.textColor?props.textColor:"#000000",
     transition: "transform 0.5s ease-in-out",
-    overflow:"hidden"
+    overflow:"hidden",
+    minHeight:"3rem"
   };
 
   
