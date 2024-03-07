@@ -10,6 +10,7 @@ import { uid } from "uid";
 import "./componentList.css";
 import { data } from "../data/data";
 import VerticalCollectionGrid from "../components/announcementBar/VerticalCollectiongrid";
+import Textparagraph from "../components/announcementBar/Textparagraph";
 
 export default function ComponentsList() {
   const [componentListArray, setComponentListArray] = useRecoilState(
@@ -81,6 +82,15 @@ export default function ComponentsList() {
                   />
                 );
 
+                case "text_paragraph":
+                  return (
+                    <Textparagraph
+                    gridItems={ele}
+                      draggable={true}
+                      text="Text Paragraph"
+                      element={ele}
+                    />
+                  );
 
             default:
               return null; // If featureType doesn't match any case, render nothing

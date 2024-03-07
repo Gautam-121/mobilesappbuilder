@@ -106,7 +106,19 @@ export const data = [{
     
     
   ]
-}
+},
+{
+  id:6,
+  isVisible: true,
+  featureType: "text_paragraph",
+  layoutType: "horizontal",
+  data: [
+    {
+      content: "Welcome to our online store, your one-stop shop for all your needs.",
+    
+    },
+  ]
+},
 
 
 
