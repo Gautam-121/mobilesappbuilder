@@ -2,13 +2,10 @@ const { CollectionConfig } = require("payload/types");
 
 const socialChannelConfig = {
   slug: "social",
+  admin: {
+    useAsTitle: "blockTitle",
+  },
   fields: [
-    {
-      name: "data",
-      label: "Data",
-      type: "array",
-      required: true,
-      fields: [
     {
       name : "blockTitle",
       label: "Channel Title",
@@ -37,8 +34,6 @@ const socialChannelConfig = {
       ]
     }
   ],
-}
-  ]}
-  ;
+};
 
 module.exports = socialChannelConfig;

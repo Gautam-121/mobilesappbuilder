@@ -12,6 +12,7 @@ const getAllTheme = async(req , res , next)=>{
             message: "Data Send Successfully",
             data: theme.docs
         })
+
     } catch (error) {
         return res.status(500).json({
             success: false,
@@ -22,6 +23,7 @@ const getAllTheme = async(req , res , next)=>{
 
 const getThemeById = async(req , res , next)=>{
     try {
+        
         if(!req.params.themeId){
             return res.status(400).json({
                 success: false,
