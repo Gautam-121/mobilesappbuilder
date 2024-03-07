@@ -25,44 +25,39 @@ useEffect(()=>{
   function handleTextChange(event) {
     let newText = event.target.value;
     // Check if the text has actually changed before updating the state
-    if (newText !== currentObject.data[0].message) {
+    if (newText !== currentObject.data.message) {
       setCurrentObject((prevObject) => ({    ...prevObject,
-        data: [
-          {
-            ...prevObject.data[0],
-            message: newText,
-          },
-        ],
+        data: {
+          ...prevObject.data,
+          message: newText,
+        },
     }))
   }
 }
-  function handleBGColorChange(event) {
-    let newColor = event.target.value;
+function handleBGColorChange(event) {
+  let newColor = event.target.value;
 
-    // Check if the color has actually changed before updating the state
-    if (newColor !== currentObject.data[0].backgroundColor) {
-      setCurrentObject((prevObject) => ({    ...prevObject,
-        data: [
-          {
-            ...prevObject.data[0],
-            backgroundColor: newColor,
-          },
-        ],
-    }))
-    }
+  // Check if the color has actually changed before updating the state
+  if (newColor !== currentObject.data.backgroundColor) {
+    setCurrentObject((prevObject) => ({
+      ...prevObject,
+      data: {
+        ...prevObject.data,
+        backgroundColor: newColor,
+      },
+    }));
   }
+}
   function handleFontColorChange(event) {
     let newColor = event.target.value;
 
     // Check if the color has actually changed before updating the state
-    if (newColor !== currentObject.data[0].textColor) {
+    if (newColor !== currentObject.data.textColor) {
       setCurrentObject((prevObject) => ({    ...prevObject,
-        data: [
-          {
-            ...prevObject.data[0],
-            textColor: newColor,
-          },
-        ],
+        data: {
+          ...prevObject.data,
+          textColor: newColor,
+        },
     }))
     }
   }
@@ -92,11 +87,11 @@ const handleRadioChange = (newAnimation) => {
   // let newAnimation = event.target.value
   console.log(newAnimation)
 
-  if (newAnimation !== currentObject.data[0].animationType) {
+  if (newAnimation !== currentObject.data.animationType) {
     setCurrentObject((prevObject) => ({    ...prevObject,
       data: [
         {
-          ...prevObject.data[0],
+          ...prevObject.data,
           animationType: newAnimation,
         },
       ],
@@ -109,17 +104,17 @@ const handleRadioChange = (newAnimation) => {
       <label htmlFor="">Enter text</label>
       <input
         onChange={(e) => handleTextChange(e)}
-        placeholder={currentObject.data[0].message?currentObject.data[0].message:""}
+        placeholder={currentObject.data.message?currentObject.data.message:""}
         type="text"
       />
       <br />
       <label htmlFor="">Select Font color</label>
-      <input onChange={handleFontColorChange} value={currentObject.data[0].textColor} type="color" />
+      <input onChange={handleFontColorChange} value={currentObject.data.textColor} type="color" />
       <br />
       <label htmlFor="">Enter Background Color</label>
       <input
         onChange={handleBGColorChange}
-        value={currentObject.data[0].backgroundColor}
+        value={currentObject.data.backgroundColor}
         type="color"
       />
       <br />
@@ -129,7 +124,7 @@ const handleRadioChange = (newAnimation) => {
         None
         <input
           type="radio"
-          checked={currentObject.data[0].animationType === 'none'}
+          checked={currentObject.data.animationType === 'none'}
           onChange={() => handleRadioChange('none')}
         />
       </label>
@@ -137,7 +132,7 @@ const handleRadioChange = (newAnimation) => {
         Left to Right
         <input
           type="radio"
-          checked={currentObject.data[0].animationType === 'moveLeftToRight'}
+          checked={currentObject.data.animationType === 'moveLeftToRight'}
           onChange={() => handleRadioChange('moveLeftToRight')}
         />
       </label>
@@ -145,7 +140,7 @@ const handleRadioChange = (newAnimation) => {
         Right to Left
         <input
           type="radio"
-          checked={currentObject.data[0].animationType === 'moveRightToLeft'}
+          checked={currentObject.data.animationType === 'moveRightToLeft'}
           onChange={() => handleRadioChange('moveRightToLeft')}
         />
       </label>

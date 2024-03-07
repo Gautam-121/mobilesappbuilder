@@ -94,11 +94,11 @@ export default function MobilePreview() {
                   index={index}
                   moveComponent={moveComponent}
                   handleEdit={() => handleEditButtonClick(ele.id)}
-                  textColor={ele.data[0].textColor}
-                  backgroundColor={ele.data[0].backgroundColor}
-                  animationType={ele.data[0].animationType}
+                  textColor={ele.data.textColor}
+                  backgroundColor={ele.data.backgroundColor}
+                  animationType={ele.data.animationType}
                   style={ele.style}
-                  text={ele.data[0].message}
+                  text={ele.data.message}
                   data={ele}
                 />
               );

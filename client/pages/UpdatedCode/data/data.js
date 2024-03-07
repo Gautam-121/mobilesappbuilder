@@ -3,14 +3,14 @@ export const data = [{
   layoutType: "horizontal",
   featureType: "announcement",
   id: 1,
-  data: [
+  data: 
     {
       message: "Up to 50% off New Arrivals",
       textColor: "#000000",
       backgroundColor: "#FE6100",
       animationType: "moveLeftToRight",
     },
-  ],
+  
 },
 {
   id:2,

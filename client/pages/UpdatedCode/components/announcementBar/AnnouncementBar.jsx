@@ -64,7 +64,7 @@ export default function AnnouncementBar(props) {
     overflow:"hidden"
   };
 
-  console.log(props.data?.data[0].animationType)
+  
   return (
     <div
       draggable={props.draggable}
@@ -75,7 +75,7 @@ export default function AnnouncementBar(props) {
       
       onClick={props.addComponents || props.handleEdit}
     >
-      <span className={props.data?.data[0].animationType}>{props.text}</span>
+      <span className={props.data?.data.animationType}>{props.text}</span>
     </div>
   );
 }

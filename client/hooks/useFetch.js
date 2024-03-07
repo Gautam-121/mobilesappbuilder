@@ -7,7 +7,7 @@ function useFetch() {
   const app = useAppBridge();
   const fetchFunction = authenticatedFetch(app);
 
-  const appOrigin = "139.5.190.56";
+ 
 
   return async (uri, options) => {
 
