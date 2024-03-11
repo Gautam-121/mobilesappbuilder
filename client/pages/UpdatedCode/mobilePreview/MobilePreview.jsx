@@ -9,6 +9,7 @@ import { useEffect } from "react";
 import DraggableVerticalCollectionGrid from "../draggableComponents/DraggableVerticalCollectionGrid";
 import DraggableHorizontalCollectionGrid from "../draggableComponents/DraggableHorizontalCollectionGrid";
 import DraggableTextParagraph from "../draggableComponents/DraggableTextParagraph";
+import DraggableBanner from "../draggableComponents/DraggableBanner";
 
 export default function MobilePreview() {
   const [componentListArray, setComponentListArray] = useRecoilState(
@@ -100,6 +101,16 @@ export default function MobilePreview() {
                 case "text_paragraph":
                   return(
                     <DraggableTextParagraph
+                    key={ele.id}
+                    gridItems={ele}
+                    index={index}
+                    moveComponent={moveComponent}
+                    handleEdit={() => handleEditButtonClick(ele.id)}
+                    />
+                  );
+                  case "banner":
+                  return(
+                    <DraggableBanner
                     key={ele.id}
                     gridItems={ele}
                     index={index}

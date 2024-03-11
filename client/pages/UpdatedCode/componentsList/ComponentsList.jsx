@@ -42,6 +42,7 @@ export default function ComponentsList() {
                  draggable={true}
                   text="Banner"
                   element={ele}
+                  addComponents={() => addComponents(ele)}
                 />
               );
 
@@ -105,6 +106,8 @@ export default function ComponentsList() {
                       draggable={true}
                       text="Text Paragraph"
                       element={ele}
+                      addComponents={() => addComponents(ele)}
+
                     />
                   );
 

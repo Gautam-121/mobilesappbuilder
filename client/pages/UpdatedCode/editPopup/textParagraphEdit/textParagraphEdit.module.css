@@ -1,0 +1,9 @@
+.btnSection{
+position: relative;
+top: 5rem;
+display: flex;
+justify-content: space-around;
+}
+.btnSection Button{
+    width: 5rem;
+}

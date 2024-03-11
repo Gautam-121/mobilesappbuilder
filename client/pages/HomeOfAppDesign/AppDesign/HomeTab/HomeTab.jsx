@@ -33,8 +33,30 @@ const HomeTab = (props) => {
       const result = await (await fetch(url, options)).json();
       console.log("result",result.data.homeData);
       let dataFromApi = result.data.homeData
-      if(dataFromApi)
-      setComponentListArray(dataFromApi)
+      const modifiedArray = dataFromApi.map((item) => {
+        if (item.featureType === "categories") {
+          // Modify the objects inside the data array
+          const modifiedData = item.data.data.map((dataItem) => ({
+            title: dataItem.title,
+            imageUrl: dataItem.imageUrl,
+            id: dataItem.collection_id, // Change the field name
+          }));
+      
+          // Return the modified object
+          return {
+            ...item,
+            data: {
+              ...item.data,
+              data: modifiedData,
+            },
+          };
+        } else {
+          // Return the unchanged object for other feature types
+          return item;
+        }
+      });
+      if(modifiedArray)
+      setComponentListArray(modifiedArray)
     };
     return [data, fetchData];
   };

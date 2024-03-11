@@ -2,7 +2,7 @@ import React,{useRef} from "react";
 import { uid } from "uid";
 import ReactHtmlParser from 'react-html-parser'; // Import the library
 
-export default  function Textparagraph({gridItems,text, element, draggable}){
+export default  function Textparagraph({gridItems,text, element, draggable, handleEdit, addComponents}){
   const dragRef = useRef(null);
   const handleDragStart = (e) => {
 
@@ -43,6 +43,7 @@ export default  function Textparagraph({gridItems,text, element, draggable}){
         ref={dragRef}
         onDragStart={draggable ? handleDragStart : undefined}
          onDragEnd={(e)=>e.preventDefault()}
+         onClick={handleEdit||addComponents}
         >
         <strong>{text}</strong>
       <div className="text-para" style={{
