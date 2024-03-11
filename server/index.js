@@ -38,7 +38,7 @@ webhookRegistrar();
 console.log("Enter inside index")
 
 const app = express();
-app.use(cors());
+
 app.use(cors(
   {
       // origin: ["https://deploy-mern-frontend.vercel.app"],
