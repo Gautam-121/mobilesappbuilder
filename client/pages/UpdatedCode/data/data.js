@@ -3,6 +3,7 @@ export const data = [
     id:1,
     featureType: "banner",
     layoutType: "horizontal",
+   data:{
     data: [
       {
         isVisible: true,
@@ -23,6 +24,7 @@ export const data = [
         imageUrl: 3
       }
     ]
+   }
   },
   
   

@@ -1,0 +1,34 @@
+.imgListSection{
+    /* border: 1px solid darkgray; */
+    border-radius: 7px;
+    box-shadow: 1px 1px 8px rgb(206, 206, 206);
+    min-height: 5rem;
+    display: flex;
+    gap: 10px;
+    padding: 5px;
+    overflow: scroll;
+}
+.imgListSection img{
+    width: 3.5rem;
+    height: 3.5rem;
+    border: 1px solid;
+    border-radius: 5px;
+    object-fit: contain;
+    cursor: pointer;
+}
+.imgSection{
+    margin: 10px;
+}
+
+.imgSection img{
+    width: 100%;
+    border-radius: 5px;
+    object-fit: contain;
+}
+.imgWraper{
+    padding: 10px;
+    box-shadow: 1px 1px 8px rgb(206, 206, 206);
+    border-radius: 7px;
+    /* height: fit-content; */
+    margin-top: 10px;
+}
