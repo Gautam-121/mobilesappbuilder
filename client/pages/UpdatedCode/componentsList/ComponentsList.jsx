@@ -32,6 +32,9 @@ export default function ComponentsList() {
   return (
     <div>
       <div className="ComponentListContainer">
+        <Text variant="headingLg" as="h5" >Design Blocks</Text>
+        <Text  variant="headingMd" as="h6" >Drag, drop max 20 blocks per design</Text>
+    <Divider borderColor="border"/>
         {data.map((ele) => {
           switch (ele.featureType) {
            
@@ -65,21 +68,23 @@ export default function ComponentsList() {
               if (ele.layoutType === "vertical_grid")
                 return (
                   <VerticalCollectionGrid
+                  text="Vertical Collection Grid"
                   draggable={true}
                     addComponents={() => addComponents(ele)}
                     key={ele.id}
                     gridItems={ele}
-                    text= "Vertical Collection Grid"
+                    // text= "Vertical Collection Grid"
                   />
                 );
               else
                 return (
                   <HorizontalCollectionGrid
                   draggable={true}
+                  text="Horzontal Collection Grid"
                     addComponents={() => addComponents(ele)}
                     key={ele.id}
                     gridItems={ele}
-                    text= "Horizontal Collection Grid"
+                    // text= "Horizontal Collection Grid"
                   />
                 );
 
