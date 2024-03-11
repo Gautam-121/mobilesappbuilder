@@ -3613,3 +3613,119 @@ const object = [
     file: {},
   },
 ];
+
+
+const dataAdd = [
+  {
+      "isVisible": false,
+      "featureType": "banner",
+      "layoutType": "horizontal",
+      "data" : {
+        "id": 1,
+        "data": [
+          {
+            "isVisible": true,
+            "bannerType": "product",
+            "actionUrl": null,
+            "imageUrl": 7
+          },
+          {
+            "isVisible": true,
+            "bannerType": "category",
+            "actionUrl": null,
+            "imageUrl": 8
+          },
+          {
+            "isVisible": true,
+            "bannerType": "marketing",
+            "actionUrl": null,
+            "imageUrl": 9
+          }
+        ]
+      }
+  },
+  {
+      "isVisible": true,
+      "featureType": "announcement",
+      "layoutType": "horizontal",
+      "data": {
+        "id": 1,
+        "message": "Up to 50% off New Arrivals",
+        "textColor": "#FFFFFF",
+        "backgroundColor": "#FE6100",
+        "animationType": "Left To Right"
+      }
+  },
+  {
+    "isVisible": true,
+    "featureType": "productGroup",
+    "layoutType": "horizontal_grid",
+    "data": {
+      "id": 1,
+      "title": "New Arrivals",
+      "productGroupId": "gid://shopify/Collection/456868004158"
+    }
+  },
+  {
+    "isVisible": true,
+    "featureType": "categories",
+    "layoutType": "horizontal_grid",
+    "data": {
+      "id": 1,
+      "data": [
+        {
+          "title": "Hydrogen",
+          "imageUrl": null,
+          "collection_id": "gid://shopify/Collection/456868036926"
+        },
+        {
+          "title": "Automated Collection",
+          "imageUrl": null,
+          "collection_id": "gid://shopify/Collection/456868004158"
+        }
+      ]
+    }
+  },
+  {
+      "isVisible": true,
+      "featureType": "announcement",
+      "layoutType": "horizontal",
+      "data": {
+        "id": null,
+        "message": "Up to 50% off New Arrivals",
+        "textColor": "#FFFFFF",
+        "backgroundColor": "#FE6100",
+        "animationType": "Right To Left"
+      }
+  },
+  {
+      "isVisible": true,
+      "featureType": "productGroup",
+      "layoutType": "vertical_grid",
+      "data": {
+        "id": 2,
+        "title": "T-Shirts",
+        "productGroupId": "gid://shopify/Collection/468936556862"
+      }
+  },
+  {
+      "isVisible": true,
+      "featureType": "categories",
+      "layoutType": "vertical_grid",
+      "data": {
+        "id": null,
+        "data": [
+          {
+            "title": "Home page",
+            "imageUrl": null,
+            "collection_id": "gid://shopify/Collection/456867971390"
+          },
+          {
+            "title": "H&M Tshirts",
+            "imageUrl": null,
+            "collection_id": "gid://shopify/Collection/468936556862"
+          }
+        ]
+      }
+  }
+]

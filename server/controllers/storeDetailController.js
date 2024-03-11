@@ -264,11 +264,14 @@ const updateStoreDetail = async (req, res, next) => {
       },
     });
 
+    if(brandingData.app_title === "appText"){
+      brandingData.app_title_text.app_name = UserStoreData?.docs[0]?.shopName
+    }
+
     await Payload.create({
       collection: "brandingTheme",
       data: {
         ...brandingData,
-        app_name : UserStoreData?.docs[0]?.shopName,
         shopId: req.shop_id || "gid://shopify/Shop/81447387454",
         themeId: data,
       },
