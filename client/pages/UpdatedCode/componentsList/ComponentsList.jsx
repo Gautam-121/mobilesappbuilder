@@ -13,6 +13,7 @@ import VerticalCollectionGrid from "../components/announcementBar/VerticalCollec
 import Textparagraph from "../components/announcementBar/Textparagraph";
 import Video from "../components/announcementBar/Video"
 import Banner from "../components/announcementBar/Banner";
+import { Divider, Text } from "@shopify/polaris";
 
 export default function ComponentsList() {
   const [componentListArray, setComponentListArray] = useRecoilState(
