@@ -38,7 +38,15 @@ webhookRegistrar();
 console.log("Enter inside index")
 
 const app = express();
-app.use(cors());
+
+app.use(cors(
+  {
+      // origin: ["https://deploy-mern-frontend.vercel.app"],
+      origin: "*",
+      methods: ["POST", "GET" , "PUT"],
+      credentials: true
+  }
+));
 // app.use(fileUpload({
 //   useTempFiles: true
 // }))
