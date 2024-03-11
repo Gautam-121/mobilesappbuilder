@@ -8,7 +8,6 @@ export default function VideoEdit({data}) {
     className="editPopupContainer"
     >
 
-
     </div>
   )
 }
