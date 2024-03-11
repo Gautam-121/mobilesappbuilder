@@ -2,10 +2,9 @@ const Payload = require("payload");
 const {shopifyApiData} = require("../utils/generalFunctions.js")
 
 
-const updateUserThemeDetail = async (req, res, next) => {
+const updateStoreDetail = async (req, res, next) => {
   try {
 
-    console.log("Enter Inside the Page")
     const data = req.body.themeId;
 
     if (!data) {
@@ -41,8 +40,6 @@ const updateUserThemeDetail = async (req, res, next) => {
         },
       });
 
-      console.log(isDataByThemeExist)
-
       if (isDataByThemeExist.docs[0]?.themeId) {
         UserStoreData = await Payload.update({
           collection: "activeStores",
@@ -58,8 +55,6 @@ const updateUserThemeDetail = async (req, res, next) => {
         });
       }
     }
-
-    console.log("Enter Inside the Page No 57")
 
     const shop = req.query.shop || "renergii.myshopify.com";
     const shopifyGraphQLEndpoint = `https://${shop || "renergii.myshopify.com"}/admin/api/2023-04/graphql.json`;
@@ -82,7 +77,7 @@ const updateUserThemeDetail = async (req, res, next) => {
     const axiosShopifyConfig = {
       headers: {
         "Content-Type": "application/json",
-        "X-Shopify-Access-Token": req.accessToken || "shpua_761d3e29150e5c4321daa39c9f3627c3",
+        "X-Shopify-Access-Token": req.accessToken || "shpua_177ec0655453453b3619532c8a216b04",
       },
     };
 
@@ -90,29 +85,29 @@ const updateUserThemeDetail = async (req, res, next) => {
 
     const collections = fetchCollections?.data?.data?.collections?.nodes[0];
 
-    console.log(collections)
-
     const homeData = await Payload.find({
       collection: "homePage",
-      where: { themeId: { equals: data } },
+      where: { 
+        themeId: { equals: data },
+        shopId: {equals: "Apprikart"}
+      },
     });
-
-    // return res.status(200).json({
-    //     success: false,
-    //     data: homeData?.docs[0]
-    // })
 
     const brandingData = await Payload.find({
       collection: "brandingTheme",
-      where: { themeId: { equals: data } },
+      where: { 
+        themeId: { equals: data },
+        shopId: { equals: "Apprikart" } 
+      },
     });
 
     const tabMenuData = await Payload.find({
       collection: "tabMenuNav",
-      where: { themeId: { equals: data } },
+      where: { 
+        themeId: { equals: data },
+        shopId: {equals: "Apprikart"}
+      },
     });
-
-    console.log("Enter Inside the Page No 72")
 
     for(val of homeData?.docs[0].homeData){
       if (val.featureType === "banner") {
@@ -233,7 +228,7 @@ const updateUserThemeDetail = async (req, res, next) => {
       else if(val.featureType === "video"){
 
         console.log("Enter in video")
-        const social = await Payload.create({
+        const video = await Payload.create({
           collection: "video",
           data: val?.data?.value
         });
@@ -248,11 +243,6 @@ const updateUserThemeDetail = async (req, res, next) => {
     }
 
     console.log("Enter Inside the Page No 138", homeData?.docs[0])
-
-    // return res.status(200).json({
-    //     success: false,
-    //     data: homeData?.docs[0]
-    // })
 
     await Payload.create({
       collection: "homePage",
@@ -305,5 +295,70 @@ const updateUserThemeDetail = async (req, res, next) => {
   }
 };
 
+const getStoreDetail = async(req,res,next)=>{
+  try {
 
-module.exports = {updateUserThemeDetail}
+    if (!req.params.shopId) {
+      return res.status(400).json({
+        success: false,
+        message: "Shop_id is Missing"
+      })
+    }
+  
+    const store = await Payload.find({
+      collection: 'activeStores',
+      where: { shopId: { equals: `gid://shopify/Shop/${req.params.shopId}` }},
+    })
+  
+    if (store.docs.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "No data found with shopId: "+ req.params.shopId
+      })
+    }
+
+  return res.status(200).json({
+      success: true,
+      message: "Data Send Successfully",
+      data: store.docs[0]
+  })
+  
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message
+    })
+  }
+}
+
+const getStoreDetailByWeb = async(req,res,next)=>{
+  try {
+  
+    const store = await Payload.find({
+      collection: 'activeStores',
+      where: { shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" }},
+    })
+  
+    if (store.docs.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "No data found with shopId: "+ req.params.shopId
+      })
+    }
+
+  return res.status(200).json({
+      success: true,
+      message: "Data Send Successfully",
+      data: store.docs[0]
+  })
+  
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message
+    })
+  }
+}
+
+
+module.exports = {updateStoreDetail , getStoreDetail , getStoreDetailByWeb}

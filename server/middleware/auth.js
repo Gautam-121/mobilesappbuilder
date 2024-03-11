@@ -8,6 +8,19 @@ const sessionHandler = require("../utils/sessionHandler.js");
 const shopify = require("../utils/shopifyConfig.js");
 const payload = require('payload');
 
+const axios = require("axios")
+
+// Define your Shopify store's domain, access token, and API version
+const shopDomain = 'renergii.myshopify.com';
+const apiVersion = '2024-01';
+
+// Define the request body
+const requestBody = {
+  storefront_access_token: {
+    title: 'Test' // An arbitrary title for the token
+  }
+};
+
 const TEST_QUERY = `
 {
   shop {
@@ -41,24 +54,65 @@ const authMiddleware = (app) => {
   });
 
   app.get("/auth/tokens", async (req, res) => {
-
     try {
+
+      console.log("Enter inside the auth/token 59")
       const callbackResponse = await shopify.auth.callback({
         rawRequest: req,
         rawResponse: res,
       });
 
       const { session } = callbackResponse;
-
       await sessionHandler.storeSession(session);
 
-      const webhookRegisterResponse = await shopify.webhooks.register({
-        session,
-      }); //Register all webhooks with offline token
+      const client = new shopify.clients.Graphql({ session });
+      const data = await client.query({ data: TEST_QUERY });
+      const { shop } = session;
 
-      console.dir(webhookRegisterResponse, { depth: null }); //This is an array that includes all registry responses.
+      console.log("Enter inside the auth/token 71")
+      
+      const isShopAvaialble = await payload.find({
+        collection: 'activeStores',
+        where: {
+          shopId: { equals: data?.body?.data?.shop?.id},
+        }
+      })
 
-      return await shopify.auth.begin({
+      if (!(isShopAvaialble.docs[0] && isShopAvaialble.docs[0].storefront_access_token)) {
+        try {
+
+          console.log("Enter inside storefrontToken")
+          // Make the POST request to create the storefront access token
+          const response = await axios.post(
+            `https://${shopDomain}/admin/api/${apiVersion}/storefront_access_tokens.json`,
+            requestBody,
+            {
+              headers: {
+                "X-Shopify-Access-Token": session.accessToken,
+                "Content-Type": "application/json",
+              },
+            })
+
+          // Create The document
+          await payload.create({
+            collection: 'activeStores', // required
+            data: {
+              shopName: shop,
+              shopId: data?.body?.data?.shop?.id,
+              storefront_access_token: response.data?.storefront_access_token?.access_token,
+              isActive: false
+            },
+          })
+        } catch (error) {
+          console.error("Error creating storefront access token:", error);
+        }
+      }
+     //Register all webhooks with offline token
+    const webhookRegisterResponse = await shopify.webhooks.register({session});
+    //This is an array that includes all registry responses.
+    console.dir(webhookRegisterResponse, { depth: null }); 
+
+    return await shopify.auth.begin({
         shop: session.shop,
         callbackPath: "/auth/callback",
         isOnline: true,
@@ -93,49 +147,35 @@ const authMiddleware = (app) => {
       });
 
       const { session } = callbackResponse;
-
       await sessionHandler.storeSession(session);
 
-      const host = req.query.host;
-      const { shop } = session;
       const client = new shopify.clients.Graphql({ session });
       const data = await client.query({ data: TEST_QUERY });
 
-      console.log("data from line 97" , data?.body?.data.shop , "data" , data.body.extensions)
-
-      console.log("Session in verifyRequest in line 24 is" , session)
-
+      const host = req.query.host;
+      const { shop } = session;
+      
+      console.log("SessionDetail" , session)
+      
       const result = await payload.find({
-        collection: 'activeStores', // required
+        collection: 'activeStores',
         where: {
-          shopName: { equals: shop},
+          shopId: { equals:  data?.body?.data?.shop?.id}
         }
       })
 
       if(result.docs?.length!=0){
-        // Update Document
         await payload.update({
           collection: 'activeStores',
           where: {
-            shopName: { equals: shop},
+            shopId: { equals:  data?.body?.data?.shop?.id}
           },
           data: {
-            shopName : shop,
             isActive: true
           }
         })
       }
-      else{
-        // Create The document
-        await payload.create({
-          collection: 'activeStores', // required
-          data: {
-            shopName : shop,
-            shopId: data?.body?.data?.shop?.id,
-            isActive: true
-          },
-        })
-      }
+
       // Redirect to app with shop parameter upon auth
       res.redirect(`/?shop=${shop}&host=${host}`);
 

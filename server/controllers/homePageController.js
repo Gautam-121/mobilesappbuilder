@@ -102,7 +102,6 @@ const createHomePage = async (req, res, next) => {
 };
 
 const getHomePage = async (req, res, next) => {
-
   try {
 
     if (!req.params.shopId) {
@@ -126,8 +125,13 @@ const getHomePage = async (req, res, next) => {
 
     // Update the homeData.docs[0].homeData array
     homeData.docs[0].homeData = homeData.docs[0].homeData.map((value) => {
+      if (value.featureType === "banner" || value.featureType === "categories") {
         return { ...value, data: value.data.value.data };
-    })
+      } 
+      else {
+        return { ...value, data: [value.data.value] };
+      }
+    });
 
     return res.status(200).json({
       success: true,
@@ -148,13 +152,14 @@ const getHomePage = async (req, res, next) => {
 
 const getHomePageByWeb = async (req , res , next)=>{
   try {
-
+console.log("entered")
     if(!req.params.themeId){
       return res.status(400).json({
         success: false,
         message: "themeId is missing"
       })
     }
+    console.log(req.shop_id)
 
     const homeData = await Payload.find({
       collection: 'homePage',
@@ -162,7 +167,7 @@ const getHomePageByWeb = async (req , res , next)=>{
         shopId: { equals:req.shop_id || "gid://shopify/Shop/81447387454"},
         themeId: { equals: req.params.themeId}
       },
-      depth: 1
+      depth: 2
     })
 
     if(homeData.docs.length === 0){
@@ -172,15 +177,16 @@ const getHomePageByWeb = async (req , res , next)=>{
       })
     }
 
+    // Update the homeData.docs[0].homeData array
     homeData.docs[0].homeData = homeData.docs[0].homeData.map((value) => {
-      console.log("enter")
       if (value.featureType === "banner" || value.featureType === "categories") {
         return { ...value, data: value.data.value };
       } 
-      else if (value.featureType === "announcement" ||value.featureType === "productGroup") {
+      else {
         return { ...value, data: value.data.value };
       }
     });
+    console.log(homeData)
 
     return res.status(200).json({
       success: true,

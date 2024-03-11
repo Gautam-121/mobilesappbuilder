@@ -10,7 +10,11 @@ const productPageDetailConfig = {
         name: "shopId",
         label: "ShopId",
         type: "text",
-        defaultValue: undefined
+        defaultValue: "Apprikart",
+        access:{
+            read : ()=>true,
+            create: ()=>false, // Prevent creating a new value
+        }
     },
     {
       name: "image",

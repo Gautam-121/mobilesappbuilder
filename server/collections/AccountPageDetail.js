@@ -10,8 +10,7 @@ const accountPageDetailConfig = {
       name:"shopId",
       label:"ShopId",
       type:"text",
-      unique:true,
-      defaultValue:undefined
+      defaultValue: "Apprikart"
     },
     {
       name: "header_bar",

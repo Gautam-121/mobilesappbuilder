@@ -2,12 +2,18 @@ const { CollectionConfig } = require("payload/types");
 
 const tabMenuConfig = {
   slug: "tabMenuNav",
+  admin: {
+    useAsTitle: "shopId",
+  },
   fields: [
     {
       name: "shopId",
       type: "text",
-      unique: true,
-      defaultValue: undefined,
+      defaultValue: "Apprikart",
+      access:{
+        read : ()=>true,
+        create: ()=>false, // Prevent creating a new value
+      }
     },
     {
       name: "themeId",
@@ -29,7 +35,6 @@ const tabMenuConfig = {
         {
           name: "position",
           type: "number",
-          unique: true,
           required: true
         }
       ],

@@ -14,8 +14,7 @@ const activeStoresConfig = {
     {
       name: "shopId",
       type: "text",
-      unique: true,
-      defaultValue: undefined
+      defaultValue: "Apprikart"
     },
     {
       name: "themeId",

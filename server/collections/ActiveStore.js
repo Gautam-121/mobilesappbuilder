@@ -3,7 +3,7 @@ const { CollectionConfig } = require("payload/types");
 const activeStoresConfig = {
   slug: "activeStores",
   admin: {
-    useAsTitle: "shopName",
+    useAsTitle: "shopId",
   },
   fields: [
     {
@@ -23,11 +23,16 @@ const activeStoresConfig = {
       defaultValue:undefined
     },
     {
+      name:"storefront_access_token",
+      type:"text",
+      defaultValue:undefined
+    },
+    {
       name: "isActive",
       type: "checkbox",
       defaultValue: false,
     }
-  ],
+  ]
 };
 
 module.exports = activeStoresConfig;

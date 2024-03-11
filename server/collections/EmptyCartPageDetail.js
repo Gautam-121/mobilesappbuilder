@@ -10,7 +10,7 @@ const emptyCartPageDetailConfig = {
       name: "shopId",
       label:"ShopId",
       type: "text",
-      defaultValue: undefined
+      defaultValue: "Apprikart"
     },
     {
       name: "empty_state_illustration",

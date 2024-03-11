@@ -2,6 +2,9 @@ const { CollectionConfig } = require("payload/types");
 
 const themeConfig = {
   slug: "theme",
+  admin: {
+    useAsTitle: "id",
+  },
   fields: [
     {
         name: "id",

@@ -10,8 +10,11 @@ const brandingThemeConfig = {
       name: "shopId",
       label:"ShopId",
       type: "text",
-      unique: true,
-      defaultValue: undefined,
+      defaultValue: "Apprikart",
+      access:{
+        read : ()=>true,
+        create: ()=>false, // Prevent creating a new value
+      }
     },
     {
       name: "themeId",
