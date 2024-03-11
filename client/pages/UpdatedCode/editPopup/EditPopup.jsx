@@ -7,6 +7,7 @@ import AnnouncementBarEdit from "./announcementBarEdit/AnnouncementBarEdit";
 import TextParagraphEdit from "./textParagraphEdit/TextParagraphEdit";
 import VerticalGridEdit from "./verticalGridEdit/VerticalGridEdit";
 import BannerEdit from "./bannerEdit/BannerEdit";
+import VideoEdit from "./verticalGridEdit/videoEdit/VideoEdit";
 
 export default function EditPopup(props) {
   const data = props.componentData;
@@ -106,6 +107,7 @@ export default function EditPopup(props) {
  {data.featureType === 'text_paragraph' && <TextParagraphEdit data={data} handleDeleteItem={handleDeleteItem}  />}
  {data.featureType === 'categories' && <VerticalGridEdit data={data} handleDeleteItem={handleDeleteItem}  />}
  {data.featureType === 'banner' && <BannerEdit data={data} handleDeleteItem={handleDeleteItem}  />}
+ {data.featureType === 'video' && <VideoEdit data={data} handleDeleteItem={handleDeleteItem}  />}
 
   </>
  )

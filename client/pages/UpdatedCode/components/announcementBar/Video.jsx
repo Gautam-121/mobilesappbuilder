@@ -1,10 +1,54 @@
-import React from "react";
+import React,{useRef} from "react";
 import  video from '../../../../assets/images/12.png'
+import { uid } from "uid";
 
-export default function Verticalproductgrid({ gridItems,text }) {
+export default function Verticalproductgrid({ element,text,addComponents,handleEdit,draggable   }) {
+
+  
+  const dragRef = useRef(null);
+
+  const handleDragStart = (e) => {
+
+    const newElement = {...element}
+    newElement.id=uid()
+ 
+     e.dataTransfer.setData('text/plain', JSON.stringify(newElement))
+     // Create a new div element
+     const dragImage = document.createElement('div');
+     dragImage.textContent = props.text; // Set content or customize as needed
+     dragImage.style.cssText = `
+       position: absolute;
+       pointer-events: none;
+       z-index: 1000;
+       background-color: #ffffff;
+       color: #000000; 
+       margin:5px;
+       padding:10px;
+       border-radius:5px;
+ 
+       border: 1px solid
+     `;
+   
+     // Append the new element to the body
+     document.body.appendChild(dragImage);
+   
+     // Set the cloned element as the custom drag image
+     e.dataTransfer.setDragImage(dragImage, 0, 0);
+     
+     // Remove the element after the drag operation is completed
+     setTimeout(() => {
+       document.body.removeChild(dragImage);
+     }, 0);
+   };
   return (
 
-    <>
+    <div
+    draggable={draggable}
+    ref={dragRef}
+    onDragStart={draggable ? handleDragStart : undefined}
+     onDragEnd={(e)=>e.preventDefault()}
+     onClick={addComponents||handleEdit}
+    >
   <strong>{text}</strong>
 
   <div className="video-section" style={{
@@ -48,7 +92,7 @@ export default function Verticalproductgrid({ gridItems,text }) {
 
       </div>
 
-    </>
+    </div>
 
 
  

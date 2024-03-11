@@ -43,6 +43,8 @@ export default function ComponentsList() {
                   text="Banner"
                   element={ele}
                   addComponents={() => addComponents(ele)}
+                  key={ele.id}
+
                 />
               );
 
@@ -88,6 +90,8 @@ export default function ComponentsList() {
                   draggable={true}
                     gridItems={ele}
                     text= "Vertical product Grid"
+                    key={ele.id}
+
                   />
                 );
               else
@@ -96,6 +100,8 @@ export default function ComponentsList() {
                   draggable={true}
                   gridItems={ele}
                     text= "Horizontal product Grid"
+                    key={ele.id}
+
                   />
                 );
 
@@ -107,6 +113,7 @@ export default function ComponentsList() {
                       text="Text Paragraph"
                       element={ele}
                       addComponents={() => addComponents(ele)}
+                      key={ele.id}
 
                     />
                   );
@@ -114,7 +121,7 @@ export default function ComponentsList() {
                   case "video":
                     return (
                       <Video
-                      gridItems={ele}
+                     key={ele.id}
                         draggable={true}
                         text="Video"
                         element={ele}

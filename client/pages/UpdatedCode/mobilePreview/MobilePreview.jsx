@@ -10,6 +10,7 @@ import DraggableVerticalCollectionGrid from "../draggableComponents/DraggableVer
 import DraggableHorizontalCollectionGrid from "../draggableComponents/DraggableHorizontalCollectionGrid";
 import DraggableTextParagraph from "../draggableComponents/DraggableTextParagraph";
 import DraggableBanner from "../draggableComponents/DraggableBanner";
+import DraggableVideo from "../draggableComponents/DraggableVideo";
 
 export default function MobilePreview() {
   const [componentListArray, setComponentListArray] = useRecoilState(
@@ -111,6 +112,16 @@ export default function MobilePreview() {
                   case "banner":
                   return(
                     <DraggableBanner
+                    key={ele.id}
+                    gridItems={ele}
+                    index={index}
+                    moveComponent={moveComponent}
+                    handleEdit={() => handleEditButtonClick(ele.id)}
+                    />
+                  )
+                  case "video":
+                  return(
+                    <DraggableVideo
                     key={ele.id}
                     gridItems={ele}
                     index={index}
