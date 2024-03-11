@@ -22,6 +22,7 @@ import axios from "axios";
 const Home = () => {
   //if appDesignPageRefreshedState then enter fullsccreen
 
+
   const isAppDesignPageRefreshed = useSelector(
     (state) => state.appDesignPageRefreshedSlice
   );
@@ -48,29 +49,31 @@ const Home = () => {
 
   const fetch = useFetch();
 
+
+
   const [themeData, setThemeData] = useState();
 
   const [selectedTheme, setSelectedTheme] = useState();
 
   const fetchAllThemeApi = "/getAllTheme";
 
-  useEffect(() => {
-    // async function fetchData() {
-    //     const res = await fetch("/api/getAllTheme"); //fetch instance of useFetch()
-    //     const data = await res.json();
-    //     console.log("theThemeData: ", data);
+  // useEffect(() => {
+  //   // async function fetchData() {
+  //   //     const res = await fetch("/api/getAllTheme"); //fetch instance of useFetch()
+  //   //     const data = await res.json();
+  //   //     console.log("theThemeData: ", data);
 
-    //     setThemeData(data?.data);
-    //     setSelectedTheme(data?.data[0]);
-    // }
+  //   //     setThemeData(data?.data);
+  //   //     setSelectedTheme(data?.data[0]);
+  //   // }
 
-    // fetchData();
+  //   // fetchData();
 
-    axios
-      .get(fetchAllThemeApi)
-      .then((res) => console.log("fetched themes: ", res.data))
-      .catch((error) => console.log("error while fetching themes: ", error));
-  }, []);
+  //   axios
+  //     .get(fetchAllThemeApi)
+  //     .then((res) => console.log("fetched themes: ", res.data))
+  //     .catch((error) => console.log("error while fetching themes: ", error));
+  // }, []);
 
   const cards = [
     {

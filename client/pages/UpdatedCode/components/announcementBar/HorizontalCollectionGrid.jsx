@@ -26,7 +26,7 @@ export default function HorizontalCollectionGrid({
     gridTemplateColumns: "repeat(2, 1fr)",
     gap: "4px",
     textAlign: "center",
-    paddingBottom: "20px",
+    // paddingBottom: "20px",
   };
 
   const horizonalComponentElemstyle = {
@@ -83,7 +83,7 @@ export default function HorizontalCollectionGrid({
 
       <div className="collection-grid" style={horizontalCollectionstyle}>
         <div style={horizontalCollectionGridstyle}>
-          {gridItems.data.map((item, index) => (
+          {gridItems.data.data.map((item, index) => (
             <p key={index} style={horizonalComponentElemstyle}>
               {item.title}
             </p>

@@ -1,5 +1,9 @@
 .dnd{
     display: flex;
     gap: 20px;
+<<<<<<< Updated upstream
     background: rgba(235, 235, 235, 1);
+=======
+    background-color: rgba(241, 241, 241, 1);
+>>>>>>> Stashed changes
 }

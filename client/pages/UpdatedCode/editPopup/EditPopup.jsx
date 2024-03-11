@@ -3,9 +3,13 @@ import { useRecoilState } from "recoil";
 import "./editPopup.css";
 import { useState, useEffect } from "react";
 import { componentListArrayAtom } from "../recoil/store";
+import AnnouncementBarEdit from "./announcementBarEdit/AnnouncementBarEdit";
+import TextParagraphEdit from "./textParagraphEdit/TextParagraphEdit";
+import VerticalGridEdit from "./verticalGridEdit/VerticalGridEdit";
+import BannerEdit from "./bannerEdit/BannerEdit";
+import VideoEdit from "./verticalGridEdit/videoEdit/VideoEdit";
 
 export default function EditPopup(props) {
-  // const [isEditPopupVisible, setIsEditPopupVisible] = useRecoilState(isEditPopupVisibleAtom)
   const data = props.componentData;
 // console.log(data)
   const [componentListArray, setComponentListArray] = useRecoilState(
@@ -15,55 +19,52 @@ export default function EditPopup(props) {
   const proxyArray = [...componentListArray];
 
   useEffect(() => {
-    if(proxyArray.length>0)
-    {setCurrentObject({ ...proxyArray.find((ele) => ele.id === data.id) });
-  }
+    if (proxyArray.length > 0) {
+      setCurrentObject({ ...proxyArray.find((ele) => ele.id === data.id) });
+    }
   }, []);
-useEffect(()=>{
-  console.log(currentObject)
-},[currentObject])
+  useEffect(() => {
+    console.log(currentObject);
+  }, [currentObject]);
   function handleTextChange(event) {
     let newText = event.target.value;
     // Check if the text has actually changed before updating the state
-    if (newText !== currentObject.data[0].message) {
-      setCurrentObject((prevObject) => ({    ...prevObject,
-        data: [
-          {
-            ...prevObject.data[0],
-            message: newText,
-          },
-        ],
-    }))
+    if (newText !== currentObject.data.message) {
+      setCurrentObject((prevObject) => ({
+        ...prevObject,
+        data: {
+          ...prevObject.data,
+          message: newText,
+        },
+      }));
+    }
   }
-}
   function handleBGColorChange(event) {
     let newColor = event.target.value;
 
     // Check if the color has actually changed before updating the state
-    if (newColor !== currentObject.data[0].backgroundColor) {
-      setCurrentObject((prevObject) => ({    ...prevObject,
-        data: [
-          {
-            ...prevObject.data[0],
-            backgroundColor: newColor,
-          },
-        ],
-    }))
+    if (newColor !== currentObject.data.backgroundColor) {
+      setCurrentObject((prevObject) => ({
+        ...prevObject,
+        data: {
+          ...prevObject.data,
+          backgroundColor: newColor,
+        },
+      }));
     }
   }
   function handleFontColorChange(event) {
     let newColor = event.target.value;
 
     // Check if the color has actually changed before updating the state
-    if (newColor !== currentObject.data[0].textColor) {
-      setCurrentObject((prevObject) => ({    ...prevObject,
-        data: [
-          {
-            ...prevObject.data[0],
-            textColor: newColor,
-          },
-        ],
-    }))
+    if (newColor !== currentObject.data.textColor) {
+      setCurrentObject((prevObject) => ({
+        ...prevObject,
+        data: {
+          ...prevObject.data,
+          textColor: newColor,
+        },
+      }));
     }
   }
 
@@ -75,85 +76,39 @@ useEffect(()=>{
       );
       return updatedArray;
     });
-    setCurrentObject((prevObject) => ({    ...prevObject,
-      isEditVisible:false}))
+    setCurrentObject((prevObject) => ({ ...prevObject, isEditVisible: false }));
   }
-  function handleDeleteItem(){
- setComponentListArray((prevArray)=>{
-  const newArray = prevArray.filter((ele)=>
-    ele.id!==currentObject.id
-  )
-  return newArray
- })
+  function handleDeleteItem() {
+    setComponentListArray((prevArray) => {
+      const newArray = prevArray.filter((ele) => ele.id !== currentObject.id);
+      return newArray;
+    });
   }
 
+  const handleRadioChange = (newAnimation) => {
+    // let newAnimation = event.target.value
+    console.log(newAnimation);
 
-const handleRadioChange = (newAnimation) => {
-  // let newAnimation = event.target.value
-  console.log(newAnimation)
+    if (newAnimation !== currentObject.data.animationType) {
+      setCurrentObject((prevObject) => ({
+        ...prevObject,
+        data: [
+          {
+            ...prevObject.data,
+            animationType: newAnimation,
+          },
+        ],
+      }));
+    }
+  };
+ return(
+  <>
+ {data.featureType === 'announcement' && <AnnouncementBarEdit data={data} handleDeleteItem={handleDeleteItem} />}
+ {data.featureType === 'text_paragraph' && <TextParagraphEdit data={data} handleDeleteItem={handleDeleteItem}  />}
+ {data.featureType === 'categories' && <VerticalGridEdit data={data} handleDeleteItem={handleDeleteItem}  />}
+ {data.featureType === 'banner' && <BannerEdit data={data} handleDeleteItem={handleDeleteItem}  />}
+ {data.featureType === 'video' && <VideoEdit data={data} handleDeleteItem={handleDeleteItem}  />}
 
-  if (newAnimation !== currentObject.data[0].animationType) {
-    setCurrentObject((prevObject) => ({    ...prevObject,
-      data: [
-        {
-          ...prevObject.data[0],
-          animationType: newAnimation,
-        },
-      ],
-  }))
-  }
-};
-  return (
-   <>
-   {currentObject.data?( <div style={data.isEditVisible?{}:{display:'none'}} className="editPopupContainer">
-      <label htmlFor="">Enter text</label>
-      <input
-        onChange={(e) => handleTextChange(e)}
-        placeholder={currentObject.data[0].message?currentObject.data[0].message:""}
-        type="text"
-      />
-      <br />
-      <label htmlFor="">Select Font color</label>
-      <input onChange={handleFontColorChange} value={currentObject.data[0].textColor} type="color" />
-      <br />
-      <label htmlFor="">Enter Background Color</label>
-      <input
-        onChange={handleBGColorChange}
-        value={currentObject.data[0].backgroundColor}
-        type="color"
-      />
-      <br />
-      <label htmlFor="">Animation</label>
-      
-      <label>
-        None
-        <input
-          type="radio"
-          checked={currentObject.data[0].animationType === 'none'}
-          onChange={() => handleRadioChange('none')}
-        />
-      </label>
-      <label>
-        Left to Right
-        <input
-          type="radio"
-          checked={currentObject.data[0].animationType === 'moveLeftToRight'}
-          onChange={() => handleRadioChange('moveLeftToRight')}
-        />
-      </label>
-      <label>
-        Right to Left
-        <input
-          type="radio"
-          checked={currentObject.data[0].animationType === 'moveRightToLeft'}
-          onChange={() => handleRadioChange('moveRightToLeft')}
-        />
-      </label>
-
-      <button onClick={updateComponentListArray}>Save</button>
-      <button onClick={handleDeleteItem}>Delete</button>
-
-    </div>):(<></>)}
-   </>
-  )
+  </>
+ )
 }

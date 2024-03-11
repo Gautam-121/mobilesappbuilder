@@ -152,13 +152,14 @@ const getHomePage = async (req, res, next) => {
 
 const getHomePageByWeb = async (req , res , next)=>{
   try {
-
+console.log("entered")
     if(!req.params.themeId){
       return res.status(400).json({
         success: false,
         message: "themeId is missing"
       })
     }
+    console.log(req.shop_id)
 
     const homeData = await Payload.find({
       collection: 'homePage',
@@ -166,7 +167,7 @@ const getHomePageByWeb = async (req , res , next)=>{
         shopId: { equals:req.shop_id || "gid://shopify/Shop/81447387454"},
         themeId: { equals: req.params.themeId}
       },
-      depth: 1
+      depth: 2
     })
 
     if(homeData.docs.length === 0){
@@ -185,6 +186,7 @@ const getHomePageByWeb = async (req , res , next)=>{
         return { ...value, data: value.data.value };
       }
     });
+    console.log(homeData)
 
     return res.status(200).json({
       success: true,

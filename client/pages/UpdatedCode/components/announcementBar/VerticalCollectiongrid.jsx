@@ -77,7 +77,7 @@ export default function VerticalCollectionGrid({
     >
       <strong>{text}</strong>
       <div className="collection-grid" style={verticalCollectionstyle}>
-        {gridItems.data.map((item, subIndex) => (
+        {gridItems.data.data.map((item, subIndex) => (
           <p key={subIndex} style={verticalCollectionGridstyle}>
             {item.title}
           </p>
