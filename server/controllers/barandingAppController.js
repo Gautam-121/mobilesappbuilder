@@ -50,8 +50,9 @@ const getBrandingApp = async (req, res, next) => {
     
         const brandingData = await Payload.find({
             collection: 'brandingTheme',
-            where: {shopId: { equals: `gid://shopify/Shop/${req.params.shopId}`},},
-            depth:req.query.depth || 0
+            where: {
+              shopId: { equals: `gid://shopify/Shop/${req.params.shopId}`},},
+              depth:req.query.depth || 1
         })
 
         if(brandingData.docs.length === 0){
@@ -60,7 +61,17 @@ const getBrandingApp = async (req, res, next) => {
               message: "No data found with shopId: " + req.params.shopId
             })
           }
-    
+
+        brandingData.docs[0].themeId = brandingData.docs[0].themeId.id
+
+        if( brandingData.docs[0].app_title === "appText"){
+          brandingData.docs[0].app_title_logo = null
+        }
+        else{
+          brandingData.docs[0].app_title_text = null
+          brandingData.docs[0].app_title_logo = brandingData.docs[0].app_title_logo.url
+        }
+
         return res.status(200).json({
             success: true,
             message: "Data Send Successfully",

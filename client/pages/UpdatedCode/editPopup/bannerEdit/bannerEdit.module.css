@@ -32,3 +32,15 @@
     /* height: fit-content; */
     margin-top: 10px;
 }
+.radioBtnList{
+    display: flex;
+    flex-direction: column;
+}
+.btnSection{
+ 
+    display: flex;
+    justify-content: space-around;
+    }
+    .btnSection Button{
+        width: 5rem;
+    }

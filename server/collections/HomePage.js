@@ -20,7 +20,6 @@ const homePage = {
       defaultValue: "Apprikart",
       access:{
         read : ()=>true,
-        create: ()=>false, // Prevent creating a new value
       }
     },
     {
@@ -33,12 +32,6 @@ const homePage = {
           label:"Visible",
           type: "checkbox",
           defaultValue: true,
-        },
-        {
-          name: "displayOrder",
-          label: "Position",
-          type: "number",
-          required: true
         },
         {
           name: "featureType",

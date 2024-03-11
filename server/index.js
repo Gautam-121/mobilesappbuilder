@@ -21,35 +21,24 @@ const verifyRequest = require('./middleware/verifyRequest.js');
 const proxyRouter = require('./routes/app_proxy/index.js');
 const router = require('./routes/index.js');
 const webhookRegistrar = require('./webhooks/index.js');
-const fileUpload = require("express-fileupload");
+const multer = require("multer")
 require('events').EventEmitter.prototype._maxListeners = 70;
 
 
 dotenv.config();
-setupCheck(); // Run a check to ensure everything is setup properly
+// Run a check to ensure everything is setup properly
+setupCheck(); 
 
 const PORT = parseInt(process.env.PORT, 10) || 8081;
 const isDev = process.env.NODE_ENV === "dev";
 
-// const localIp = "192.168.1.135"
-
 // Register all webhook handlers
 webhookRegistrar();
-console.log("Enter inside index")
 
 const app = express();
+app.use(cors());
+app.use(multer().any())
 
-app.use(cors(
-  {
-      // origin: ["https://deploy-mern-frontend.vercel.app"],
-      origin: "*",
-      methods: ["POST", "GET" , "PUT"],
-      credentials: true
-  }
-));
-// app.use(fileUpload({
-//   useTempFiles: true
-// }))
 
 const start = async () => {
   try {

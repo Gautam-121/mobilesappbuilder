@@ -3,8 +3,6 @@ const payload = require('payload');
 
 const isShopActive = async (req, res, next) => {
 
-  console.log("isAvailable")
-
   const { shop, host } = req.query;
 
   if (!shop) {

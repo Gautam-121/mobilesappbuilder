@@ -1,16 +1,15 @@
-const cloudinary = require("cloudinary").v2;
 const dotenv = require("dotenv");
-dotenv.config();
+const Payload = require("payload");
+const Jimp = require('jimp');
 
-cloudinary.config({
-  cloud_name: process.env.CLOUDANARY_NAME,
-  api_key: process.env.CLOUDANARY_API_KEY,
-  api_secret: process.env.CLOUDANARY_API_SECRET,
-});
+dotenv.config();
 
 const uploadImages = async (req, res, next) => {
   try {
+
     const file = JSON.parse(JSON.stringify(req.files));
+
+    console.log(file)
 
     if (!file) {
       return res.status(400).json({
@@ -19,24 +18,30 @@ const uploadImages = async (req, res, next) => {
       });
     }
 
-    const result = await cloudinary.uploader.upload(file.photos.tempFilePath, {
-      folder: "banner",
+    const image = await Payload.create({
+      collection: "media",
+      file: {
+        data: file[0].buffer,
+        mimetype: file[0].mimetype,
+        name: file[0].originalname,
+        size: file[0].size,
+      }
     });
+
+    console.log(image)
 
     return res.status(200).json({
       success: true,
       message: "Upload Images SuccessFully",
-      data: {
-        public_id: result.public_id,
-        url: result.secure_url,
-      },
+      data: image
     });
   } catch (error) {
     return res.status(500).json({
       success: false,
-      message: error.message,
+      message: error,
     });
   }
 };
+
 
 module.exports = { uploadImages };
