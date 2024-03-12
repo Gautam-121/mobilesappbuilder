@@ -11,6 +11,7 @@ import DraggableHorizontalCollectionGrid from "../draggableComponents/DraggableH
 import DraggableTextParagraph from "../draggableComponents/DraggableTextParagraph";
 import DraggableBanner from "../draggableComponents/DraggableBanner";
 import DraggableVideo from "../draggableComponents/DraggableVideo";
+import DragableVerticalProduct from "../draggableComponents/DragableVerticalProduct"
 
 export default function MobilePreview() {
   const [componentListArray, setComponentListArray] = useRecoilState(
@@ -129,6 +130,22 @@ export default function MobilePreview() {
                     handleEdit={() => handleEditButtonClick(ele.id)}
                     />
                   )
+                  case "productGroup":
+                    if (ele.layoutType === "vertical_grid")
+                      return (
+                        <DragableVerticalProduct
+                          key={ele.id}
+                          gridItems={ele}
+                          index={index}
+                          moveComponent={moveComponent}
+                          handleEdit={() => handleEditButtonClick(ele.id)}
+                        />
+                      );
+                    else
+                      return (
+                        <div></div>
+                      );
+
             default:
               return null;
           }

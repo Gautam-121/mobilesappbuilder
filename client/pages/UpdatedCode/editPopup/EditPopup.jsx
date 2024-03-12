@@ -108,6 +108,7 @@ export default function EditPopup(props) {
  {data.featureType === 'categories' && <VerticalGridEdit data={data} handleDeleteItem={handleDeleteItem}  />}
  {data.featureType === 'banner' && <BannerEdit data={data} handleDeleteItem={handleDeleteItem}  />}
  {data.featureType === 'video' && <VideoEdit data={data} handleDeleteItem={handleDeleteItem}  />}
+  
 
   </>
  )

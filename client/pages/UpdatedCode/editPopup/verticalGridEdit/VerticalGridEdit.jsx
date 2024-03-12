@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
-import styles from "./verticalGridEdit.module.css";
+// import styles from "./verticalGridEdit.module.css";
 import { useRecoilState } from "recoil";
 import { componentListArrayAtom } from "../../recoil/store";
 import useFetch from "../../../../hooks/useFetch";
 import { P } from "pino";
 import { Button } from "@shopify/polaris";
+import horizonalLayouticon from "../../../../assets/images/Frame 7.png"
+import verticalLayouticon from "../../../../assets/images/Group 7.png"
+import "../verticalGridEdit/verticalGridEdit.css"
 
 export default function VerticalGridEdit(props) {
   const [componentListArray, setComponentListArray] = useRecoilState(
@@ -115,6 +118,18 @@ return (
           </label>
         </div>
       ))} 
+
+     <label className="layout-heading"><b>Layout</b></label>
+     <div className="layout-section-container">
+     <div className="horizonatlLayout-icon-section">
+      <img src={horizonalLayouticon} style={{width:"100%",height:"100%",objectFit:"contain"}}/>
+
+     </div>
+     <div className="verticalLayout-icon-section">
+     <img src={verticalLayouticon}  />
+
+     </div>
+     </div>
       <Button onClick={updateComponentListArray}>Save</Button>
     </div> 
   )

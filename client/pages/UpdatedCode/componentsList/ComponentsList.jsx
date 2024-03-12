@@ -96,6 +96,7 @@ export default function ComponentsList() {
                   draggable={true}
                     gridItems={ele}
                     text= "Vertical product Grid"
+                    addComponents={() => addComponents(ele)}
                     key={ele.id}
 
                   />
