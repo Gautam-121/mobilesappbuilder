@@ -15,6 +15,7 @@
     "pretty": "prettier --write .",
     "-----> ngrok <-----": "",
     "ngrok:auth": "ngrok authtoken 2dZZJcIGnymAjM0vcxMoRmiffEj_53C1Ef6W8rXx96hRGrmvo",
+    "ngrok:auth": "ngrok authtoken NGROK_AUTHTOKEN=2dXN0SK4C2FQ8LRY8w7W66ZyEHR_4zHQeZLdFpmumepqRWFod",
     "ngrok": "ngrok http 5173",
     "ngrok:prod": "ngrok http 8081",
     "-----> Shopify <-----": "",
