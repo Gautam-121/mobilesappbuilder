@@ -1,10 +1,15 @@
 import React,{useRef} from "react";
 import  video from '../../../../assets/images/12.png'
 import { uid } from "uid";
+import ReactPlayer from 'react-player'
+
 
 export default function Verticalproductgrid({ element,text,addComponents,handleEdit,draggable   }) {
 
-  
+  console.log("API Video URL:", element.data.videoUrl);
+  console.log("Api Autoplay",element.data.autoPlay)
+
+
   const dragRef = useRef(null);
 
   const handleDragStart = (e) => {
@@ -49,7 +54,7 @@ export default function Verticalproductgrid({ element,text,addComponents,handleE
      onDragEnd={(e)=>e.preventDefault()}
      onClick={addComponents||handleEdit}
     >
-  <strong>{text}</strong>
+  
 
   <div className="video-section" style={{
        border: "1px solid grey",
@@ -62,12 +67,14 @@ export default function Verticalproductgrid({ element,text,addComponents,handleE
        display: "grid",
        gridTemplateColumns: `repeat(1, 1fr)`,
        gap: "16px",
-       textAlign: "center",
+       textAlign: "left",
        paddingTop:"20px",
        paddingBottom:"20px"
       }}>
 
-        <div style={{ border: "1px solid grey",
+<strong>{text?text:element.data.title}</strong>
+
+        {/* <div style={{ border: "1px solid grey",
        // margin: "5px",
        padding: "40px",
        paddingTop:"40px",
@@ -87,7 +94,46 @@ export default function Verticalproductgrid({ element,text,addComponents,handleE
        
     }}>
            
-        </div>
+        </div> */}
+
+
+
+{element.data.videoUrl ? (
+        <ReactPlayer url= {JSON.stringify(element.data.videoUrl)}
+        playing={element.data.autoPlay}  
+        muted={element.data.mute} 
+        loop={element.data.loop} 
+        width={element.data.fullWidth ? '100%' : 'auto'} 
+     
+        controls={element.data.showPlayback}
+        /* <ReactPlayer url={element.data.videoUrl} */
+      
+         height="100%" />
+):(
+  <div style={{ border: "1px solid grey",
+  // margin: "5px",
+  padding: "40px",
+  paddingTop:"40px",
+  paddingBottom:"40px",
+  borderRadius: "5px",
+  cursor: "pointer",
+  backgroundColor: "#cccccc",
+  color: "#000000",
+  display: "grid",
+  gridTemplateColumns: `repeat(1, 1fr)`,
+  gap: "16px",
+  textAlign: "center",
+  backgroundImage: `url(${video})`, // Set the background image
+  backgroundSize: "40px",
+  backgroundRepeat:"no-repeat",
+  backgroundPosition:"center",
+  
+}}>
+      
+   </div> 
+
+)
+}
 
 
       </div>
