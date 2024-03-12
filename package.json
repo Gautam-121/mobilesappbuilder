@@ -14,7 +14,7 @@
     "update:url": "node _developer/updateDashboard.js",
     "pretty": "prettier --write .",
     "-----> ngrok <-----": "",
-    "ngrok:auth": "ngrok authtoken 2dXNzsGj0F0CaiUCLbEGy9Nzz6d_4iXPBxV5Y194d4nbBMTCS",
+    "ngrok:auth": "ngrok authtoken 2dZZJcIGnymAjM0vcxMoRmiffEj_53C1Ef6W8rXx96hRGrmvo",
     "ngrok": "ngrok http 5173",
     "ngrok:prod": "ngrok http 8081",
     "-----> Shopify <-----": "",
