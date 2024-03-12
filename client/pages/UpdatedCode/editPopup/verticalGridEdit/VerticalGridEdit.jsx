@@ -13,80 +13,62 @@ export default function VerticalGridEdit(props) {
   const [componentListArray, setComponentListArray] = useRecoilState(
     componentListArrayAtom
   );
-  const [collections, setCollections] = useState([])
+  const collections = useRecoilValue(collectionsAtom)
 
 const data = props.data
 console.log(data)
 const [currentObject, setCurrentObject] = useState({...data})
-  const getCollections = {
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-    },
-    method: "GET",
-  };
-  const useDataFetcher = (initialState, url, options) => {
-    console.log("");
-    const [data, setData] = useState(initialState);
-    const fetch = useFetch();
-
-    const fetchData = async () => {
-      console.log("fetch data triggered");
-      setData("");
-      const result = await (await fetch(url, options)).json();
-      console.log("result", result.collections);
-      setCollections(result.collections);
-    };
-    return [data, fetchData];
-  };
-
-  const [responseData, fetchData] = useDataFetcher(
-    [],
-    "/api/getCollection",
-    getCollections
-  );
-
-useEffect(()=>{
-    fetchData()
-},[])
 useEffect(()=>{
     console.log("Collections", collections)
 },[collections])
 
 const handleCheckboxChange = (id) => {
-    // Find the selected checkbox item
-    const selectedCheckboxItem = collections.find((item) => item.id === id);
+  // Find the selected checkbox item
+  const selectedCheckboxItem = collections.find((item) => item.id === id);
 
-    // Check if the selected item is already in the data array
-    if (currentObject.data.data.some((item) => item.id === id)) {
-      // Remove the item from the data array
-      setCurrentObject((prevObject) => ({
-        ...prevObject,
-        data: {
-          ...prevObject.data,
-          data: prevObject.data.data.filter(
-            (item) => item.id !== id
-          ),
-        },
-      }));
-    } else {
-      // Add the selected item to the data array
-      setCurrentObject((prevObject) => ({
-        ...prevObject,
-        data: {
-          ...prevObject.data,
-          data: [
-            ...prevObject.data.data,
-            {
-              title: selectedCheckboxItem.title,
-              imageUrl: selectedCheckboxItem.image,
-              id: selectedCheckboxItem.id,
-            },
-          ],
-        },
-      }));
-    }
-  };
+  // Check if the selected item is already in the data array
+  const newData = currentObject.data.data.filter(
+    (item) => collections.some((collectionItem) => collectionItem.id === item.collection_id)
+  );
+
+  // Check if the selected item is already in newData
+  const isSelected = newData.some((item) => item.collection_id === id);
+
+  // Toggle the selection
+  if (isSelected) {
+    // Deselect the item (remove from newData)
+    const updatedData = newData.filter((item) => item.collection_id !== id);
+    setCurrentObject((prevObject) => ({
+      ...prevObject,
+      data: {
+        ...prevObject.data,
+        data: updatedData,
+      },
+    }));
+  } else {
+    // Select the item (add to newData)
+    newData.push({
+      title: selectedCheckboxItem.title,
+      imageUrl: selectedCheckboxItem.image,
+      collection_id: selectedCheckboxItem.id,
+    });
+
+    // Update the currentObject
+    setCurrentObject((prevObject) => ({
+      ...prevObject,
+      data: {
+        ...prevObject.data,
+        data: newData,
+      },
+    }));
+  }
+};
+const handleDelete = ()=>{
+ let newArray =[...componentListArray]
+let updatedArray = newArray.filter((ele)=>ele.id!=currentObject.id)
+setComponentListArray(updatedArray) 
+}
+
 useEffect(()=>{
     console.log(currentObject, "Current object changed")
 },[currentObject])
@@ -101,7 +83,6 @@ function updateComponentListArray() {
     setCurrentObject((prevObject) => ({ ...prevObject, isEditVisible: false }));
   }
 return (
-    
     <div
       style={data.isEditVisible ? {} : { display: "none" }}
       className="editPopupContainer"
@@ -111,7 +92,7 @@ return (
           <label htmlFor="">
             <input
               type="checkbox"
-              checked={currentObject.data.data.some(dataItem => dataItem.id === item.id)}
+              checked={currentObject.data.data.some(dataItem => dataItem.collection_id === item.id)}
               onChange={() => handleCheckboxChange(item.id)}
             />
             {item.title}
@@ -131,6 +112,7 @@ return (
      </div>
      </div>
       <Button onClick={updateComponentListArray}>Save</Button>
+      <Button onClick={handleDelete} variant="primary" tone="critical"> Delete</Button>
     </div> 
   )
 }

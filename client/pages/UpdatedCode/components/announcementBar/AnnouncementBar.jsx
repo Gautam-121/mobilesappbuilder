@@ -4,7 +4,13 @@ import { uid } from 'uid';
 import './announcementBar.css'
 export default function AnnouncementBar(props) {
   const dragRef = useRef(null);
-
+let animationType = ""
+if(props.data?.data.animationType==="Left To Right"){
+  animationType = "moveLeftToRight"
+}
+else{
+  animationType = "moveRightToLeft"
+}
   const handleDragStart = (e) => {
 
    const newElement = {...props.element}

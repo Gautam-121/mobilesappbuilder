@@ -129,7 +129,7 @@ export default function AnnouncementBarEdit(props) {
           <input
             type="radio"
             checked={currentObject.data.animationType === "none"}
-            onChange={() => handleRadioChange("none")}
+            onChange={() => handleRadioChange("None")}
           />
         </label>
         <label>
@@ -137,7 +137,7 @@ export default function AnnouncementBarEdit(props) {
           <input
             type="radio"
             checked={currentObject.data.animationType === "moveLeftToRight"}
-            onChange={() => handleRadioChange("moveLeftToRight")}
+            onChange={() => handleRadioChange("Left To Right")}
           />
         </label>
         <label>
@@ -145,7 +145,7 @@ export default function AnnouncementBarEdit(props) {
           <input
             type="radio"
             checked={currentObject.data.animationType === "moveRightToLeft"}
-            onChange={() => handleRadioChange("moveRightToLeft")}
+            onChange={() => handleRadioChange("Right To Left")}
           />
         </label>
 

@@ -207,7 +207,9 @@ console.log("entered")
 
 const updateHomePage = async (req, res, next) => {
   try {
-    const { datas } = req.body;
+    const {datas}  = req.body;
+
+    console.log(req.body)
 
     if (!req.params.themeId) {
       return res.status(400).json({
@@ -226,6 +228,8 @@ const updateHomePage = async (req, res, next) => {
       },
     });
 
+    console.log("incomingData" , datas)
+
     console.log("Enter" , isExistHomeData )
 
     if (isExistHomeData.docs.length === 0) {
@@ -239,11 +243,15 @@ const updateHomePage = async (req, res, next) => {
 
       if (datas[index].featureType === "banner") {
 
+        console.log("bANNER")
+
         const isVisible = datas[index]?.data?.data.some(
           (val) => val.isVisible === true
         );
 
         if (datas[index]?.data?.id) {
+
+          console.log("Entr inside banner" , datas[index].data)
 
           const banner = await Payload.update({
             collection: "banner",
@@ -282,7 +290,11 @@ const updateHomePage = async (req, res, next) => {
       } 
       else if (datas[index].featureType === "announcement") {
 
+        console.log("Entr inside announcementBanner")
+
         if (datas[index]?.data?.id) {
+
+          console.log("Entr inside id")
 
           const announcementBar = await Payload.update({
             collection: "announcementBanner",

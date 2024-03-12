@@ -11,7 +11,7 @@ import VideoEdit from "./videoEdit/VideoEdit";
 
 export default function EditPopup(props) {
   const data = props.componentData;
-// console.log(data)
+ console.log(data)
   const [componentListArray, setComponentListArray] = useRecoilState(
     componentListArrayAtom
   );
