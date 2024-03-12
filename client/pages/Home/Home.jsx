@@ -55,25 +55,29 @@ const Home = () => {
 
   const [selectedTheme, setSelectedTheme] = useState();
 
-  const fetchAllThemeApi = "/getAllTheme";
+  const fetchAllThemeApi = "https://appbuilder.xircular.io/apps/api/getAllTheme";
 
-  // useEffect(() => {
-  //   // async function fetchData() {
-  //   //     const res = await fetch("/api/getAllTheme"); //fetch instance of useFetch()
-  //   //     const data = await res.json();
-  //   //     console.log("theThemeData: ", data);
+  useEffect(() => {
+    // async function fetchData() {
+    //     const res = await fetch("/api/getAllTheme"); //fetch instance of useFetch()
+    //     const data = await res.json();
+    //     console.log("theThemeData: ", data);
 
-  //   //     setThemeData(data?.data);
-  //   //     setSelectedTheme(data?.data[0]);
-  //   // }
+    //     setThemeData(data?.data);
+    //     setSelectedTheme(data?.data[0]);
+    // }
 
-  //   // fetchData();
+    // fetchData();
 
-  //   axios
-  //     .get(fetchAllThemeApi)
-  //     .then((res) => console.log("fetched themes: ", res.data))
-  //     .catch((error) => console.log("error while fetching themes: ", error));
-  // }, []);
+    axios
+      .get(fetchAllThemeApi)
+      .then((res) => {
+        console.log("theme daata: ", res);
+        setThemeData(res?.data?.data);
+        setSelectedTheme(res?.data?.data[0]);
+      })
+      .catch((error) => console.log("error while fetching themes: ", error));
+  }, []);
 
   const cards = [
     {
