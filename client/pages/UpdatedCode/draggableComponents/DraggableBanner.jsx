@@ -8,7 +8,7 @@ import Banner from '../components/announcementBar/Banner';
  
  const DraggableBanner = ({ id, index, moveComponent, handleEdit, style, text, gridItems, textColor, backgroundColor}) => {
     const dragRef = useRef(null);
-  
+  console.log("component data in DraggableBanner", gridItems)
     const [{isDragging }, drag] = useDrag({
       type: 'COMPONENT',
       item: { id, index },

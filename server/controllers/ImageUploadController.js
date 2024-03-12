@@ -1,7 +1,5 @@
 const dotenv = require("dotenv");
 const Payload = require("payload");
-const Jimp = require('jimp');
-
 dotenv.config();
 
 const uploadImages = async (req, res, next) => {

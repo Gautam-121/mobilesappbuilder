@@ -8,6 +8,8 @@ import VerticalCollectionGrid from '../components/announcementBar/VerticalCollec
  
  const DraggableVerticalCollectionGrid = ({ id, index, moveComponent, handleEdit, style, text, gridItems, textColor, backgroundColor}) => {
     const dragRef = useRef(null);
+    console.log("component data in DraggableVerticalCollection", gridItems)
+
   
     const [{isDragging }, drag] = useDrag({
       type: 'COMPONENT',

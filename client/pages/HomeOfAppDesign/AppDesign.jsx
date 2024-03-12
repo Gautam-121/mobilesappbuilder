@@ -11,15 +11,52 @@ import { Button, ButtonGroup, Divider, Tooltip } from "@shopify/polaris";
 
 import { SkeletonTabs, SkeletonThumbnail } from "@shopify/polaris";
 import { useState, useCallback } from "react";
-
+import {useRecoilState} from 'recoil'
 import { useDispatch, useSelector } from "react-redux";
 import { exitFullScreen } from "../../store/fullScreenSlice";
 import {
   pageNotRefreshed,
   pageRefreshed,
 } from "../../store/appDesignPageRefreshedSlice";
+import useFetch from "../../hooks/useFetch";
+import { componentListArrayAtom } from "../UpdatedCode/recoil/store";
 
 const AppDesign = (props) => {
+const [componentListArray, setComponentListArray] = useRecoilState(componentListArrayAtom)
+const [dataForBackend, setDataForBackend] = useState([])
+
+
+useEffect(()=>{
+ let modifiedArray = componentListArray.map((item)=>{
+    if (item.featureType === "banner") {
+      // Modify the objects inside the data array
+      const modifiedData = item.data.data.map((dataItem) => ({
+        bannerType:dataItem.bannerType,
+       actionUrl:dataItem.actionUrl,
+       isVisible:dataItem.isVisible,
+        imageUrl: dataItem.imageUrl.id,
+        // id: dataItem.id, // Change the field name
+      }));
+  
+      // Return the modified object
+      return {
+        ...item,
+        data: {
+          ...item.data,
+          data: modifiedData,
+        },
+      };
+    } else {
+      // Return the unchanged object for other feature types
+      return item;
+    }
+  })
+  setDataForBackend(modifiedArray)
+},[componentListArray])
+
+useEffect(()=>{
+  console.log("data for backend", dataForBackend)
+},[dataForBackend])
   const dispatch = useDispatch();
 
   const isFullScreen = useSelector((state) => state.fullScreenMode);
@@ -110,11 +147,46 @@ const AppDesign = (props) => {
   };
 
   const [activeSideNavIndex, setActiveSideNavIndex] = useState(0);
+  let modifiedArray = []
 
   const handleSideNavButtonClick = (index) => {
     setActiveSideNavIndex(index);
   };
 
+
+  const postOptions = {
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    method: "PUT",
+    body: JSON.stringify({datas:dataForBackend}),
+  };
+
+  const useDataFetcher = (initialState, url, options) => {
+    const [data, setData] = useState(initialState);
+    const fetch = useFetch();
+
+    const fetchData = async () => {
+      setData("");
+      const result = await (await fetch(url, options)).json();
+      console.log(result);
+      if ("serverKey" in result) setData(result.serverKey);
+      else if ("message" in result) setData(result.message);
+    };
+    return [data, fetchData];
+  };
+
+  const [responseFromServer, publishChanges] = useDataFetcher(
+    "",
+    "/api/updateHomePage/3E",
+    postOptions
+  );
+  function handlePublish(){
+     
+    console.log(modifiedArray)
+    publishChanges();
+  }
   return (
     <div className="appdesign-main-div">
       <div className="appdesign-header">
@@ -146,7 +218,7 @@ const AppDesign = (props) => {
             </Button>
           </div>
           {/* <div className='appdesign-preview-btn'><HiQrCode className='appdesign-qr'/> Preview on mobile</div> */}
-          <button className="appdesign-publish-btn">Publish changes</button>
+          <button onClick={handlePublish} className="appdesign-publish-btn">Publish changes</button>
         </div>
       </div>
 
