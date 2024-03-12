@@ -38,7 +38,7 @@ export const data = [
       message: "Up to 50% off New Arrivals",
       textColor: "#000000",
       backgroundColor: "#FE6100",
-      animationType: "moveLeftToRight",
+      animationType: "Left To Right",
     },
   
 },
