@@ -31,7 +31,7 @@ const HomeTab = (props) => {
       console.log("fetch data triggered")
       setData("");
       const result = await (await fetch(url, options)).json();
-      console.log("result",result.data.homeData);
+      console.log("result",result.data);
       let dataFromApi = result.data.homeData
       const modifiedArray = dataFromApi.map((item) => {
         if (item.featureType === "categories") {
@@ -63,7 +63,7 @@ const HomeTab = (props) => {
 
   const [responseData, fetchData] = useDataFetcher(
     "",
-    "/api/getHomePageByShop/BW",
+    "/api/getHomePageByShop/3E",
     getData
   );
 useEffect(()=>{
