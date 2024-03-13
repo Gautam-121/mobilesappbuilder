@@ -21,11 +21,11 @@ const verifyRequest = require('./middleware/verifyRequest.js');
 const proxyRouter = require('./routes/app_proxy/index.js');
 const router = require('./routes/index.js');
 const webhookRegistrar = require('./webhooks/index.js');
-const multer = require("multer")
 require('events').EventEmitter.prototype._maxListeners = 70;
 
 
 dotenv.config();
+
 // Run a check to ensure everything is setup properly
 setupCheck(); 
 
@@ -37,8 +37,6 @@ webhookRegistrar();
 
 const app = express();
 app.use(cors());
-app.use(multer().any())
-
 
 const start = async () => {
   try {

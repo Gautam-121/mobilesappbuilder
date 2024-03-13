@@ -93,8 +93,6 @@ const authMiddleware = (app) => {
               },
             })
 
-          console.log("response" , response)
-
           // Create The document
           await payload.create({
             collection: 'activeStores', // required
