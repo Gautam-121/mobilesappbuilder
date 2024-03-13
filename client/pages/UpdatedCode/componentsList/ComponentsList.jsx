@@ -109,10 +109,12 @@ useEffect(() => {
                 );
               else
                 return (
+
                   <Horizontalproductgrid
                   draggable={true}
                   gridItems={ele}
                     text= "Horizontal product Grid"
+                    addComponents={() => addComponents(ele)}
                     key={ele.id}
 
                   />

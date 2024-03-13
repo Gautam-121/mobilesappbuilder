@@ -12,6 +12,7 @@ import DraggableTextParagraph from "../draggableComponents/DraggableTextParagrap
 import DraggableBanner from "../draggableComponents/DraggableBanner";
 import DraggableVideo from "../draggableComponents/DraggableVideo";
 import DragableVerticalProduct from "../draggableComponents/DragableVerticalProduct"
+import DragableHorizontalProductGrid from "../draggableComponents/DragableHorizontalProductGrid";
 
 export default function MobilePreview() {
   const [componentListArray, setComponentListArray] = useRecoilState(
@@ -143,7 +144,13 @@ export default function MobilePreview() {
                       );
                     else
                       return (
-                        <div></div>
+                        <DragableHorizontalProductGrid
+                          key={ele.id}
+                          gridItems={ele}
+                          index={index}
+                          moveComponent={moveComponent}
+                          handleEdit={() => handleEditButtonClick(ele.id)}
+                        />
                       );
 
             default:
