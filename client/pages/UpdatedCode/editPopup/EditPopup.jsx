@@ -6,12 +6,13 @@ import { componentListArrayAtom } from "../recoil/store";
 import AnnouncementBarEdit from "./announcementBarEdit/AnnouncementBarEdit";
 import TextParagraphEdit from "./textParagraphEdit/TextParagraphEdit";
 import VerticalGridEdit from "./verticalGridEdit/VerticalGridEdit";
+import VerticalProductgridEdit from "./verticalProductGridEdit/VerticalProductgridEdit";
 import BannerEdit from "./bannerEdit/BannerEdit";
 import VideoEdit from "./videoEdit/VideoEdit";
 
 export default function EditPopup(props) {
   const data = props.componentData;
-// console.log(data)
+ console.log(data)
   const [componentListArray, setComponentListArray] = useRecoilState(
     componentListArrayAtom
   );
@@ -108,6 +109,8 @@ export default function EditPopup(props) {
  {data.featureType === 'categories' && <VerticalGridEdit data={data} handleDeleteItem={handleDeleteItem}  />}
  {data.featureType === 'banner' && <BannerEdit data={data} handleDeleteItem={handleDeleteItem}  />}
  {data.featureType === 'video' && <VideoEdit data={data} handleDeleteItem={handleDeleteItem}  />}
+ {data.featureType === 'productGroup' && <VerticalProductgridEdit data={data} handleDeleteItem={handleDeleteItem}  />}
+  
 
   </>
  )

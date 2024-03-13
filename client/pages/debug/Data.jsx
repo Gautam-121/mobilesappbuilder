@@ -1,7 +1,8 @@
-import { useEffect } from "react";
+import { useEffect , useState} from "react";
 import useFetch from "../../hooks/useFetch";
 import Home from "../Home/Home";
-
+import { collectionsAtom, productsAtom } from "../UpdatedCode/recoil/store";
+import {useSetRecoilState} from 'recoil'
 
 const GetData = () => {
 // const fetch = useFetch();
@@ -11,6 +12,13 @@ const GetData = () => {
 //   const data = await res.json();
 //   console.log(data)
 // },[])
+
+
+
+
+
+
+console.log("get data")
 
   return (
     <>

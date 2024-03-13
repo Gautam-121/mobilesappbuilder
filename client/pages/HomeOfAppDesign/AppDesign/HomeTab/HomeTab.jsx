@@ -9,11 +9,13 @@ import ComponentsList from '../../../UpdatedCode/componentsList/ComponentsList';
 import MobilePreview from '../../../UpdatedCode/mobilePreview/MobilePreview';
 import useFetch from '../../../../hooks/useFetch';
 import { useSetRecoilState } from 'recoil';
-import { componentListArrayAtom } from '../../../UpdatedCode/recoil/store';
+import { collectionsAtom, componentListArrayAtom, productsAtom } from '../../../UpdatedCode/recoil/store';
 
 
 const HomeTab = (props) => {
   const setComponentListArray = useSetRecoilState(componentListArrayAtom)
+  const setCollections = useSetRecoilState(collectionsAtom)
+  const setProducts = useSetRecoilState(productsAtom)
   const getData = {
     headers: {
       Accept: "application/json",
@@ -31,8 +33,9 @@ const HomeTab = (props) => {
       console.log("fetch data triggered")
       setData("");
       const result = await (await fetch(url, options)).json();
-      console.log("result",result.data.homeData);
+      console.log("result",result.data);
       let dataFromApi = result.data.homeData
+      
       const modifiedArray = dataFromApi.map((item) => {
         if (item.featureType === "categories") {
           // Modify the objects inside the data array
@@ -55,6 +58,7 @@ const HomeTab = (props) => {
           return item;
         }
       });
+      console.log("modified array", modifiedArray)
       if(modifiedArray)
       setComponentListArray(modifiedArray)
     };
@@ -63,14 +67,51 @@ const HomeTab = (props) => {
 
   const [responseData, fetchData] = useDataFetcher(
     "",
-    "/api/getHomePageByShop/BW",
+    "/api/getHomePageByShop/3E",
     getData
   );
 useEffect(()=>{
   console.log("useEffect triggered")
   fetchData()
-
+  fetchCollections();
+  fetchProducts();
 },[])
+
+
+const useDataFetcherForShopifyData = (initialState, url, options) => {
+  console.log("");
+  const [data, setData] = useState(initialState);
+  const fetch = useFetch();
+
+  const fetchData = async () => {
+    console.log("fetch data triggered");
+    setData("");
+    const result = await (await fetch(url, options)).json();
+    console.log("result", result);
+    setData(result);
+  };
+  return [data, fetchData];
+};
+
+const [responseCollections, fetchCollections] = useDataFetcherForShopifyData(
+  [],
+  "/api/getCollection",
+  getData
+);
+const [responseProducts, fetchProducts] = useDataFetcherForShopifyData(
+  [],
+  "api/getProduct",
+  getData
+);
+
+useEffect(() => {
+  setCollections(responseCollections.collections);
+
+}, [responseCollections]);
+
+useEffect(() => {
+  setProducts(responseProducts.products);
+}, [responseProducts]);
   return (
     <DndProvider backend={HTML5Backend}>
     <div className='dnd'>

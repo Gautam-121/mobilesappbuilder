@@ -2,14 +2,13 @@
 /* eslint-disable react/prop-types */
 import { useRef} from 'react'
 import {  useDrag, useDrop } from 'react-dnd';
-import AnnouncementBar from '../components/announcementBar/AnnouncementBar';
+// import AnnouncementBar from '../components/announcementBar/AnnouncementBar';
  import EditPopup from '../editPopup/EditPopup';
-import VerticalCollectionGrid from '../components/announcementBar/VerticalCollectiongrid';
- 
- const DraggableVerticalCollectionGrid = ({ id, index, moveComponent, handleEdit, style, text, gridItems, textColor, backgroundColor}) => {
-    const dragRef = useRef(null);
-    console.log("component data in DraggableVerticalCollection", gridItems)
 
+import Horizontalproductgrid from '../components/announcementBar/Horizontalproductgrid';
+ 
+ const DragableHorizontalProductGrid = ({ id, index, moveComponent, handleEdit, style, text, gridItems, textColor, backgroundColor}) => {
+    const dragRef = useRef(null);
   
     const [{isDragging }, drag] = useDrag({
       type: 'COMPONENT',
@@ -51,10 +50,10 @@ import VerticalCollectionGrid from '../components/announcementBar/VerticalCollec
         }}
       >
         {/* <AnnouncementBar handleEdit={handleEdit} data={data} style={style} text={text} textColor={textColor} backgroundColor={backgroundColor} /> */}
-       <VerticalCollectionGrid handleEdit={handleEdit} gridItems={gridItems}  />
+       <Horizontalproductgrid handleEdit={handleEdit} gridItems={gridItems}  />
         <EditPopup componentData={gridItems} />
       </div>
     );
   };
 
-  export default DraggableVerticalCollectionGrid
+  export default  DragableHorizontalProductGrid

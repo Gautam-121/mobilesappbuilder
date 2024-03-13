@@ -1,6 +1,5 @@
 const dotenv = require("dotenv");
 const Payload = require("payload");
-
 dotenv.config();
 
 const uploadImages = async (req, res, next) => {

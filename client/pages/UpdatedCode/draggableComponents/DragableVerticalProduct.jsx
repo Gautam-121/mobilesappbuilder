@@ -4,12 +4,10 @@ import { useRef} from 'react'
 import {  useDrag, useDrop } from 'react-dnd';
 import AnnouncementBar from '../components/announcementBar/AnnouncementBar';
  import EditPopup from '../editPopup/EditPopup';
-import VerticalCollectionGrid from '../components/announcementBar/VerticalCollectiongrid';
+import Verticalproductgrid from '../components/announcementBar/Verticalproductgrid';
  
- const DraggableVerticalCollectionGrid = ({ id, index, moveComponent, handleEdit, style, text, gridItems, textColor, backgroundColor}) => {
+ const DragableVerticalProduct = ({ id, index, moveComponent, handleEdit, style, text, gridItems, textColor, backgroundColor}) => {
     const dragRef = useRef(null);
-    console.log("component data in DraggableVerticalCollection", gridItems)
-
   
     const [{isDragging }, drag] = useDrag({
       type: 'COMPONENT',
@@ -51,10 +49,10 @@ import VerticalCollectionGrid from '../components/announcementBar/VerticalCollec
         }}
       >
         {/* <AnnouncementBar handleEdit={handleEdit} data={data} style={style} text={text} textColor={textColor} backgroundColor={backgroundColor} /> */}
-       <VerticalCollectionGrid handleEdit={handleEdit} gridItems={gridItems}  />
+       <Verticalproductgrid handleEdit={handleEdit} gridItems={gridItems}  />
         <EditPopup componentData={gridItems} />
       </div>
     );
   };
 
-  export default DraggableVerticalCollectionGrid
+  export default  DragableVerticalProduct

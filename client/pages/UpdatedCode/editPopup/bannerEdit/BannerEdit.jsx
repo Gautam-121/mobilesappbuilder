@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useCallback } from "react";
 import styles from "./bannerEdit.module.css";
 import addIcon from "../../../../images/addIcon.jpg";
-import { useRecoilState } from "recoil";
-import { componentListArrayAtom } from "../../recoil/store";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { collectionsAtom, componentListArrayAtom, productsAtom } from "../../recoil/store";
 import { Button, RadioButton, Text } from "@shopify/polaris";
 import useFetch from "../../../../hooks/useFetch";
 import CollectionSelector from "./CollectionSelector";
@@ -12,56 +12,8 @@ export default function BannerEdit({ data, handleDelete }) {
   );
   const [currentObject, setCurrentObject] = useState(data);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [collections, setCollections] = useState([]);
-  const [products, setProducts] = useState([]);
-  // const [value, setValue] = useState("")
-  const getData = {
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-    },
-    method: "GET",
-  };
-  const useDataFetcher = (initialState, url, options) => {
-    console.log("");
-    const [data, setData] = useState(initialState);
-    const fetch = useFetch();
-
-    const fetchData = async () => {
-      console.log("fetch data triggered");
-      setData("");
-      const result = await (await fetch(url, options)).json();
-      console.log("result", result);
-      setData(result);
-    };
-    return [data, fetchData];
-  };
-
-  const [responseCollections, fetchCollections] = useDataFetcher(
-    [],
-    "/api/getCollection",
-    getData
-  );
-  const [responseProducts, fetchProducts] = useDataFetcher(
-    [],
-    "api/getProduct",
-    getData
-  );
-
-  useEffect(() => {
-    fetchCollections();
-    fetchProducts();
-  }, []);
-
-  useEffect(() => {
-    setCollections(responseCollections.collections);
-    // console.log("Collections", responseCollections.collections);
-  }, [responseCollections]);
-
-  useEffect(() => {
-    setProducts(responseProducts.products);
-    console.log("Products", responseProducts);
-  }, [responseProducts]);
+  const collections = useRecoilValue(collectionsAtom);
+  const products = useRecoilValue(productsAtom);
 
   useEffect(() => {
     console.log("Collections", collections);

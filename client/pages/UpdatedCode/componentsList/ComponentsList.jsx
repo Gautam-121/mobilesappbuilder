@@ -1,11 +1,12 @@
 import "./componentList.css";
+import {useEffect} from 'react'
 import AnnouncementBar from '../components/announcementBar/AnnouncementBar'
 import HorizontalCollectionGrid from "../components/announcementBar/HorizontalCollectionGrid";
 import Horizontalproductgrid from "../components/announcementBar/Horizontalproductgrid";
 import Verticalproductgrid from "../components/announcementBar/Verticalproductgrid";
 // import CollectionSlider from './components/announcementBar/Collectionslider'
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { componentListArrayAtom } from "../recoil/store";
+import { collectionsAtom, componentListArrayAtom } from "../recoil/store";
 import { uid } from "uid";
 import "./componentList.css";
 import { data } from "../data/data";
@@ -19,8 +20,13 @@ export default function ComponentsList() {
   const [componentListArray, setComponentListArray] = useRecoilState(
     componentListArrayAtom
   );
-  // const componentList = useRecoilValue(componentListArrayAtom)
-  // const setComponentList = useSetRecoilState(componentListArrayAtom)
+const collections = useRecoilValue(collectionsAtom)
+useEffect(() => {
+  console.log("Collections Atom", collections)
+
+ 
+}, [collections])
+
 
   function addComponents(data) {
     let newData = {...data}
@@ -96,16 +102,19 @@ export default function ComponentsList() {
                   draggable={true}
                     gridItems={ele}
                     text= "Vertical product Grid"
+                    addComponents={() => addComponents(ele)}
                     key={ele.id}
 
                   />
                 );
               else
                 return (
+
                   <Horizontalproductgrid
                   draggable={true}
                   gridItems={ele}
                     text= "Horizontal product Grid"
+                    addComponents={() => addComponents(ele)}
                     key={ele.id}
 
                   />

@@ -68,6 +68,8 @@ export default function VerticalCollectionGrid({
       document.body.removeChild(dragImage);
     }, 0);
   };
+
+  console.log("collectionGriditems",gridItems.data.data)
   return (
     <div onClick={addComponents || handleEdit} 
     draggable={draggable}
