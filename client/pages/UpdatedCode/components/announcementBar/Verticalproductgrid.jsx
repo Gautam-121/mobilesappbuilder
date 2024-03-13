@@ -45,6 +45,8 @@ export default function Verticalproductgrid({ gridItems,text,addComponents,
       }, 0);
     };
 
+    console.log("productGriditems",gridItems.data)
+
   return (
     <div onClick={addComponents || handleEdit} 
     draggable={draggable}
