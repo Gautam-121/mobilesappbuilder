@@ -6,23 +6,53 @@ import { collectionsAtom, componentListArrayAtom, productsAtom } from "../../rec
 import { Button, RadioButton, Text } from "@shopify/polaris";
 import useFetch from "../../../../hooks/useFetch";
 import CollectionSelector from "./CollectionSelector";
+
+
+
+
 export default function BannerEdit({ data, handleDelete }) {
+
+  //uploading a new banner image
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  // Function to handle file selection
+  const handleImageChange = (e) => {
+
+    const file = e.target.files[0];
+    console.log("image uploaded: ", file);
+    if (file && (file.type === 'image/png' || file.type === 'image/jpeg' || file.type === 'image/jpg')) {
+      setSelectedImage(file);
+    } else {
+      alert('Please select a valid image file (PNG, JPEG, JPG)');
+    }
+  };
+
+
+
+
+
+
+
   const [componentListArray, setComponentListArray] = useRecoilState(
     componentListArrayAtom
   );
+
   const [currentObject, setCurrentObject] = useState(data);
   const [currentIndex, setCurrentIndex] = useState(0);
   const collections = useRecoilValue(collectionsAtom);
   const products = useRecoilValue(productsAtom);
 
   useEffect(() => {
-    console.log("Collections", collections);
+    console.log("Collections for banners", collections);
     console.log(products);
   }, [collections]);
 
   console.log(data);
+
   function handleChange(value) {
+
     const updatedData = JSON.parse(JSON.stringify(currentObject.data.data));
+
     const currentImageData = updatedData[currentIndex];
 
     switch (value) {
@@ -64,20 +94,22 @@ export default function BannerEdit({ data, handleDelete }) {
     }));
   };
 
-  
-function updateComponentListArray() {
-  setComponentListArray((prevArray) => {
-    const updatedArray = prevArray.map((item) =>
-      item.id === currentObject.id ? currentObject : item
-    );
-    return updatedArray;
-  });
-  setCurrentObject((prevObject) => ({ ...prevObject, isEditVisible: false }));
-}
+
+  function updateComponentListArray() {
+    setComponentListArray((prevArray) => {
+      const updatedArray = prevArray.map((item) =>
+        item.id === currentObject.id ? currentObject : item
+      );
+      return updatedArray;
+    });
+    setCurrentObject((prevObject) => ({ ...prevObject, isEditVisible: false }));
+  }
 
   useEffect(() => {
-    console.log(currentObject);
+    console.log("currentObject", currentObject);
   }, [currentObject]);
+
+
 
   return (
     <div
@@ -85,16 +117,34 @@ function updateComponentListArray() {
       className="editPopupContainer"
     >
       <div className={styles.imgListSection}>
+
         {currentObject.data.data.map((ele, ind) => (
           <img
             key={ele.id}
-            src={ele.imageUrl.url}
+            src={ele?.imageUrl?.url}
             alt=""
             onClick={() => setCurrentIndex(ind)}
           />
         ))}
-        <img src={addIcon} alt="" />
+
+
+         {/* Hidden file input */}
+        <input type="file" accept="image/png, image/jpeg, image/jpg" onChange={handleImageChange} id="fileInput" />
+        
+        {/* Circular button */}
+        <label htmlFor="fileInput" className={styles.uploadButton}>
+          <span>+</span>
+        </label>
+
+        {/* Position "Choose file" text off-screen */}
+        {/* <button type="submit">Upload Image</button> */}
+
+
+     
+
       </div>
+
+
       <div className={styles.imgSection}>
         <Text variant="headingSm" as="h4">
           Image {currentIndex + 1} of {currentObject.data.data.length}
@@ -106,6 +156,8 @@ function updateComponentListArray() {
           />
         </div>
       </div>
+
+
       <div>
         <Text variant="headingSm" as="h4">
           Navigate to
@@ -131,7 +183,7 @@ function updateComponentListArray() {
             }
             onChange={() => handleChange("product")}
           />
-           {currentObject?.data?.data[currentIndex]?.bannerType ===
+          {currentObject?.data?.data[currentIndex]?.bannerType ===
             "product" && <CollectionSelector collections={products} onSelect={handleCollectionSelect} />}
           <RadioButton
             label="External Link"
