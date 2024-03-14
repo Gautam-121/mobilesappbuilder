@@ -152,14 +152,13 @@ const getHomePage = async (req, res, next) => {
 
 const getHomePageByWeb = async (req , res , next)=>{
   try {
-console.log("entered")
+
     if(!req.params.themeId){
       return res.status(400).json({
         success: false,
         message: "themeId is missing"
       })
     }
-    console.log(req.shop_id)
 
     const homeData = await Payload.find({
       collection: 'homePage',
@@ -186,7 +185,6 @@ console.log("entered")
         return { ...value, data: value.data.value };
       }
     });
-    console.log(homeData)
 
     return res.status(200).json({
       success: true,
@@ -208,8 +206,6 @@ console.log("entered")
 const updateHomePage = async (req, res, next) => {
   try {
     const {datas}  = req.body;
-
-    console.log(req.body)
 
     if (!req.params.themeId) {
       return res.status(400).json({

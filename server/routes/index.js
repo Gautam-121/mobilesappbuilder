@@ -1,6 +1,7 @@
 const { Router } = require("express");
 const verifyRequest = require("../middleware/verifyRequest.js");
 const { uploadImages } = require("../controllers/ImageUploadController.js");
+const multer = require("multer")
 
 
 const {
@@ -116,7 +117,7 @@ router.get("/api/getTabMenu/:shopId", getTabMenu);
 
 /*--------------------------UploadImages-----------------------------------------------*/
 
-router.post("/api/upload/file" , uploadImages)
+router.post("/api/upload/file" , multer().any() ,  uploadImages)
 
 router.get("/api/getData", (req, res) => {
   const sendData = { text: "This is coming from /apps/api route." };

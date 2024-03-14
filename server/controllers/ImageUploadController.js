@@ -5,9 +5,7 @@ dotenv.config();
 const uploadImages = async (req, res, next) => {
   try {
 
-    const file = JSON.parse(JSON.stringify(req.files));
-
-    console.log(file)
+    const file = req.files
 
     if (!file) {
       return res.status(400).json({
