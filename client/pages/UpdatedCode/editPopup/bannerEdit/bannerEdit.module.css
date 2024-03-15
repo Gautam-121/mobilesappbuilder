@@ -44,3 +44,40 @@
     .btnSection Button{
         width: 5rem;
     }
+
+
+
+
+/* Hide default file input text */
+input[type="file"] {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+  }
+  
+  /* Style the custom button */
+  .uploadButton {
+    display: inline-block;
+    width: 55px; /* Adjust size as needed */
+    height: 55px; /* Adjust size as needed */
+    border: 2px solid grey;
+    border-radius: 50%; /* Make it circular */
+    background-color: rgb(32, 29, 29); /* Button color */
+    color: white; /* Text color */
+    font-size: 24px; /* Adjust size as needed */
+    text-align: center;
+    line-height: 40px; /* Center the plus sign vertically */
+    cursor: pointer;
+  }
+  
+  .uploadButton span {
+    display: inline-block;
+    line-height: 2.2;
+    
+  }
+  
