@@ -23,30 +23,34 @@ const verifyRequest = async (req, res, next) => {
 
     const session = await sessionHandler.loadSession(sessionId);
     
-    if (new Date(session?.expires) > new Date()) {
+    if ( 
+      new Date(session?.expires) > new Date() &&
+      shopify.config.scopes.equals(session.scope)
+      ) {
 
-      const client = new shopify.clients.Graphql({ session });
-      const data = await client.query({ data: TEST_QUERY });
+      const client = new shopify.clients.Graphql({ session });      
+      const response = await client.request(TEST_QUERY);
+
       res.setHeader(
         "Content-Security-Policy",
         `frame-ancestors https://${session.shop} https://admin.shopify.com;`
       );
       
+      res.locals.user_session = session;
       req.shop = session.shop
-      req.shop_id = data?.body?.data?.shop?.id
+      req.shop_id = response?.data?.shop?.id
       req.accessToken = session.accessToken
 
       return next();
     }
    
     const authBearer = req.headers.authorization?.match(/Bearer (.*)/);
-
     if (authBearer) {
       if (!shop) {
         console.log(shop)
         if (session) {
           shop = session?.shop
-        } else if (shopify.config.isEmbeddedApp || true) {
+        } else if (shopify.config.isEmbeddedApp) {
           if (authBearer) {
             const payload = await shopify.session.decodeSessionToken(
               authBearer[1]
@@ -55,15 +59,18 @@ const verifyRequest = async (req, res, next) => {
           }
         }
       }
-      res.status(403);
-      res.header("X-Shopify-API-Request-Failure-Reauthorize", "1");
-      res.header(
-        "X-Shopify-API-Request-Failure-Reauthorize-Url",
-        `/exitframe/${shop}`
-      );
-      res.end();
+      res
+        .status(403)
+        .setHeader("Verify-Request-Failure", "1")
+        .setHeader("Verify-Request-Reauth-URL", `/exitframe/${shop}`)
+        .end();
     } else {
-      res.redirect(`/exitframe/${shop}`);
+      res
+      .status(403)
+      .setHeader("Verify-Request-Failure", "1")
+      .setHeader("Verify-Request-Reauth-URL", `/exitframe/${shop}`)
+      .end();
+    return;
     }
   } catch (e) {
     console.error(e);

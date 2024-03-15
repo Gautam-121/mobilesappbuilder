@@ -14,14 +14,13 @@ import onemobile_img from "../../assets/images/onemobile_img.png";
 
 import { useDispatch, useSelector } from "react-redux";
 import { selectTheme } from "../../store/themeSlice";
-import { useAppBridge, useNavigate } from "@shopify/app-bridge-react";
+import { useAppBridge } from "@shopify/app-bridge-react";
 import { Fullscreen } from "@shopify/app-bridge/actions";
 
 import axios from "axios";
 
 const Home = () => {
   //if appDesignPageRefreshedState then enter fullsccreen
-
 
   const isAppDesignPageRefreshed = useSelector(
     (state) => state.appDesignPageRefreshedSlice
@@ -41,7 +40,6 @@ const Home = () => {
     }
   }, [isAppDesignPageRefreshed]);
 
-  const navigate = useNavigate();
 
   const app = useAppBridge();
 
@@ -164,8 +162,8 @@ const Home = () => {
         <div className="theme-card-container">
           {themeData?.map((res, index) => {
             return (
-              <>
-                <div className="theme-card" key={index}>
+              <div key={index}>
+                <div className="theme-card">
                   <div style={{ position: "relative" }}>
                     {res?.type === "payment" && <div className="star"></div>}
                   </div>
@@ -218,7 +216,7 @@ const Home = () => {
                     </div>
                   )}
                 </div>
-              </>
+              </div>
             );
           })}
         </div>

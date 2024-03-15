@@ -4,7 +4,7 @@ import { HiQrCode } from "react-icons/hi2";
 import image_placeholder from "../../../assets/images/image_placeholder.png";
 import ImageChecker from '../../../components/image-checker/ImageChecker';
 
-import { useAppBridge, useNavigate } from '@shopify/app-bridge-react';
+import { useAppBridge } from '@shopify/app-bridge-react';
 import { Fullscreen } from '@shopify/app-bridge/actions';
 
 
@@ -17,8 +17,6 @@ const SelectedTheme = (props) => {
 
     const dispatch = useDispatch();
 
-	const navigate = useNavigate();
-
     const theTheme = props?.selectedTheme;
 
     const app = useAppBridge();
@@ -30,7 +28,7 @@ const SelectedTheme = (props) => {
 
     const customize = () => {
 
-        navigate('/app-design/customize');
+        window.location.href = '/app-design/customize'
 
         fullscreen.dispatch(Fullscreen.Action.ENTER);
 

@@ -6,7 +6,6 @@ import { HiQrCode } from "react-icons/hi2";
 import "./AppDesign.css";
 import { useAppBridge } from "@shopify/app-bridge-react";
 import { Fullscreen } from "@shopify/app-bridge/actions";
-import { useNavigate } from "@shopify/app-bridge-react";
 import { Button, ButtonGroup, Divider, Tooltip } from "@shopify/polaris";
 
 import { SkeletonTabs, SkeletonThumbnail } from "@shopify/polaris";
@@ -81,8 +80,6 @@ useEffect(()=>{
     }
   }, []);
 
-  const navigate = useNavigate();
-
   const app = useAppBridge();
 
   const fullscreen = Fullscreen.create(app);
@@ -90,7 +87,7 @@ useEffect(()=>{
   const exit = () => {
     fullscreen.dispatch(Fullscreen.Action.EXIT);
 
-    navigate("/app-design");
+    window.location.href = "/app-design"
 
     dispatch(exitFullScreen());
     dispatch(pageNotRefreshed());
@@ -179,7 +176,7 @@ useEffect(()=>{
 
   const [responseFromServer, publishChanges] = useDataFetcher(
     "",
-    "/api/updateHomePage/3E",
+    "/apps/api/updateHomePage/3E",
     postOptions
   );
   function handlePublish(){

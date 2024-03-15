@@ -1,6 +1,6 @@
 import React,{useRef} from "react";
 import { uid } from "uid";
-import ReactHtmlParser from 'react-html-parser'; // Import the library
+// import ReactHtmlParser from 'react-html-parser'; // Import the library
 
 export default  function Textparagraph({gridItems,text, element, draggable, handleEdit, addComponents}){
   const dragRef = useRef(null);
@@ -59,7 +59,7 @@ export default  function Textparagraph({gridItems,text, element, draggable, hand
        gap: "16px",
        textAlign: "center",
       }}>
-       <div>{ReactHtmlParser(gridItems.data.content)}</div>
+       <div>{gridItems.data.content}</div>
       </div>
         </div>
 

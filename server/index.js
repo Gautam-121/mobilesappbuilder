@@ -58,35 +58,35 @@ const start = async () => {
     console.log("Enter Inside The createServer App")
   
     // Incoming webhook requests
-    app.post(
-      "/webhooks/:topic",
-      express.text({ type: "*/*" }),
-      async (req, res) => {
-        const { topic } = req.params || "";
-        const shop = req.headers["x-shopify-shop-domain"] || "";
-  
-        try {
-          await shopify.webhooks.process({
-            rawBody: req.body,
-            rawRequest: req,
-            rawResponse: res,
-          });
-          console.log(`--> Processed ${topic} webhook for ${shop}`);
-        } catch (e) {
-          console.error(
-            `---> Error while registering ${topic} webhook for ${shop}`,
-            e
-          );
-          if (!res.headersSent) {
-            res.status(500).send(error.message);
-          }
+  app.post(
+    "/webhooks/:topic",
+    express.text({ type: "*/*" }),
+    async (req, res) => {
+      const { topic } = req.params || "";
+      const shop = req.headers["x-shopify-shop-domain"] || "";
+
+      try {
+        await shopify.webhooks.process({
+          rawBody: req.body,
+          rawRequest: req,
+          rawResponse: res,
+        });
+        console.log(`--> Processed ${topic} webhook for ${shop}`);
+      } catch (e) {
+        console.error(
+          `---> Error while registering ${topic} webhook for ${shop}`,
+          e
+        );
+        if (!res.headersSent) {
+          res.status(500).send(error.message);
         }
       }
-    );
+    }
+  );
   
     app.use(express.json());
   
-    app.post("/graphql", verifyRequest, async (req, res) => {
+    app.post("/api/graphql", verifyRequest, async (req, res) => {
       try {
         const sessionId = await shopify.session.getCurrentId({
           isOnline: true,
@@ -101,15 +101,16 @@ const start = async () => {
         res.status(200).send(response.body);
       } catch (e) {
         console.error(`---> An error occured at GraphQL Proxy`, e);
-        res.status(403).send(e)
+        res.status(403).send(e);
       }
     });
   
     app.use(csp);
-    app.use(isShopActive)
+    app.use(isShopActive);
     // If you're making changes to any of the routes, please make sure to add them in `./client/vite.config.cjs` or it'll not work.
     app.use("/apps", router); //Verify user route requests
     app.use("/proxy_route", verifyProxy, proxyRouter); //MARK:- App Proxy routes
+  
   
     app.post("/gdpr/:topic", verifyHmac, async (req, res) => {
       const { body } = req;

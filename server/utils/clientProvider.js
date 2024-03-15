@@ -1,9 +1,5 @@
-const { ApiVersion } = require('@shopify/shopify-api');
 const sessionHandler = require('./sessionHandler.js');
 const shopify = require('./shopifyConfig.js');
-
-
-const currentApiVersion = ApiVersion.January23;
 
 const fetchSession = async ({ req, res, isOnline }) => {
   //false for offline session, true for online session
@@ -27,7 +23,7 @@ const restClient = async ({ req, res, isOnline }) => {
   const session = await fetchSession({ req, res, isOnline });
   const client = new shopify.clients.Rest({
     session,
-    apiVersion: currentApiVersion,
+    apiVersion: process.env.SHOPIFY_API_VERSION,
   });
   const { shop } = session;
   return { client, shop, session };
@@ -49,7 +45,7 @@ const offline = {
     const session = await fetchOfflineSession(shop);
     const client = new shopify.clients.Rest({
       session,
-      apiVersion: currentApiVersion,
+      apiVersion: process.env.SHOPIFY_API_VERSION,
     });
     return { client, shop, session };
   },

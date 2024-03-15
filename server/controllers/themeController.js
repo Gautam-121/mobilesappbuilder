@@ -1,4 +1,4 @@
-const Payload = require("payload")
+const Payload = require("payload");
 
 const getAllTheme = async(req , res , next)=>{
     try {

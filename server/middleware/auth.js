@@ -1,4 +1,5 @@
 const {
+  BotActivityDetected,
   CookieNotFound,
   InvalidOAuthError,
   InvalidSession,
@@ -40,11 +41,12 @@ const authMiddleware = (app) => {
       const { shop } = req.query;
       switch (true) {
         case e instanceof CookieNotFound:
-          return res.redirect(`/exitframe/${shop}`);
-          break;
         case e instanceof InvalidOAuthError:
         case e instanceof InvalidSession:
           res.redirect(`/auth?shop=${shop}`);
+          break;
+        case e instanceof BotActivityDetected:
+          res.status(410).send(e.message);
           break;
         default:
           res.status(500).send(e.message);
@@ -66,7 +68,8 @@ const authMiddleware = (app) => {
       await sessionHandler.storeSession(session);
 
       const client = new shopify.clients.Graphql({ session });
-      const data = await client.query({ data: TEST_QUERY });
+      const response = await client.request(TEST_QUERY);
+
       const { shop } = session;
 
       console.log("Enter inside the auth/token 71")
@@ -74,7 +77,7 @@ const authMiddleware = (app) => {
       const isShopAvaialble = await payload.find({
         collection: 'activeStores',
         where: {
-          shopId: { equals: data?.body?.data?.shop?.id},
+          shopId: { equals: response?.data?.shop?.id},
         }
       })
 
@@ -83,7 +86,7 @@ const authMiddleware = (app) => {
 
           console.log("Enter inside storefrontToken")
           // Make the POST request to create the storefront access token
-          const response = await axios.post(
+          const storefrontResponse = await axios.post(
             `https://${shopDomain}/admin/api/${apiVersion}/storefront_access_tokens.json`,
             requestBody,
             {
@@ -98,8 +101,8 @@ const authMiddleware = (app) => {
             collection: 'activeStores', // required
             data: {
               shopName: shop,
-              shopId: data?.body?.data?.shop?.id,
-              storefront_access_token: response.data?.storefront_access_token?.access_token,
+              shopId: response?.data?.shop?.id,
+              storefront_access_token: storefrontResponse.data?.storefront_access_token?.access_token,
               isActive: false
             },
           })
@@ -125,11 +128,12 @@ const authMiddleware = (app) => {
       const { shop } = req.query;
       switch (true) {
         case e instanceof CookieNotFound:
-          return res.redirect(`/exitframe/${shop}`);
-          break;
         case e instanceof InvalidOAuthError:
         case e instanceof InvalidSession:
           res.redirect(`/auth?shop=${shop}`);
+          break;
+        case e instanceof BotActivityDetected:
+          res.status(410).send(e.message);
           break;
         default:
           res.status(500).send(e.message);
@@ -150,7 +154,7 @@ const authMiddleware = (app) => {
       await sessionHandler.storeSession(session);
 
       const client = new shopify.clients.Graphql({ session });
-      const data = await client.query({ data: TEST_QUERY });
+      const response = await client.request(TEST_QUERY);
 
       const host = req.query.host;
       const { shop } = session;
@@ -160,7 +164,7 @@ const authMiddleware = (app) => {
       const result = await payload.find({
         collection: 'activeStores',
         where: {
-          shopId: { equals:  data?.body?.data?.shop?.id}
+          shopId: { equals:  response?.data?.shop?.id}
         }
       })
 
@@ -168,7 +172,7 @@ const authMiddleware = (app) => {
         await payload.update({
           collection: 'activeStores',
           where: {
-            shopId: { equals:  data?.body?.data?.shop?.id}
+            shopId: { equals: response?.data?.shop?.id}
           },
           data: {
             isActive: true
@@ -184,15 +188,16 @@ const authMiddleware = (app) => {
       const { shop } = req.query;
       switch (true) {
         case e instanceof CookieNotFound:
-          return res.redirect(`/exitframe/${shop}`);
-          break;
-        case e instanceof InvalidOAuthError:
-        case e instanceof InvalidSession:
-          res.redirect(`/auth?shop=${shop}`);
-          break;
-        default:
-          res.status(500).send(e.message);
-          break;
+          case e instanceof InvalidOAuthError:
+          case e instanceof InvalidSession:
+            res.redirect(`/auth?shop=${shop}`);
+            break;
+          case e instanceof BotActivityDetected:
+            res.status(410).send(e.message);
+            break;
+          default:
+            res.status(500).send(e.message);
+            break;
       }
     }
   });

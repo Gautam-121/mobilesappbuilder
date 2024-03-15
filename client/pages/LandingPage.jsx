@@ -60,7 +60,7 @@ const AppForm = () => {
   };
   const [appdetailsPost, postAppDetails] = useDataFetcher(
     "",
-    "/api/createBrandingPage",
+    "/apps/api/createBrandingPage",
     postOptions
   );
 

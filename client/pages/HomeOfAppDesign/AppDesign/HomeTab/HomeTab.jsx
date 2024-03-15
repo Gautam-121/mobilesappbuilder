@@ -67,7 +67,7 @@ const HomeTab = (props) => {
 
   const [responseData, fetchData] = useDataFetcher(
     "",
-    "/api/getHomePageByShop/3E",
+    "/apps/api/getHomePageByShop/BW",
     getData
   );
 useEffect(()=>{
@@ -95,12 +95,12 @@ const useDataFetcherForShopifyData = (initialState, url, options) => {
 
 const [responseCollections, fetchCollections] = useDataFetcherForShopifyData(
   [],
-  "/api/getCollection",
+  "/apps/api/getCollection",
   getData
 );
 const [responseProducts, fetchProducts] = useDataFetcherForShopifyData(
   [],
-  "api/getProduct",
+  "/apps/api/getProduct",
   getData
 );
 
