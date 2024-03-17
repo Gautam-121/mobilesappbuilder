@@ -9,8 +9,13 @@ export default function VerticalGridEdit(props) {
   const [componentListArray, setComponentListArray] = useRecoilState(
     componentListArrayAtom
   );
-  const collections = useRecoilValue(collectionsAtom)
-
+  const [collections, setCollections] = useRecoilState(collectionsAtom)
+  if(collections===undefined)
+  setCollections([])
+  useEffect(()=>{
+    console.log(collections)
+  },[collections])
+console.log(collections)
 const data = props.data
 console.log(data)
 const [currentObject, setCurrentObject] = useState({...data})

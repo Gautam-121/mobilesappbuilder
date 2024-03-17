@@ -8,13 +8,13 @@ import DroppableContainer from '../DragAndDropNew/DroppableContainer';
 import ComponentsList from '../../../UpdatedCode/componentsList/ComponentsList';
 import MobilePreview from '../../../UpdatedCode/mobilePreview/MobilePreview';
 import useFetch from '../../../../hooks/useFetch';
-import { useSetRecoilState } from 'recoil';
+import { useSetRecoilState, useRecoilState } from 'recoil';
 import { collectionsAtom, componentListArrayAtom, productsAtom } from '../../../UpdatedCode/recoil/store';
 
 
 const HomeTab = (props) => {
   const setComponentListArray = useSetRecoilState(componentListArrayAtom)
-  const setCollections = useSetRecoilState(collectionsAtom)
+  const [collections,setCollections] = useRecoilState(collectionsAtom)
   const setProducts = useSetRecoilState(productsAtom)
   const getData = {
     headers: {
@@ -67,7 +67,7 @@ const HomeTab = (props) => {
 
   const [responseData, fetchData] = useDataFetcher(
     "",
-    "/apps/api/getHomePageByShop/BW",
+    "/apps/api/getHomePageByShop/B1",
     getData
   );
 useEffect(()=>{
@@ -77,7 +77,9 @@ useEffect(()=>{
   fetchProducts();
 },[])
 
-
+useEffect(()=>{
+  console.log("Collections set to recoil atom", collections)
+},[collections])
 const useDataFetcherForShopifyData = (initialState, url, options) => {
   console.log("");
   const [data, setData] = useState(initialState);
@@ -87,6 +89,8 @@ const useDataFetcherForShopifyData = (initialState, url, options) => {
     console.log("fetch data triggered");
     setData("");
     const result = await (await fetch(url, options)).json();
+    // console.log("result", result?.collections);
+    console.log("result", result.products);
     console.log("result", result);
     setData(result);
   };
@@ -105,12 +109,17 @@ const [responseProducts, fetchProducts] = useDataFetcherForShopifyData(
 );
 
 useEffect(() => {
+ if(responseCollections!=undefined){
   setCollections(responseCollections.collections);
-
+  console.log(responseCollections.collections)
+ }
 }, [responseCollections]);
 
 useEffect(() => {
+  if(responseProducts!=undefined){
   setProducts(responseProducts.products);
+  console.log(responseProducts.products)
+  }
 }, [responseProducts]);
   return (
     <DndProvider backend={HTML5Backend}>

@@ -3,6 +3,7 @@ import { SearchIcon } from '@shopify/polaris-icons';
 import { useState, useCallback, useMemo } from 'react';
 
 export default function CollectionSelector({ collections, onSelect }) {
+  console.log(collections)
   const deselectedOptions = useMemo(
     () =>
       collections?.map((collection) => ({

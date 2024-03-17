@@ -10,7 +10,12 @@ export default function VerticalProductgridEdit(props) {
     const [componentListArray, setComponentListArray] = useRecoilState(
         componentListArrayAtom
       );
-      const collections = useRecoilValue(productsAtom)
+      const [collections, setCollections] = useRecoilState(productsAtom)
+      if(collections===undefined)
+      setCollections([])
+      useEffect(()=>{
+        console.log(collections)
+      },[collections])
     
     const data = props.data
     console.log("productdata",data)
@@ -93,12 +98,12 @@ const handleCheckboxChange = (id) => {
     className="editPopupContainer">
     
     
-    {collections.map((item) => (
+    {collections===undefined?"":collections.map((item) => (
         <div key={item.id}>
           <label htmlFor="">
             <input
               type="checkbox"
-              checked={currentObject.data && currentObject.data && currentObject.data.some(dataItem => dataItem.productGroupId === item.id)}
+              checked={currentObject.data && currentObject.data && currentObject?.data.some(dataItem => dataItem.productGroupId === item.id)}
 
               onChange={() => handleCheckboxChange(item.id)}
             />

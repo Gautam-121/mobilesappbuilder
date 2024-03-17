@@ -50,7 +50,7 @@ import Horizontalproductgrid from '../components/announcementBar/Horizontalprodu
         }}
       >
         {/* <AnnouncementBar handleEdit={handleEdit} data={data} style={style} text={text} textColor={textColor} backgroundColor={backgroundColor} /> */}
-       <Horizontalproductgrid handleEdit={handleEdit} gridItems={gridItems}  />
+       {/* <Horizontalproductgrid handleEdit={handleEdit} gridItems={gridItems}  /> */}
         <EditPopup componentData={gridItems} />
       </div>
     );

@@ -43,12 +43,12 @@ export default function BannerEdit({ data, handleDelete }) {
   const products = useRecoilValue(productsAtom);
 
   useEffect(() => {
-    console.log("Collections for banners", collections);
+   
     console.log(products);
   }, [collections]);
 
   console.log(data);
-
+ console.log("Collections for banners", collections);
   function handleChange(value) {
 
     const updatedData = JSON.parse(JSON.stringify(currentObject.data.data));
