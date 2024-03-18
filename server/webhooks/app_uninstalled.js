@@ -1,5 +1,4 @@
-const payload = require('payload');
-
+const payload = require("payload");
 
 /**
  * @typedef { import("../../_developer/types/2023-07/webhooks.js").APP_UNINSTALLED } webhookTopic
@@ -16,21 +15,21 @@ const appUninstallHandler = async (
   const webhookBody = JSON.parse(webhookRequestBody);
 
   await payload.update({
-    collection: 'activeStores',
+    collection: "activeStores",
     where: {
-      shopName: { equals: shop},
+      shopName: { equals: shop },
     },
     data: {
-      isActive: false
-    }
-  })
+      isActive: false,
+    },
+  });
 
   await payload.delete({
-    collection: 'session',
+    collection: "session",
     where: {
-      shop: { equals: shop},
+      shop: { equals: shop },
     },
-  })
+  });
 };
 
-module.exports =  appUninstallHandler;
+module.exports = appUninstallHandler;

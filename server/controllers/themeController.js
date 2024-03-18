@@ -1,59 +1,45 @@
 const Payload = require("payload");
+const ErrorHandler = require("../utils/errorHandler");
 
-const getAllTheme = async(req , res , next)=>{
-    try {
+const getAllTheme = async (req, res, next) => {
+  try {
+    const theme = await Payload.find({
+      collection: "theme",
+    });
 
-        const theme = await Payload.find({
-            collection: 'theme',
-        })
+    return res.status(200).json({
+      success: true,
+      message: "Data Send Successfully",
+      data: theme.docs,
+    });
+  } catch (error) {
+    return next(new ErrorHandler(error.message, 500));
+  }
+};
 
-        return res.status(200).json({
-            success: true,
-            message: "Data Send Successfully",
-            data: theme.docs
-        })
-
-    } catch (error) {
-        return res.status(500).json({
-            success: false,
-            message: error.message
-        })
+const getThemeById = async (req, res, next) => {
+  try {
+    if (!req.params.themeId) {
+      return next(new ErrorHandler("Theme_id is missing", 400));
     }
-}
 
-const getThemeById = async(req , res , next)=>{
-    try {
-        
-        if(!req.params.themeId){
-            return res.status(400).json({
-                success: false,
-                message: "Theme_id is missing"
-            })
-        }
-    
-        const theme = await Payload.findByID({
-            collection: 'theme', // required
-            id: req.params.themeId, // required
-        })
-    
-        if(!theme){
-            return res.status(404).json({
-                success: false,
-                message: "Theme not found"
-            })
-        }
-    
-        return res.status(200).json({
-            success:true,
-            message: "Data Send Successfully",
-            data: theme
-        })
-    } catch (error) {
-        return res.status(500).json({
-            success: false,
-            message: error.message
-        })
-    } 
-}
+    const theme = await Payload.findByID({
+      collection: "theme", // required
+      id: req.params.themeId, // required
+    });
+
+    if (!theme) {
+      return next(new ErrorHandler("Theme not found", 400));
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Data Send Successfully",
+      data: theme,
+    });
+  } catch (error) {
+    return next(new ErrorHandler(error.message, 500));
+  }
+};
 
 module.exports = {getAllTheme , getThemeById}

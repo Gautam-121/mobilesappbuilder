@@ -1,5 +1,5 @@
-const { shopifyApi } = require('@shopify/shopify-api');
-require('dotenv').config();
+const { shopifyApi } = require("@shopify/shopify-api");
+require("dotenv").config();
 
 const isDev = process.env.NODE_ENV === "dev";
 
@@ -15,7 +15,4 @@ const shopify = shopifyApi({
   logger: { level: isDev ? 1 : 0 }, //Error = 0,Warning = 1,Info = 2,Debug = 3
 });
 
-module.exports =  shopify;
-
-
-
+module.exports = shopify;

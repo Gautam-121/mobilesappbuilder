@@ -1,8 +1,6 @@
-const  shopify  =  require("./shopifyConfig.js");
-
+const shopify = require("./shopifyConfig.js");
 
 const authRedirect = async (req, res) => {
-  
   if (!req.query.shop) {
     return res.status(500).send("No shop provided");
   }
@@ -27,4 +25,4 @@ const authRedirect = async (req, res) => {
   });
 };
 
-module.exports =  authRedirect
+module.exports = authRedirect;

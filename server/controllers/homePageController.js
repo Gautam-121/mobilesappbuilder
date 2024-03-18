@@ -1,134 +1,28 @@
 const Payload = require("payload");
-
-
-const createHomePage = async (req, res, next) => {
-  try {
-
-    const { datas } = req.body;
-
-    const isHomeDataPresent = await Payload.find({
-      collection: 'homePage',
-      where: { shopId: { equals: "gid://shopify/Shop/814473874894"} }
-    })
-
-    if (isHomeDataPresent.docs.length != 0) {
-      return res.status(400).json({
-        success: false,
-        message: "Shop_id Already Exist"
-      })
-    }
-
-    for (let index in datas) {
-
-      if (datas[index].featureType === "banner") {
-        const isVisible = datas[index]?.data?.some(val => val.isVisible === true)
-        const banner = await Payload.create({
-          collection: "banner",
-          data: {
-            data: datas[index].data
-          }
-        });
-
-        datas[index].data = {
-          relationTo: "banner",
-          value: banner.id,
-        }
-        datas[index].isVisible = isVisible
-        datas[index].displayOrder = Number(index) + 1
-      }
-      else if (datas[index].featureType === "announcement") {
-        const announcementBar = await Payload.create({
-          collection: "announcementBanner",
-          data:  datas[index].data
-        });
-
-        datas[index].data = {
-          relationTo: "announcementBanner",
-          value: announcementBar.id,
-        }
-        datas[index].displayOrder = Number(index) + 1
-
-      }
-      else if (datas[index].featureType === "productGroup") {
-        const product = await Payload.create({
-          collection: "product",
-          data:  datas[index].data,
-        });
-
-        datas[index].data = {
-          relationTo: "product",
-          value: product.id,
-        }
-        datas[index].displayOrder = Number(index) + 1
-      }
-      else if (datas[index].featureType === "categories") {
-        const collection = await Payload.create({
-          collection: "collection",
-          data: {
-            data:  datas[index].data,
-          }
-        });
-
-        datas[index].data = {
-          relationTo: "collection",
-          value: collection.id,
-        }
-        datas[index].displayOrder = Number(index) + 1
-      }
-    }
-    console.log("Check enter Upto" , datas)
-    const homeData = await Payload.create({
-      collection: "homePage",
-      data: {
-        shopId: req.shop_id || "gid://shopify/Shop/814473874884",
-        homeData: datas
-      },
-    });
-
-    console.log("Check Finish Upto")
-
-
-    return res.status(201).json({
-      success: true,
-      data: homeData,
-    });
-
-  } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    });
-  }
-};
+const ErrorHandler = require("../utils/errorHandler");
 
 const getHomePage = async (req, res, next) => {
   try {
-
     if (!req.params.shopId) {
-      return res.status(400).json({
-        success: false,
-        message: "Shop_id is Missing"
-      })
+      return next(new ErrorHandler("Shop_id is Missing", 400));
     }
 
     const homeData = await Payload.find({
-      collection: 'homePage',
-      where: { shopId: { equals: `gid://shopify/Shop/${req.params.shopId}` }, },
-    })
+      collection: "homePage",
+      where: { shopId: { equals: `gid://shopify/Shop/${req.params.shopId}` } },
+    });
 
     if (homeData.docs.length === 0) {
-      return res.status(400).json({
-        success: false,
-        message: "No data found with shopId: "+ req.params.shopId
-      })
+      return next(
+        new ErrorHandler("No data found with shopId: " + req.params.shopId, 400)
+      );
     }
 
     // Update the homeData.docs[0].homeData array
     homeData.docs[0].homeData = homeData.docs[0].homeData.map((value) => {
       if (value.featureType === "banner" || value.featureType === "categories") {
         return { ...value, data: value.data.value.data };
-      } 
-      else {
+      } else {
         return { ...value, data: [value.data.value] };
       }
     });
@@ -138,50 +32,38 @@ const getHomePage = async (req, res, next) => {
       message: "Send Successfully",
       data: {
         ...homeData.docs[0],
-        themeId:homeData.docs[0]?.themeId.id
-      }
-    })
-
+        themeId: homeData.docs[0]?.themeId.id,
+      },
+    });
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message
-    })
+    return next(new ErrorHandler(error.message, 500));
   }
-}
+};
 
-const getHomePageByWeb = async (req , res , next)=>{
+const getHomePageByWeb = async (req, res, next) => {
   try {
-
-    if(!req.params.themeId){
-      return res.status(400).json({
-        success: false,
-        message: "themeId is missing"
-      })
+    if (!req.params.themeId) {
+      return next(new ErrorHandler("themeId is missing", 400));
     }
 
     const homeData = await Payload.find({
-      collection: 'homePage',
+      collection: "homePage",
       where: {
-        shopId: { equals:req.shop_id || "gid://shopify/Shop/81447387454"},
-        themeId: { equals: req.params.themeId}
+        shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
+        themeId: { equals: req.params.themeId },
       },
-      depth: 2
-    })
+      depth: 2,
+    });
 
-    if(homeData.docs.length === 0){
-      return res.status(400).json({
-        success: false,
-        message: "No Document Found"
-      })
+    if (homeData.docs.length === 0) {
+      return next(new ErrorHandler("No Document Found", 400));
     }
 
     // Update the homeData.docs[0].homeData array
     homeData.docs[0].homeData = homeData.docs[0].homeData.map((value) => {
-      if (value.featureType === "banner" || value.featureType === "categories") {
+      if ( value.featureType === "banner" || value.featureType === "categories") {
         return { ...value, data: value.data.value };
-      } 
-      else {
+      } else {
         return { ...value, data: value.data.value };
       }
     });
@@ -191,64 +73,42 @@ const getHomePageByWeb = async (req , res , next)=>{
       message: "Send Successfully",
       data: {
         ...homeData.docs[0],
-        themeId:homeData.docs[0].themeId?.id
-      }
-    })
-  
+        themeId: homeData.docs[0].themeId?.id,
+      },
+    });
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message
-    })
+    return next(new ErrorHandler(error.message, 500));
   }
-}
+};
 
 const updateHomePage = async (req, res, next) => {
   try {
-    const {datas}  = req.body;
+
+    const { datas } = req.body;
 
     if (!req.params.themeId) {
-      return res.status(400).json({
-        success: false,
-        message: "themeId is missing",
-      });
+      return next(new ErrorHandler("themeId is missing", 400));
     }
-
-    console.log("Enter" , req.params.themeId )
 
     const isExistHomeData = await Payload.find({
       collection: "homePage",
       where: {
-        shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454"},
+        shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
         themeId: { equals: req.params.themeId },
       },
     });
 
-    console.log("incomingData" , datas)
-
-    console.log("Enter" , isExistHomeData )
-
     if (isExistHomeData.docs.length === 0) {
-      return res.status(400).json({
-        success: false,
-        message: "No Document Found",
-      });
+      return next(new ErrorHandler("No Document Found", 400));
     }
 
     for (let index in datas) {
-
       if (datas[index].featureType === "banner") {
-
-        console.log("bANNER")
-
         const isVisible = datas[index]?.data?.data.some(
           (val) => val.isVisible === true
         );
 
         if (datas[index]?.data?.id) {
-
-          console.log("Entr inside banner" , datas[index].data)
-
           const banner = await Payload.update({
             collection: "banner",
             id: datas[index].data.id,
@@ -263,15 +123,12 @@ const updateHomePage = async (req, res, next) => {
           };
 
           datas[index].isVisible = isVisible;
-          console.log("banner")
-
-        } 
+        }
         else {
-          
           const banner = await Payload.create({
             collection: "banner",
             data: {
-              data: datas[index].data?.data
+              data: datas[index].data?.data,
             },
           });
 
@@ -281,17 +138,11 @@ const updateHomePage = async (req, res, next) => {
           };
 
           datas[index].isVisible = isVisible;
-
         }
       } 
       else if (datas[index].featureType === "announcement") {
 
-        console.log("Entr inside announcementBanner")
-
         if (datas[index]?.data?.id) {
-
-          console.log("Entr inside id")
-
           const announcementBar = await Payload.update({
             collection: "announcementBanner",
             id: datas[index]?.data?.id,
@@ -305,26 +156,22 @@ const updateHomePage = async (req, res, next) => {
             value: announcementBar.id,
           };
 
-          console.log("announcementBar")
         } 
         else {
-
           const announcementBar = await Payload.create({
             collection: "announcementBanner",
-            data: datas[index]?.data
+            data: datas[index]?.data,
           });
 
           datas[index].data = {
             relationTo: "announcementBanner",
             value: announcementBar.id,
           };
-
         }
       } 
       else if (datas[index].featureType === "productGroup") {
 
         if (datas[index]?.data?.id) {
-
           const product = await Payload.update({
             collection: "product",
             id: datas[index]?.data?.id,
@@ -337,11 +184,8 @@ const updateHomePage = async (req, res, next) => {
             relationTo: "product",
             value: product.id,
           };
-
-          console.log("productGroup")
         } 
         else {
-
           const product = await Payload.create({
             collection: "product",
             data: datas[index]?.data,
@@ -356,7 +200,6 @@ const updateHomePage = async (req, res, next) => {
       else if (datas[index].featureType === "categories") {
 
         if (datas[index]?.data?.id) {
-
           const collection = await Payload.update({
             collection: "collection",
             id: datas[index].data.id,
@@ -369,10 +212,8 @@ const updateHomePage = async (req, res, next) => {
             relationTo: "collection",
             value: collection.id,
           };
-          console.log("collection")
         } 
         else {
-
           const collection = await Payload.create({
             collection: "collection",
             data: {
@@ -385,11 +226,10 @@ const updateHomePage = async (req, res, next) => {
             value: collection.id,
           };
         }
-      }
+      } 
       else if (datas[index].featureType === "text_paragraph") {
 
         if (datas[index]?.data?.id) {
-
           const text_paragraph = await Payload.update({
             collection: "paragraph",
             id: datas[index].data.id,
@@ -402,12 +242,8 @@ const updateHomePage = async (req, res, next) => {
             relationTo: "paragraph",
             value: text_paragraph.id,
           };
-
-          console.log("textParagraph")
-
-        } 
+        }
         else {
-
           const text_paragraph = await Payload.create({
             collection: "paragraph",
             data: {
@@ -419,13 +255,11 @@ const updateHomePage = async (req, res, next) => {
             relationTo: "paragraph",
             value: text_paragraph.id,
           };
-
         }
-      }
+      } 
       else if (datas[index].featureType === "countdown") {
 
         if (datas[index]?.data?.id) {
-
           const eventTimer = await Payload.update({
             collection: "eventTimer",
             id: datas[index].data.id,
@@ -438,13 +272,8 @@ const updateHomePage = async (req, res, next) => {
             relationTo: "eventTimer",
             value: eventTimer.id,
           };
-
-          console.log("eventTimer")
-
-
-        } 
+        }
         else {
-
           const eventTimer = await Payload.create({
             collection: "eventTimer",
             data: {
@@ -457,11 +286,10 @@ const updateHomePage = async (req, res, next) => {
             value: eventTimer.id,
           };
         }
-      }
+      } 
       else if (datas[index].featureType === "social_channel") {
 
         if (datas[index]?.data?.id) {
-
           const social = await Payload.update({
             collection: "social",
             id: datas[index].data.id,
@@ -474,12 +302,8 @@ const updateHomePage = async (req, res, next) => {
             relationTo: "social",
             value: social.id,
           };
-          console.log("social")
-
-
         } 
         else {
-
           const social = await Payload.create({
             collection: "social",
             data: {
@@ -492,11 +316,10 @@ const updateHomePage = async (req, res, next) => {
             value: social.id,
           };
         }
-      }
+      } 
       else if (datas[index].featureType === "video") {
 
         if (datas[index]?.data?.id) {
-
           const video = await Payload.update({
             collection: "video",
             id: datas[index].data.id,
@@ -509,12 +332,8 @@ const updateHomePage = async (req, res, next) => {
             relationTo: "video",
             value: video.id,
           };
-
-          console.log("video")
-
-        } 
+        }
         else {
-
           const video = await Payload.create({
             collection: "video",
             data: {
@@ -530,11 +349,10 @@ const updateHomePage = async (req, res, next) => {
       }
     }
 
-
     const homeData = await Payload.update({
       collection: "homePage",
       where: {
-        shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454"},
+        shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
         themeId: { equals: req.params.themeId },
       },
       data: {
@@ -547,26 +365,9 @@ const updateHomePage = async (req, res, next) => {
       message: "Data Updated Successfully",
       data: homeData,
     });
-    
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+    return next(new ErrorHandler(error.message, 400));
   }
 };
 
-module.exports = {createHomePage , getHomePage , updateHomePage , getHomePageByWeb}
-
-
-
-
-
-
-
-
-
-
-
-
-
+module.exports = { getHomePage, updateHomePage, getHomePageByWeb };

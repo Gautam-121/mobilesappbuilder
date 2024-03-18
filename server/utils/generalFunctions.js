@@ -1,5 +1,4 @@
 const axios = require("axios");
-const Payload = require("payload")
 
 const shopifyApiData = async (
   shopifyGraphQLEndpoint,
@@ -13,6 +12,5 @@ const shopifyApiData = async (
   );
   return shopifyResult;
 };
-
 
 module.exports = { shopifyApiData };

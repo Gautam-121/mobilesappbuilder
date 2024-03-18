@@ -1,7 +1,7 @@
+const ErrorHandler = require("../utils/errorHandler.js");
 const {shopifyApiData} = require("../utils/generalFunctions.js")
 
 const getProduct = async (req, res) => {
-
   try {
 
     const shop = req.query.shop;
@@ -22,28 +22,32 @@ const getProduct = async (req, res) => {
     const axiosShopifyConfig = {
       headers: {
         "Content-Type": "application/json",
-        "X-Shopify-Access-Token": req.accessToken || "shpua_177ec0655453453b3619532c8a216b04",
+        "X-Shopify-Access-Token":
+          req.accessToken || "shpua_177ec0655453453b3619532c8a216b04",
       },
     };
 
-    const fetchProducts = await shopifyApiData(shopifyGraphQLEndpoint , graphqlQuery , axiosShopifyConfig)
+    const fetchProducts = await shopifyApiData(
+      shopifyGraphQLEndpoint,
+      graphqlQuery,
+      axiosShopifyConfig
+    );
 
-    const products = fetchProducts?.data?.data?.products?.edges?.map((edge) => edge.node);
+    const products = fetchProducts?.data?.data?.products?.edges?.map(
+      (edge) => edge.node
+    );
 
     return res.status(200).json({
       success: true,
-      products
+      products,
     });
-
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    return next(new ErrorHandler(error.message, 500));
   }
 };
 
 const getCollection = async (req, res) => {
-
   try {
-
     const shop = req.query.shop;
     const shopifyGraphQLEndpoint = `https://${shop || "renergii.myshopify.com"}/admin/api/2023-04/graphql.json`;
 
@@ -65,33 +69,35 @@ const getCollection = async (req, res) => {
     const axiosShopifyConfig = {
       headers: {
         "Content-Type": "application/json",
-        "X-Shopify-Access-Token": req.accessToken || "shpua_177ec0655453453b3619532c8a216b04",
+        "X-Shopify-Access-Token":
+          req.accessToken || "shpua_177ec0655453453b3619532c8a216b04",
       },
     };
 
-    const fetchCollections = await shopifyApiData(shopifyGraphQLEndpoint , graphqlQuery , axiosShopifyConfig)
+    const fetchCollections = await shopifyApiData(
+      shopifyGraphQLEndpoint,
+      graphqlQuery,
+      axiosShopifyConfig
+    );
 
-    const collections = fetchCollections?.data?.data?.collections?.nodes?.map((edge) => edge);
+    const collections = fetchCollections?.data?.data?.collections?.nodes?.map(
+      (edge) => edge
+    );
 
     return res.status(200).json({
       success: true,
-      collections
+      collections,
     });
-
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    return next(new ErrorHandler(error.message, 500));
   }
 };
 
-const getProductByCollectionId = async( req , res , next)=>{
+const getProductByCollectionId = async (req, res, next) => {
   try {
-
-  // if(!req.query.collectionId){
-  //   return res.status(400).json({
-  //     success : false,
-  //     message : "Collection_Id is Missing"
-  //   })
-  // }
+    if (!req.query.collectionId) {
+      return next(new ErrorHandler("Collection_Id is Missing", 400));
+    }
 
     const shop = req.query.shop;
     const shopifyGraphQLEndpoint = `https://${shop || "renergii.myshopify.com"}/admin/api/2023-04/graphql.json`;
@@ -132,23 +138,30 @@ const getProductByCollectionId = async( req , res , next)=>{
     const axiosShopifyConfig = {
       headers: {
         "Content-Type": "application/json",
-        "X-Shopify-Access-Token": req.accessToken || "shpua_177ec0655453453b3619532c8a216b04",
+        "X-Shopify-Access-Token":
+          req.accessToken || "shpua_177ec0655453453b3619532c8a216b04",
       },
     };
 
-    const fetchCollectionsProducts = await shopifyApiData(shopifyGraphQLEndpoint , graphqlQuery , axiosShopifyConfig)
+    const fetchCollectionsProducts = await shopifyApiData(
+      shopifyGraphQLEndpoint,
+      graphqlQuery,
+      axiosShopifyConfig
+    );
 
-    const collectionsProducts = fetchCollectionsProducts?.data?.data?.collection?.products?.edges?.map((edge) => edge.node);
+    const collectionsProducts =
+      fetchCollectionsProducts?.data?.data?.collection?.products?.edges?.map(
+        (edge) => edge.node
+      );
 
     return res.status(200).json({
       success: true,
-      data : collectionsProducts
+      data: collectionsProducts,
     });
-
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    return next(new ErrorHandler(error.message, 500));
   }
-}
+};
 
 module.exports = { getProduct , getCollection , getProductByCollectionId}
 

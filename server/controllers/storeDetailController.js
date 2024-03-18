@@ -1,23 +1,20 @@
 const Payload = require("payload");
-const {shopifyApiData} = require("../utils/generalFunctions.js")
+const {shopifyApiData} = require("../utils/generalFunctions.js");
+const ErrorHandler = require("../utils/errorHandler.js");
 
 
 const updateStoreDetail = async (req, res, next) => {
   try {
-
     const data = req.body.themeId;
 
     if (!data) {
-      return res.status(200).json({
-        success: false,
-        message: "Data is missing",
-      });
+      return next(new ErrorHandler("Data is missing", 400));
     }
 
     let UserStoreData = await Payload.find({
       collection: "activeStores",
       where: {
-          shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
+        shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
       },
     });
 
@@ -77,195 +74,172 @@ const updateStoreDetail = async (req, res, next) => {
     const axiosShopifyConfig = {
       headers: {
         "Content-Type": "application/json",
-        "X-Shopify-Access-Token": req.accessToken || "shpua_177ec0655453453b3619532c8a216b04",
+        "X-Shopify-Access-Token":
+          req.accessToken || "shpua_177ec0655453453b3619532c8a216b04",
       },
     };
 
-    const fetchCollections = await shopifyApiData(shopifyGraphQLEndpoint , graphqlQuery , axiosShopifyConfig)
+    const fetchCollections = await shopifyApiData(
+      shopifyGraphQLEndpoint,
+      graphqlQuery,
+      axiosShopifyConfig
+    );
 
     const collections = fetchCollections?.data?.data?.collections?.nodes[0];
 
     const homeData = await Payload.find({
       collection: "homePage",
-      where: { 
+      where: {
         themeId: { equals: data },
-        shopId: {equals: "Apprikart"}
+        shopId: { equals: "Apprikart" },
       },
     });
 
     const brandingData = await Payload.find({
       collection: "brandingTheme",
-      where: { 
+      where: {
         themeId: { equals: data },
-        shopId: { equals: "Apprikart" } 
+        shopId: { equals: "Apprikart" },
       },
     });
 
     const tabMenuData = await Payload.find({
       collection: "tabMenuNav",
-      where: { 
+      where: {
         themeId: { equals: data },
-        shopId: {equals: "Apprikart"}
+        shopId: { equals: "Apprikart" },
       },
     });
 
-    for(val of homeData?.docs[0].homeData){
-      if (val.featureType === "banner") {
-        console.log("Enter in Banner")
+    for (val of homeData?.docs[0].homeData) {
 
-        val?.data?.value?.data.forEach(element => {
-          element.imageUrl = element.imageUrl.id
+      if (val.featureType === "banner") {
+        val?.data?.value?.data.forEach((element) => {
+          element.imageUrl = element.imageUrl.id;
         });
 
         const banner = await Payload.create({
           collection: "banner",
           data: {
-            data: val?.data?.value?.data
-          }
+            data: val?.data?.value?.data,
+          },
         });
 
         val.data = {
           relationTo: "banner",
           value: banner.id,
-        }
-
-        console.log("banner" , val)
-      }
+        };
+      } 
       else if (val.featureType === "announcement") {
-        console.log("Enter in announcement")
         const announcementBar = await Payload.create({
           collection: "announcementBanner",
-          data: val?.data?.value
+          data: val?.data?.value,
         });
 
         val.data = {
           relationTo: "announcementBanner",
           value: announcementBar.id,
-        }
-        console.log("announcementBanner" , val)
-      }
+        };
+      } 
       else if (val.featureType === "productGroup") {
-        console.log("Enter in productGroup")
         const product = await Payload.create({
           collection: "product",
-          data:{
+          data: {
             ...val?.data?.value,
-            productGroupId:collections?.id
-          }
+            productGroupId: collections?.id,
+          },
         });
 
         val.data = {
           relationTo: "product",
           value: product.id,
-        }
-
-        console.log("product" , val)
-      }
+        };
+      } 
       else if (val.featureType === "categories") {
-        console.log("Enter in categories")
         const collection = await Payload.create({
           collection: "collection",
           data: {
-            data: [{
-              title:collections?.title,
-              imageUrl:collections?.image,
-              collection_id:collections?.id
-            }]
-          }
+            data: [
+              {
+                title: collections?.title,
+                imageUrl: collections?.image,
+                collection_id: collections?.id,
+              },
+            ],
+          },
         });
 
         val.data = {
           relationTo: "collection",
           value: collection.id,
-        }
-        console.log("collection" , val)
-      }
-      else if(val.featureType === "text_paragraph"){
-
-        console.log("Enter in text_paragraph")
+        };
+      } 
+      else if (val.featureType === "text_paragraph") {
         const text_paragraph = await Payload.create({
           collection: "paragraph",
-          data: val?.data?.value
+          data: val?.data?.value,
         });
 
         val.data = {
           relationTo: "paragraph",
           value: text_paragraph.id,
-        }
-
-        console.log("text_paragrapg" , val)
-      }
-      else if(val.featureType === "countdown"){
-
-        console.log("Enter in countdown")
+        };
+      } 
+      else if (val.featureType === "countdown") {
         const eventTimer = await Payload.create({
           collection: "eventTimer",
-          data: val?.data?.value
+          data: val?.data?.value,
         });
 
         val.data = {
           relationTo: "eventTimer",
           value: eventTimer.id,
-        }
-
-        console.log("eventTimer" , val)
-      }
-      else if(val.featureType === "social_channel"){
-
-        console.log("Enter in social_channel")
+        };
+      } 
+      else if (val.featureType === "social_channel") {
         const social = await Payload.create({
           collection: "social",
-          data: val?.data?.value
+          data: val?.data?.value,
         });
 
         val.data = {
           relationTo: "social",
           value: social.id,
-        }
-
-        console.log("social" , val)
-      }
-      else if(val.featureType === "video"){
-
-        console.log("Enter in video")
+        };
+      } 
+      else if (val.featureType === "video") {
         const video = await Payload.create({
           collection: "video",
-          data: val?.data?.value
+          data: val?.data?.value,
         });
 
         val.data = {
           relationTo: "video",
           value: video.id,
-        }
-
-        console.log("video" , val)
+        };
       }
     }
-
-    console.log("Enter Inside the Page No 138", homeData?.docs[0])
 
     await Payload.create({
       collection: "homePage",
       data: {
-        shopId: req.shop_id ||"gid://shopify/Shop/81447387454",
+        shopId: req.shop_id || "gid://shopify/Shop/81447387454",
         themeId: data,
         homeData: homeData?.docs[0].homeData,
       },
     });
 
-    console.log("Enter Inside the Page No 83" , tabMenuData)
-
     await Payload.create({
       collection: "tabMenuNav",
       data: {
-        setting:tabMenuData.docs[0]?.setting,
+        setting: tabMenuData.docs[0]?.setting,
         shopId: req.shop_id || "gid://shopify/Shop/81447387454",
         themeId: data,
       },
     });
 
-    if(brandingData.app_title === "appText"){
-      brandingData.app_title_text.app_name = UserStoreData?.docs[0]?.shopName
+    if (brandingData.app_title === "appText") {
+      brandingData.app_title_text.app_name = UserStoreData?.docs[0]?.shopName;
     }
 
     await Payload.create({
@@ -276,8 +250,6 @@ const updateStoreDetail = async (req, res, next) => {
         themeId: data,
       },
     });
-
-    console.log("Enter Inside the Page No 93")
 
     UserStoreData = await Payload.update({
       collection: "activeStores",
@@ -291,10 +263,7 @@ const updateStoreDetail = async (req, res, next) => {
       message: "UserStoreData Update Successfully",
     });
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+    return next(new ErrorHandler(error.message, 500));
   }
 };
 
@@ -302,10 +271,7 @@ const getStoreDetail = async(req,res,next)=>{
   try {
 
     if (!req.params.shopId) {
-      return res.status(400).json({
-        success: false,
-        message: "Shop_id is Missing"
-      })
+      return next(new ErrorHandler("shop_id is missing",400))
     }
   
     const store = await Payload.find({
@@ -314,10 +280,7 @@ const getStoreDetail = async(req,res,next)=>{
     })
   
     if (store.docs.length === 0) {
-      return res.status(400).json({
-        success: false,
-        message: "No data found with shopId: "+ req.params.shopId
-      })
+      return next(new ErrorHandler("No data found with shopId: "+ req.params.shopId , 400))
     }
 
   return res.status(200).json({
@@ -327,10 +290,7 @@ const getStoreDetail = async(req,res,next)=>{
   })
   
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message
-    })
+    return next(new ErrorHandler(error.message, 500))
   }
 }
 
@@ -343,10 +303,7 @@ const getStoreDetailByWeb = async(req,res,next)=>{
     })
   
     if (store.docs.length === 0) {
-      return res.status(400).json({
-        success: false,
-        message: "No data found with shopId: "+ req.params.shopId
-      })
+      return next(new ErrorHandler("No data found with shopId: "+ req.params.shopId , 400))
     }
 
   return res.status(200).json({
@@ -356,10 +313,7 @@ const getStoreDetailByWeb = async(req,res,next)=>{
   })
   
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message
-    })
+    return next(new ErrorHandler(error.message , 500))
   }
 }
 

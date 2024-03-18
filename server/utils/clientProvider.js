@@ -1,5 +1,5 @@
-const sessionHandler = require('./sessionHandler.js');
-const shopify = require('./shopifyConfig.js');
+const sessionHandler = require("./sessionHandler.js");
+const shopify = require("./shopifyConfig.js");
 
 const fetchSession = async ({ req, res, isOnline }) => {
   //false for offline session, true for online session
@@ -53,4 +53,4 @@ const offline = {
 
 const clientProvider = { graphqlClient, restClient, offline };
 
-module.exports =  clientProvider;
+module.exports = clientProvider;

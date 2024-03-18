@@ -1,17 +1,15 @@
 const dotenv = require("dotenv");
 const Payload = require("payload");
+const ErrorHandler = require("../utils/errorHandler");
 dotenv.config();
 
 const uploadImages = async (req, res, next) => {
   try {
-
+    
     const file = req.files
 
     if (!file) {
-      return res.status(400).json({
-        success: false,
-        message: "file is missing",
-      });
+      return next(new ErrorHandler("file is missing",400))
     }
 
     const image = await Payload.create({
@@ -24,18 +22,14 @@ const uploadImages = async (req, res, next) => {
       }
     });
 
-    console.log(image)
-
     return res.status(200).json({
       success: true,
       message: "Upload Images SuccessFully",
       data: image
     });
+
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error,
-    });
+    return next(new ErrorHandler(error.message , 400))
   }
 };
 
