@@ -1,10 +1,6 @@
 const otherScreen = {
   "data": {
       "productDetail": {
-          "image": {
-              "adjustment": "cover",
-              "ratio": "3:4"
-          },
           "actions": {
               "basic": {
                   "wishlist": true,

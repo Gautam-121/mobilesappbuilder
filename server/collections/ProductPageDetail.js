@@ -17,27 +17,6 @@ const productPageDetailConfig = {
         }
     },
     {
-      name: "image",
-      label: "Image Info",
-      type: "group",
-      fields:[
-        {
-            name:"adjustment",
-            label: "Adjustment",
-            type:"select",
-            options:["fill" , "fit" , "stretch"],
-            defaultValue:"fill"
-        },
-        {
-            name:"ratio",
-            label:"Ratio",
-            type:"select",
-            options:["oneToOne", "twoToThree", "threeToFour"],
-            defaultValue:"threeToFour"
-        }
-      ]
-    },
-    {
       name: "actions",
       label: "Actions",
       type: "group",
