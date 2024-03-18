@@ -25,6 +25,7 @@ const {
   createAccountDetailPage,
   getOtherScreenPageDetailByWeb,
   getOtherScreen,
+  getProductDetails
 } = require("../controllers/otherScreenController.js");
 const {
   updateStoreDetail,
@@ -123,5 +124,7 @@ router.get("/api/getData", (req, res) => {
   const sendData = { text: "This is coming from /apps/api route." };
   return res.status(200).json(sendData);
 });
+
+router.get("/api/productDetail/:shopId", getProductDetails)
 
 module.exports = router;
