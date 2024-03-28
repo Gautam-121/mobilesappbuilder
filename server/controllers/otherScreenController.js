@@ -80,6 +80,25 @@ const createAccountDetailPage = async (req, res, next) => {
   }
 };
 
+const getProductDetails = async(req , res , next)=>{
+  try {
+    
+    const productDetail = await Payload.find({
+      collection: "productPageDetail",
+      where: { shopId: { equals: `gid://shopify/Shop/${req.params.shopId}` } },
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "Data Send Successfully",
+      productDetail: productDetail?.docs[0] || otherScreen?.data?.productDetail,
+    });
+
+  } catch (error) {
+    return next(new ErrorHandler(error.message, 500));
+  }
+}
+
 const getOtherScreenPageDetailByWeb = async (req, res, next) => {
   try {
     const productDetail = await Payload.find({
@@ -121,6 +140,7 @@ const getOtherScreenPageDetailByWeb = async (req, res, next) => {
 
 const getOtherScreen = async (req, res, next) => {
   try {
+    
     const productDetail = await Payload.find({
       collection: "productPageDetail",
       where: { shopId: { equals: `gid://shopify/Shop/${req.params.shopId}` } },
@@ -157,4 +177,5 @@ module.exports = {
   createAccountDetailPage,
   getOtherScreenPageDetailByWeb,
   getOtherScreen,
+  getProductDetails
 };
