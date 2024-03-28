@@ -57,7 +57,7 @@ export default function HorizontalCollectionGrid({
       padding:10px;
       border-radius:5px;
 
-      border: 1px solid
+      border: 1px solid green;
     `;
 
     // Append the new element to the body
@@ -73,8 +73,8 @@ export default function HorizontalCollectionGrid({
   };
   return (
     <div
-      onClick={addComponents || handleEdit}
-      draggable={draggable}
+    onClick={addComponents}
+    draggable={draggable}
       ref={dragRef}
       onDragStart={draggable ? handleDragStart : undefined}
       onDragEnd={(e) => e.preventDefault()}

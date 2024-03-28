@@ -1,36 +1,184 @@
-.mobilePreviewContainer{
-    border: 3px solid black;
-    height: 25rem;
-    width: 13rem;
-    border-radius: 30px;
-    padding:10px;
-    overflow: scroll;
-    background: white;
+.mobilePreviewContainer {
+  height: 35rem;
+  width: 18.3rem;
+  border: 8px solid rgb(26, 26, 26);
+  border-radius: 55px;
+  margin-top: 20px;
+  background-color: #f2f2f3;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+}
+
+.the-spinner {
+  text-align: 'center';
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding-top: 20px;
+}
+
+
+
+.content-container {
+  overflow-y: auto;
+  /* Enable vertical scrolling */
+  flex: 1;
+  /* Fill remaining space */
+  /* Hide the scrollbar */
+  scrollbar-width: none;
+  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE and Edge */
+
+}
+
+.scrollable-content {
+  display: flex;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  flex-direction: column;
+
+  padding: 0px;
+  /* Add padding to prevent content from touching the edges */
+}
+
+
+.content-container::-webkit-scrollbar {
+  display: none;
+  /* Chrome, Safari, Opera */
+}
+
+/* header design*/
+.header-main-mobile-preview-div {
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding-left: 18px;
+  padding-right: 14px;
+  padding-top: 18px;
+  width: 100%;
+  /* Adjusted width */
+  background-color: white;
+  border-top-left-radius: 50px;
+  /* Removed 'solid white' from border properties */
+  border-top-right-radius: 50px;
+  /* Removed 'solid white' from border properties */
+  border-top: 8px solid white;
+  /* Added top border */
+  z-index: 100;
+  /* Ensure the header is above other content */
+}
+
+.menu {
+  display: none;
+}
+
+.menu-icon {
+  font-size: 15px;
+  cursor: pointer;
+  color: rgb(26, 26, 26);
+}
+
+.menu ul {
+  list-style: none;
+  padding: 0;
+}
+
+.menu ul li {
+  margin-bottom: 10px;
+}
+
+.menu ul li a {
+  text-decoration: none;
+  color: #333;
+}
+
+/* Show menu when checkbox is checked */
+#menu-toggle:checked+.menu {
+  display: block;
+}
+
+
+
+
+/* footer design */
+
+
+.footer-main-mobile-preview-div {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: 20px;
+  padding-right: 18px;
+  padding-top: 12px;
+  padding-bottom: 2px;
+  width: 100%;
+  background-color: white;
+  border-bottom-left-radius: 50px;
+  border-bottom-right-radius: 50px;
+  border-bottom: 8px solid white;
+  z-index: 100;
+}
+
+
+.home-footer-icon {
+  font-size: large;
+  cursor: pointer;
+}
+
+.search-footer-icon {
+  cursor: pointer;
+}
+
+.cart-footer-icon {
+  cursor: pointer;
+}
+
+
+
+.editBtn {
+  display: none;
+}
+
+.componentContainer:hover {
+  .editBtn {
     display: flex;
-    flex-direction: column;
-    gap: 5px;
-    }
-.mobilePreviewContainer::-webkit-scrollbar{
-    width: 5px;
-    display: none;
-    
-}
-.editBtn{
-    display: none;
+  }
 }
 
-.componentContainer:hover{
-    .editBtn{
-        display: flex;
-        
-    }
-}
 .componentContainer {
-    transition: transform 0.5s ease-in-out; /* Add a smooth transition for the transform property */
+  transition: transform 0.5s ease-in-out;
+  /* Add a smooth transition for the transform property */
+}
 
-  }
-  
-  .dragging {
-    opacity: 0; /* Make the dragged element transparent during drag */
-    transition: opacity 0.3s ease-in-out;
-  }
+.dragging {
+  opacity: 0;
+  /* Make the dragged element transparent during drag */
+  transition: opacity 0.3s ease-in-out;
+}
+
+.editPopupContainer {
+  position: absolute;
+  top: 7.5rem;
+  height: 25rem;
+  width: 21rem;
+  left: 66%;
+  background-color: white;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  overflow: scroll;
+  border: 1px solid rgba(204, 204, 204, 1);
+}
+
+.editPopupContainer::-webkit-scrollbar {
+  display: none;
+}

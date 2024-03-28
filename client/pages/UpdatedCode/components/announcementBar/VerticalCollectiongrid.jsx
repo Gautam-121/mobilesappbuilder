@@ -54,7 +54,7 @@ export default function VerticalCollectionGrid({
       padding:10px;
       border-radius:5px;
 
-      border: 1px solid
+      border: 1px solid green;
     `;
   
     // Append the new element to the body
@@ -71,7 +71,7 @@ export default function VerticalCollectionGrid({
 
   console.log("collectionGriditems",gridItems.data.data)
   return (
-    <div onClick={addComponents || handleEdit} 
+    <div onClick={handleEdit} 
     draggable={draggable}
     ref={dragRef}
     onDragStart={draggable ? handleDragStart : undefined}

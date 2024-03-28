@@ -1,15 +1,13 @@
 .appdesign-main-div {
-    background-color: white;
+    background-color: #ffffff;
     display: flex;
-
     flex-direction: column;
-
     justify-content: space-around;
     /* gap: 20px; */
     /* width: 100%; */
 
     /* margin: 20px 60px 50px 60px; */
-    padding: 20px 0px 20px 0px;
+    padding: 27px 0px 0px 0px;
 }
 
 
@@ -19,14 +17,13 @@
     justify-content: space-between;
     margin-left: 18px;
     margin-right: 10px;
-
-
+    
 }
 
 
 .appdesign-hr-line {
 
-    margin-top: 10px;
+    margin-top: 8px;
     flex: 1;
     /* Take up remaining space */
     margin-left: -16px;
@@ -40,7 +37,6 @@
     width: 100%;
     border: none;
     height: 1px;
-    margin-top: 10px;
     margin-bottom: 0;
     padding: 0;
     box-shadow: 0 1px 0 0 rgb(201, 198, 198);

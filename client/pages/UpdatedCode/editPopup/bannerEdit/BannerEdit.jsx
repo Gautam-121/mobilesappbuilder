@@ -29,10 +29,6 @@ export default function BannerEdit({ data, handleDelete }) {
 
 
 
-
-
-
-
   const [componentListArray, setComponentListArray] = useRecoilState(
     componentListArrayAtom
   );
@@ -51,7 +47,7 @@ export default function BannerEdit({ data, handleDelete }) {
  console.log("Collections for banners", collections);
   function handleChange(value) {
 
-    const updatedData = JSON.parse(JSON.stringify(currentObject.data.data));
+    const updatedData = JSON.parse(JSON.stringify(currentObject?.data?.data));
 
     const currentImageData = updatedData[currentIndex];
 
@@ -113,7 +109,7 @@ export default function BannerEdit({ data, handleDelete }) {
 
   return (
     <div
-      style={data.isEditVisible ? {} : { display: "none" }}
+      style={data?.isEditVisible ? {} : { display: "none" }}
       className="editPopupContainer"
     >
       <div className={styles.imgListSection}>
@@ -147,11 +143,11 @@ export default function BannerEdit({ data, handleDelete }) {
 
       <div className={styles.imgSection}>
         <Text variant="headingSm" as="h4">
-          Image {currentIndex + 1} of {currentObject.data.data.length}
+          Image {currentIndex + 1} of {currentObject?.data?.data.length}
         </Text>
         <div className={styles.imgWraper}>
           <img
-            src={currentObject.data.data[currentIndex].imageUrl.url}
+            src={currentObject?.data?.data[currentIndex]?.imageUrl?.url}
             alt=""
           />
         </div>

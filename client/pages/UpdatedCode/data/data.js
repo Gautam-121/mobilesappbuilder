@@ -171,6 +171,22 @@ export const data = [
       showPlayback: true
     }
   ]
+},
+
+
+{
+  id:9,
+  isVisible: true,
+  featureType: "image",
+  layoutType: "vertical",
+  data: [
+    {
+      title: "Test Image type",
+      imageUrl: "https://www.google.com/imgres?imgurl=https%3A%2F%2Fstatic.toiimg.com%2Fphoto%2F101094345.cms&tbnid=5IIYbtZB9E_f4M&vet=10CIABEDMonwFqFwoTCJi6x5vI_YQDFQAAAAAdAAAAABAD..i&imgrefurl=https%3A%2F%2Fwww.timesnownews.com%2Fweb-stories%2Flifestyle%2Fgood-morning-beautiful-inspirational-images-and-quotes-to-share-on-whatsapp%2Fphotostory%2F101094345.cms&docid=srQSeiOUUx3RRM&w=720&h=1280&q=images&hl=en&ved=0CIABEDMonwFqFwoTCJi6x5vI_YQDFQAAAAAdAAAAABAD",
+      width: '300px',
+      height: '200px'
+    }
+  ]
 }
 
 

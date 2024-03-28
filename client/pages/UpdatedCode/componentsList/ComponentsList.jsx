@@ -1,5 +1,5 @@
 import "./componentList.css";
-import {useEffect} from 'react'
+import { useEffect } from 'react'
 import AnnouncementBar from '../components/announcementBar/AnnouncementBar'
 import HorizontalCollectionGrid from "../components/announcementBar/HorizontalCollectionGrid";
 import Horizontalproductgrid from "../components/announcementBar/Horizontalproductgrid";
@@ -15,22 +15,23 @@ import Textparagraph from "../components/announcementBar/Textparagraph";
 import Video from "../components/announcementBar/Video"
 import Banner from "../components/announcementBar/Banner";
 import { Divider, Text } from "@shopify/polaris";
+import ImageElement from "../components/announcementBar/ImageElement";
 
 export default function ComponentsList() {
   const [componentListArray, setComponentListArray] = useRecoilState(
     componentListArrayAtom
   );
-const collections = useRecoilValue(collectionsAtom)
-useEffect(() => {
-  console.log("Collections Atom", collections)
+  const collections = useRecoilValue(collectionsAtom)
+  useEffect(() => {
+    console.log("Collections Atom", collections)
 
- 
-}, [collections])
+
+  }, [collections])
 
 
   function addComponents(data) {
-    let newData = {...data}
-    newData.id=uid()
+    let newData = { ...data }
+    newData.id = uid()
     console.log(newData);
     const newArray = [...componentListArray];
     newArray.push(newData);
@@ -40,16 +41,16 @@ useEffect(() => {
     <div>
       <div className="ComponentListContainer">
         <Text variant="headingLg" as="h5" >Design Blocks</Text>
-        <Text  variant="headingMd" as="h6" >Drag, drop max 20 blocks per design</Text>
-    <Divider borderColor="border"/>
+        <Text variant="headingMd" as="h6" >Drag, drop max 20 blocks per design</Text>
+        <Divider borderColor="border" />
+
         {data.map((ele) => {
           switch (ele.featureType) {
-           
 
             case "banner":
               return (
                 <Banner
-                 draggable={true}
+                  draggable={true}
                   text="Banner"
                   element={ele}
                   addComponents={() => addComponents(ele)}
@@ -69,39 +70,39 @@ useEffect(() => {
                 />
               );
 
-           
+
 
             case "categories":
               if (ele.layoutType === "vertical_grid")
                 return (
                   <VerticalCollectionGrid
-                  text="Vertical Collection Grid"
-                  draggable={true}
+                    text="Vertical Collection Grid"
+                    draggable={true}
                     addComponents={() => addComponents(ele)}
                     key={ele.id}
                     gridItems={ele}
-                    // text= "Vertical Collection Grid"
+                  // text= "Vertical Collection Grid"
                   />
                 );
               else
                 return (
                   <HorizontalCollectionGrid
-                  draggable={true}
-                  text="Horzontal Collection Grid"
+                    draggable={true}
+                    text="Horzontal Collection Grid"
                     addComponents={() => addComponents(ele)}
                     key={ele.id}
                     gridItems={ele}
-                    // text= "Horizontal Collection Grid"
+                  // text= "Horizontal Collection Grid"
                   />
                 );
 
-                case "productGroup":
+            case "productGroup":
               if (ele.layoutType === "vertical_grid")
                 return (
                   <Verticalproductgrid
-                  draggable={true}
+                    draggable={true}
                     gridItems={ele}
-                    text= "Vertical product Grid"
+                    text="Vertical product Grid"
                     addComponents={() => addComponents(ele)}
                     key={ele.id}
 
@@ -111,37 +112,49 @@ useEffect(() => {
                 return (
 
                   <Horizontalproductgrid
-                  draggable={true}
-                  gridItems={ele}
-                    text= "Horizontal product Grid"
+                    draggable={true}
+                    gridItems={ele}
+                    text="Horizontal product Grid"
                     addComponents={() => addComponents(ele)}
                     key={ele.id}
 
                   />
                 );
 
-                case "text_paragraph":
-                  return (
-                    <Textparagraph
-                    gridItems={ele}
-                      draggable={true}
-                      text="Text Paragraph"
-                      element={ele}
-                      addComponents={() => addComponents(ele)}
-                      key={ele.id}
+            case "text_paragraph":
+              return (
+                <Textparagraph
+                  gridItems={ele}
+                  draggable={true}
+                  text="Text Paragraph"
+                  element={ele}
+                  addComponents={() => addComponents(ele)}
+                  key={ele.id}
 
-                    />
-                  );
+                />
+              );
 
-                  case "video":
-                    return (
-                      <Video
-                     key={ele.id}
-                        draggable={true}
-                        text="Video"
-                        element={ele}
-                      />
-                    );
+            case "video":
+              return (
+                <Video
+                  key={ele.id}
+                  draggable={true}
+                  text="Video"
+                  element={ele}
+                />
+              );
+
+
+              case "image":
+                return (
+                  <ImageElement
+                    key={ele.id}
+                    draggable={true}
+                    text="Image"
+                    elementUrl={ele}
+                  />
+                );
+
 
             default:
               return null; // If featureType doesn't match any case, render nothing

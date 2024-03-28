@@ -48,7 +48,9 @@ import EditPopup from '../editPopup/EditPopup';
         }}
       >
         <AnnouncementBar handleEdit={handleEdit} data={data} style={style} text={text} textColor={textColor} backgroundColor={backgroundColor} />
+        
         <EditPopup componentData={data} />
+        
       </div>
     );
   };

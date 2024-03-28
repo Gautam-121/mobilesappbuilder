@@ -1,0 +1,21 @@
+.editPopupContainer {
+  position: absolute;
+  /* height: 21.2rem;
+     */
+  width: 23rem;
+  background-color: white;
+  /* padding: 20px; */
+  overflow: auto;
+  
+
+}
+
+.placeholder-icon {
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 80px;
+  
+}

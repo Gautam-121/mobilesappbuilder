@@ -5,7 +5,6 @@ import { HiQrCode } from "react-icons/hi2";
 
 import "./AppDesign.css";
 import { useAppBridge } from "@shopify/app-bridge-react";
-import { Fullscreen } from "@shopify/app-bridge/actions";
 import { Button, ButtonGroup, Divider, Tooltip } from "@shopify/polaris";
 
 import { SkeletonTabs, SkeletonThumbnail } from "@shopify/polaris";
@@ -30,10 +29,10 @@ useEffect(()=>{
     if (item.featureType === "banner") {
       // Modify the objects inside the data array
       const modifiedData = item.data.data.map((dataItem) => ({
-        bannerType:dataItem.bannerType,
-       actionUrl:dataItem.actionUrl,
-       isVisible:dataItem.isVisible,
-        imageUrl: dataItem.imageUrl.id,
+        bannerType:dataItem?.bannerType,
+       actionUrl:dataItem?.actionUrl,
+       isVisible:dataItem?.isVisible,
+        imageUrl: dataItem?.imageUrl?.id,
         // id: dataItem.id, // Change the field name
       }));
   
@@ -82,13 +81,11 @@ useEffect(()=>{
 
   const app = useAppBridge();
 
-  const fullscreen = Fullscreen.create(app);
 
   const exit = () => {
-    fullscreen.dispatch(Fullscreen.Action.EXIT);
 
     window.location.href = "/app-design"
-
+   
     dispatch(exitFullScreen());
     dispatch(pageNotRefreshed());
   };
