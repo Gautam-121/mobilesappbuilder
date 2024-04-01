@@ -475,32 +475,3 @@ const DragAndDrop = () => {
 };
 
 export default DragAndDrop;
-
-function HSBtoRGB(h, s, brightness, alpha) {
-  let r, g, blue;
-
-  const chroma = brightness * s;
-  const hue1 = h / 60;
-  const x = chroma * (1 - Math.abs((hue1 % 2) - 1));
-  const m = brightness - chroma;
-
-  if (0 <= hue1 && hue1 < 1) {
-    [r, g, blue] = [chroma, x, 0];
-  } else if (1 <= hue1 && hue1 < 2) {
-    [r, g, blue] = [x, chroma, 0];
-  } else if (2 <= hue1 && hue1 < 3) {
-    [r, g, blue] = [0, chroma, x];
-  } else if (3 <= hue1 && hue1 < 4) {
-    [r, g, blue] = [0, x, chroma];
-  } else if (4 <= hue1 && hue1 < 5) {
-    [r, g, blue] = [x, 0, chroma];
-  } else if (5 <= hue1 && hue1 < 6) {
-    [r, g, blue] = [chroma, 0, x];
-  }
-
-  const red = Math.round((r + m) * 255);
-  const green = Math.round((g + m) * 255);
-  const blu = Math.round((blue + m) * 255);
-
-  return `rgba(${red}, ${green}, ${blu}, ${alpha})`;
-}

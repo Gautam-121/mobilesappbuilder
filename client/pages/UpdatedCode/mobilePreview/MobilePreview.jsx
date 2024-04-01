@@ -1,11 +1,10 @@
-/* eslint-disable react/prop-types */
 import { useRecoilState } from "recoil";
 import "./monilePreview.css";
 import { componentListArrayAtom } from "../recoil/store";
 import DraggableAnnouncementBar from "../draggableComponents/DraggableAnnouncementBar";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import DraggableVerticalCollectionGrid from "../draggableComponents/DraggableVerticalCollectionGrid";
 import DraggableHorizontalCollectionGrid from "../draggableComponents/DraggableHorizontalCollectionGrid";
 import DraggableTextParagraph from "../draggableComponents/DraggableTextParagraph";
@@ -14,13 +13,20 @@ import DraggableVideo from "../draggableComponents/DraggableVideo";
 import DragableVerticalProduct from "../draggableComponents/DragableVerticalProduct"
 import DragableHorizontalProductGrid from "../draggableComponents/DragableHorizontalProductGrid";
 
-export default function MobilePreview() {
-  const [componentListArray, setComponentListArray] = useRecoilState(
-    componentListArrayAtom
-  );
+import { useDispatch } from "react-redux";
+import { setEditingStatus } from "../../../store/editStatusSlice";
 
+import { Spinner } from '@shopify/polaris';
+
+
+export default function MobilePreview() {
+  const dispatch = useDispatch();
+  const [isEditing, setIsEditing] = useState(false);
+  const [componentListArray, setComponentListArray] = useRecoilState(componentListArrayAtom);
+
+  // Function to handle click on the edit button of a component
   const handleEditButtonClick = (eleId) => {
-    // Set the visibility of the edit popup for the specific element
+    setIsEditing(true);
     console.log("Edit triggered", eleId);
     setComponentListArray((prevArray) =>
       prevArray.map((ele) => ({
@@ -28,8 +34,17 @@ export default function MobilePreview() {
         isEditVisible: ele.id === eleId ? !ele.isEditVisible : false,
       }))
     );
+    dispatch(setEditingStatus(true));
   };
 
+  // Handle clicks outside of the main div
+  const handleOutsideClick = (event) => {
+    if (!event.target.closest('.mobilePreviewContainer') && !isEditing) {
+      dispatch(setEditingStatus(false)); // Show default component
+    }
+  };
+
+  // Function to move a component
   const moveComponent = (dragIndex, hoverIndex) => {
     const draggedComponent = componentListArray[dragIndex];
     setComponentListArray((prevArray) => {
@@ -39,102 +54,94 @@ export default function MobilePreview() {
       return newArray;
     });
   };
+
+  // Function to handle dropping a component
   const handleDrop = (e) => {
     e.preventDefault();
     const draggedComponent = JSON.parse(e.dataTransfer.getData("text/plain"));
     console.log(draggedComponent);
-    // setComponentListArray([...componentListArray, draggedComponent]);
     let newArray = [...componentListArray];
     newArray.push(draggedComponent);
     setComponentListArray(newArray);
   };
-  useEffect(() => {
-    console.log(componentListArray);
-  }, [componentListArray]);
+
+  // Function to handle drag over
   const handleDragOver = (e) => {
     e.preventDefault();
   };
 
   return (
-    <DndProvider backend={HTML5Backend}>
-      <div
-        className="mobilePreviewContainer"
-        onDrop={handleDrop}
-        onDragOver={handleDragOver}
-      >
-        {componentListArray.map((ele, index) => {
-          switch (ele.featureType) {
-            case "announcement":
-              return (
-                <DraggableAnnouncementBar
-                  key={ele.id}
-                  id={ele.id}
-                  index={index}
-                  moveComponent={moveComponent}
-                  handleEdit={() => handleEditButtonClick(ele.id)}
-                  textColor={ele.data.textColor}
-                  backgroundColor={ele.data.backgroundColor}
-                  animationType={ele.data.animationType}
-                  style={ele.style}
-                  text={ele.data.message}
-                  data={ele}
-                />
-              );
-            case "categories":
-              if (ele.layoutType === "vertical_grid")
-                return (
-                  <DraggableVerticalCollectionGrid
-                    key={ele.id}
-                    gridItems={ele}
-                    index={index}
-                    moveComponent={moveComponent}
-                    handleEdit={() => handleEditButtonClick(ele.id)}
-                  />
-                );
-              else
-                return (
-                  <DraggableHorizontalCollectionGrid
-                    key={ele.id}
-                    index={index}
-                    moveComponent={moveComponent}
-                    handleEdit={() => handleEditButtonClick(ele.id)}
-                    gridItems={ele}
-                  />
-                );
-                case "text_paragraph":
-                  return(
-                    <DraggableTextParagraph
-                    key={ele.id}
-                    gridItems={ele}
-                    index={index}
-                    moveComponent={moveComponent}
-                    handleEdit={() => handleEditButtonClick(ele.id)}
-                    />
-                  );
-                  case "banner":
-                  return(
-                    <DraggableBanner
-                    key={ele.id}
-                    gridItems={ele}
-                    index={index}
-                    moveComponent={moveComponent}
-                    handleEdit={() => handleEditButtonClick(ele.id)}
-                    />
-                  )
-                  case "video":
-                  return(
-                    <DraggableVideo
-                    key={ele.id}
-                    gridItems={ele}
-                    index={index}
-                    moveComponent={moveComponent}
-                    handleEdit={() => handleEditButtonClick(ele.id)}
-                    />
-                  )
-                  case "productGroup":
-                    if (ele.layoutType === "vertical_grid")
+    <div className="mobilePreviewContainer" onClick={handleOutsideClick}>
+      {
+
+        componentListArray !== null && componentListArray.length > 0 ?
+
+          <DndProvider backend={HTML5Backend}>
+
+            <div className="header-main-mobile-preview-div">
+              <div>
+                <label htmlFor="menu-toggle" className="menu-icon">&#9776;</label>
+                <nav className="menu">
+                  <ul>
+                    <li><a href="#">Account</a></li>
+                    <li><a href="#">Orders</a></li>
+                    <li><a href="#">Addresses</a></li>
+                    <li><a href="#">Login</a></li>
+                  </ul>
+                </nav>
+              </div>
+              <div>
+                {shopify.config.shop.split(".")[0] || 'Renergii'}
+              </div>
+              <div>
+                cart
+              </div>
+            </div>
+
+            <div className="content-container"
+            onDrop={handleDrop}
+            onDragOver={handleDragOver}
+            >
+              <div className="scrollable-content">
+                {componentListArray.map((ele, index) => {
+                  switch (ele.featureType) {
+                    case "announcement":
                       return (
-                        <DragableVerticalProduct
+                        <DraggableAnnouncementBar
+                          key={ele.id}
+                          id={ele.id}
+                          index={index}
+                          moveComponent={moveComponent}
+                          handleEdit={() => handleEditButtonClick(ele.id)}
+                          textColor={ele.data.textColor}
+                          backgroundColor={ele.data.backgroundColor}
+                          animationType={ele.data.animationType}
+                          style={ele.style}
+                          text={ele.data.message}
+                          data={ele}
+                        />
+                      );
+                    case "categories":
+                      return ele.layoutType === "vertical_grid" ? (
+                        <DraggableVerticalCollectionGrid
+                          key={ele.id}
+                          gridItems={ele}
+                          index={index}
+                          moveComponent={moveComponent}
+                          handleEdit={() => handleEditButtonClick(ele.id)}
+                        />
+                      ) : (
+                        <DraggableHorizontalCollectionGrid
+                          key={ele.id}
+                          index={index}
+                          moveComponent={moveComponent}
+                          handleEdit={() => handleEditButtonClick(ele.id)}
+                          gridItems={ele}
+                        />
+                      );
+                    case "text_paragraph":
+                      return (
+                        <DraggableTextParagraph
                           key={ele.id}
                           gridItems={ele}
                           index={index}
@@ -142,8 +149,36 @@ export default function MobilePreview() {
                           handleEdit={() => handleEditButtonClick(ele.id)}
                         />
                       );
-                    else
+                    case "banner":
                       return (
+                        <DraggableBanner
+                          key={ele.id}
+                          gridItems={ele}
+                          index={index}
+                          moveComponent={moveComponent}
+                          handleEdit={() => handleEditButtonClick(ele.id)}
+                        />
+                      );
+                    case "video":
+                      return (
+                        <DraggableVideo
+                          key={ele.id}
+                          gridItems={ele}
+                          index={index}
+                          moveComponent={moveComponent}
+                          handleEdit={() => handleEditButtonClick(ele.id)}
+                        />
+                      );
+                    case "productGroup":
+                      return ele.layoutType === "vertical_grid" ? (
+                        <DragableVerticalProduct
+                          key={ele.id}
+                          gridItems={ele}
+                          index={index}
+                          moveComponent={moveComponent}
+                          handleEdit={() => handleEditButtonClick(ele.id)}
+                        />
+                      ) : (
                         <DragableHorizontalProductGrid
                           key={ele.id}
                           gridItems={ele}
@@ -152,12 +187,45 @@ export default function MobilePreview() {
                           handleEdit={() => handleEditButtonClick(ele.id)}
                         />
                       );
+                    default:
+                      return null;
+                  }
+                })}
+              </div>
+            </div>
 
-            default:
-              return null;
-          }
-        })}
-      </div>
-    </DndProvider>
+
+            <div className="footer-main-mobile-preview-div">
+
+              <div className="search-footer-icon">
+                &#128269;
+              </div>
+
+              <div>
+                <label htmlFor="home-btn" className="home-footer-icon">&#8962;</label>
+              </div>
+
+              <div className="cart-footer-icon">
+                &#128722;
+              </div>
+
+
+
+            </div>
+
+          </DndProvider>
+
+
+          :
+
+          <div className="the-spinner">
+
+            <Spinner accessibilityLabel="Spinner" size="large" />
+
+          </div>
+
+      }
+    </div>
+
   );
 }

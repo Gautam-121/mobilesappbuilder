@@ -1,6 +1,9 @@
 import React,{useRef, useState, useEffect} from "react";
 import { uid } from 'uid';
 import ImgIcon from '../../../../images/imgIcon.jpg'
+
+
+
 export default function Banner({ text, draggable, addComponents, element, handleEdit, i }) {
 const [selectedImg, setSelectedImg] = useState(null)
 const [index, setIndex] = useState(i)
@@ -23,7 +26,7 @@ if(typeof(element?.data?.data[index]?.imageUrl)==="object"){
      e.dataTransfer.setData('text/plain', JSON.stringify(newElement))
      // Create a new div element
      const dragImage = document.createElement('div');
-     dragImage.textContent = props.text; // Set content or customize as needed
+     dragImage.textContent = this.props.text; // Set content or customize as needed
      dragImage.style.cssText = `
        position: absolute;
        pointer-events: none;
@@ -48,6 +51,9 @@ if(typeof(element?.data?.data[index]?.imageUrl)==="object"){
        document.body.removeChild(dragImage);
      }, 0);
    };
+
+
+
   return (
     <div 
     draggable={draggable}

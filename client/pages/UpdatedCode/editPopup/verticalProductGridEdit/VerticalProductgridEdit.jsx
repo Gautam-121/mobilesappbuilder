@@ -25,9 +25,9 @@ export default function VerticalProductgridEdit(props) {
         console.log("ProductCollections", collections)
     },[collections])
 
-    console.log('currentObject:', currentObject);
-console.log('currentObject.data:', currentObject.data);
-console.log('currentObject.data.data:', currentObject.data.data);
+    console.log('VerticalProductGridEDit: currentObject:', currentObject);
+console.log('VerticalProductGridEDit: currentObject.data:', currentObject.data);
+console.log('VerticalProductGridEDit: currentObject.data.data:', currentObject.data.data);
 
 const handleCheckboxChange = (id) => {
   // Find the selected checkbox item
@@ -98,19 +98,25 @@ const handleCheckboxChange = (id) => {
     className="editPopupContainer">
     
     
-    {collections===undefined?"":collections.map((item) => (
+    {collections===undefined?"":collections?.map((item) => {
+      
+      console.log("VerticalProductGridEDit: collections item: ", currentObject?.productGroupId, item);
+
+      return(
         <div key={item.id}>
           <label htmlFor="">
             <input
               type="checkbox"
-              checked={currentObject.data && currentObject.data && currentObject?.data.some(dataItem => dataItem.productGroupId === item.id)}
+              checked={currentObject?.data && currentObject?.productGroupId === item?.id}
 
               onChange={() => handleCheckboxChange(item.id)}
             />
             {item.title}
           </label>
         </div>
-      ))} 
+      )
+      }
+      )} 
 
         <Button
           variant="primary"

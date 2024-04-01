@@ -1,0 +1,55 @@
+.common-style{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.announcementbar-main-div{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 30px;
+
+}
+
+.announcementbar-text-field{
+    border: 1px solid grey;
+    border-radius: 4px;
+    padding: 6px;
+}
+
+
+
+
+.announcementbar-color-pickers-div{
+    display: flex;
+
+    flex-direction: column;
+    justify-content: space-between;
+
+
+}
+
+.announcementbar-save-btns-div{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.announcementbar-animation-section-main-div {
+
+   
+
+}
+
+.label-element-placement{
+   
+}
+
+
+.announcementbar-animation-section-bullets {
+
+  
+}
+
