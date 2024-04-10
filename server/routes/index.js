@@ -1,6 +1,6 @@
 const { Router } = require("express");
-const verifyRequest = require("../middleware/verifyRequest.js");
-const { uploadImages } = require("../controllers/ImageUploadController.js");
+const verifyRequest = require("../middleware/verifyRequest.middleware.js");
+const { uploadImages } = require("../controllers/ImageUpload.controller.js");
 const multer = require("multer")
 
 
@@ -8,17 +8,17 @@ const {
   getHomePage,
   updateHomePage,
   getHomePageByWeb,
-} = require("../controllers/homePageController.js");
+} = require("../controllers/homes.controller.js");
 const {
   getProduct,
   getCollection,
   getProductByCollectionId,
-} = require("../controllers/shopifyApiCotroller.js");
+} = require("../controllers/shopifyApi.controller.js");
 const {
   getBrandingApp,
   getBrandingAppWeb,
   updateBrandingApp,
-} = require("../controllers/barandingAppController.js");
+} = require("../controllers/baranding.controller.js");
 const {
   createProductDetailPage,
   createCartDetailPage,
@@ -26,20 +26,20 @@ const {
   getOtherScreenPageDetailByWeb,
   getOtherScreen,
   getProductDetails
-} = require("../controllers/otherScreenController.js");
+} = require("../controllers/otherScreen.controller.js");
 const {
   updateStoreDetail,
   getStoreDetail,
   getStoreDetailByWeb,
-} = require("../controllers/storeDetailController.js");
+} = require("../controllers/store.controller.js");
 const {
   getTabMenuDataByWeb,
   getTabMenu,
-} = require("../controllers/tabNavigationController.js");
+} = require("../controllers/tabNavigation.controller.js");
 const {
   getAllTheme,
   getThemeById,
-} = require("../controllers/themeController.js");
+} = require("../controllers/theme.Controller.js");
 
 
 const router = Router();

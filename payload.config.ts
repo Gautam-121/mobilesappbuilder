@@ -7,31 +7,30 @@ const { webpackBundler } = require("@payloadcms/bundler-webpack");
 const { slateEditor } = require("@payloadcms/richtext-slate");
 
 // Importing the actual modules for runtime
-const productConfig = require("./server/collections/Product.js");
-const userConfig = require("./server/collections/User.js");
-const bannerImageConfig = require("./server/collections/BannerImage.js");
-const collectionConfig = require("./server/collections/Collection.js");
-const sessionConfig = require("./server/collections/Session.js");
-const activeStoreConfig = require("./server/collections/ActiveStore.js");
-const socialChannelConfig = require("./server/collections/SocialChannels.js");
-const textParagraphConfig = require("./server/collections/TextParagraph.js");
-const eventTimerConfig = require("./server/collections/EventTimer.js");
-const announcementBannerConfig = require("./server/collections/AnnouncementBanner.js");
-const otherComponentConfig = require("./server/collections/OthersComponent.js");
-const brandingThemeConfig = require("./server/collections/BrandingApp.js");
-const homePageConfig = require("./server/collections/HomePage.js");
-const videoConfig = require("./server/collections/Video.js");
-const tabMenuConfig = require("./server/collections/tabMenuNavigation.js");
-const productPageDetailConfig = require("./server/collections/ProductPageDetail.js");
-const emptyCartPageDetailConfig = require("./server/collections/EmptyCartPageDetail.js");
-const accountPageDetailConfig = require("./server/collections/AccountPageDetail.js");
-const themeConfig = require("./server/collections/Theme.js");
-const Media = require("./server/collections/Media.js");
+const ProductGroup = require("./server/models/productGroup.models.js");
+const User = require("./server/models/user.models.js");
+const Banner = require("./server/models/bannerImage.models.js");
+const Categories = require("./server/models/categories.models.js");
+const StoreSession = require("./server/models/session.models.js");
+const Store = require("./server/models/store.models.js");
+const SocialChannel = require("./server/models/socialChannels.models.js");
+const TextParagraph = require("./server/models/textParagraph.models.js");
+const EventTimer = require("./server/models/eventTimer.models.js");
+const AnnouncementBanner = require("./server/models/announcementBanner.models.js");
+const Branding = require("./server/models/branding.models.js");
+const HomePage = require("./server/models/home.models.js");
+const Video = require("./server/models/video.models.js");
+const TabMenu = require("./server/models/tabNavigation.models.js");
+const ProductPage = require("./server/models/productDetails.models.js");
+const EmptyCartPage = require("./server/models/cartDetail.models.js");
+const AccountPage = require("./server/models/accountDetail.models.js");
+const Theme = require("./server/models/theme.models.js");
+const Media = require("./server/models/media.models.js");
 
 module.exports = buildConfig({
   serverURL: process.env.PAYLOAD_PUBLIC_EXTERNAL_SERVER_URL,
   admin: {
-    user: userConfig.slug,
+    user: User.slug,
     bundler: webpackBundler(),
   },
   editor: slateEditor({}),
@@ -43,24 +42,24 @@ module.exports = buildConfig({
     : [],
   collections: [
     Media,
-    themeConfig,
-    accountPageDetailConfig,
-    emptyCartPageDetailConfig,
-    productPageDetailConfig,
-    socialChannelConfig,
-    brandingThemeConfig,
-    videoConfig,
-    textParagraphConfig,
-    eventTimerConfig,
-    tabMenuConfig,
-    homePageConfig,
-    announcementBannerConfig,
-    userConfig,
-    bannerImageConfig,
-    productConfig,
-    collectionConfig,
-    sessionConfig,
-    activeStoreConfig,
+    Theme,
+    AccountPage,
+    EmptyCartPage,
+    ProductPage,
+    SocialChannel,
+    Branding,
+    Video,
+    TextParagraph,
+    EventTimer,
+    TabMenu,
+    HomePage,
+    AnnouncementBanner,
+    User,
+    Banner,
+    ProductGroup,
+    Categories,
+    StoreSession,
+    Store,
   ],
   typescript: {
     outputFile: path.resolve(__dirname, "payload-types.ts"),

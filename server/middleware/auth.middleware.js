@@ -10,27 +10,14 @@ const shopify = require("../utils/shopifyConfig.js");
 const payload = require('payload');
 const axios = require("axios")
 require("dotenv").config()
+const {
+  requestBodyForStorefrontToken,
+  TEST_QUERY
+} = require("../constant.js")
 
-// Define your Shopify store's domain, access token, and API version
-const shopDomain = 'renergii.myshopify.com';
-const apiVersion = '2024-01';
-
-// Define the request body
-const requestBody = {
-  storefront_access_token: {
-    title: 'Test' // An arbitrary title for the token
-  }
-};
-
-const TEST_QUERY = `
-{
-  shop {
-    name
-    id
-  }
-}`
 
 const authMiddleware = (app) => {
+
   app.get("/auth", async (req, res) => {
     try {
       await authRedirect(req, res);
@@ -55,6 +42,7 @@ const authMiddleware = (app) => {
 
   app.get("/auth/tokens", async (req, res) => {
     try {
+
       const callbackResponse = await shopify.auth.callback({
         rawRequest: req,
         rawResponse: res,
@@ -74,13 +62,13 @@ const authMiddleware = (app) => {
         },
       });
 
-      if (!(isShopAvaialble.docs[0] &&isShopAvaialble.docs[0].storefront_access_token)) 
-      {
+      if (!(isShopAvaialble.docs[0] && isShopAvaialble.docs[0].storefront_access_token)
+      ) {
         try {
           // Make the POST request to create the storefront access token
           const storefrontResponse = await axios.post(
             `https://${shop}/admin/api/${process.env.SHOPIFY_API_VERSION}/storefront_access_tokens.json`,
-            requestBody,
+            requestBodyForStorefrontToken,
             {
               headers: {
                 "X-Shopify-Access-Token": session.accessToken,
@@ -100,8 +88,8 @@ const authMiddleware = (app) => {
               isActive: false,
             },
           });
-        } 
-        catch (error) {
+
+        } catch (error) {
           console.error("Error creating storefront access token:", error);
         }
       }
@@ -120,6 +108,7 @@ const authMiddleware = (app) => {
         rawRequest: req,
         rawResponse: res,
       });
+      
     } catch (e) {
       console.error(`---> Error at /auth/tokens`, e);
       const { shop } = req.query;
@@ -149,7 +138,7 @@ const authMiddleware = (app) => {
       const { session } = callbackResponse;
       await sessionHandler.storeSession(session);
 
-      console.log("session" , session)
+      console.log("session", session);
 
       const client = new shopify.clients.Graphql({ session });
       const response = await client.request(TEST_QUERY);

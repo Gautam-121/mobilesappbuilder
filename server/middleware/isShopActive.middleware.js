@@ -1,6 +1,7 @@
 const payload = require("payload");
 
 const isShopActive = async (req, res, next) => {
+  
   const { shop, host } = req.query;
 
   if (!shop) {

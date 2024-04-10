@@ -1,4 +1,3 @@
-const { CollectionConfig } = require("payload/types");
 
 const productPageDetailConfig = {
   slug: "productPageDetail",

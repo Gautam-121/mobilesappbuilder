@@ -1,4 +1,3 @@
-const { CollectionConfig } = require("payload/types");
 
 const bannerImageConfig = {
   slug: "banner",

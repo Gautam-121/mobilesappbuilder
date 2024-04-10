@@ -1,15 +1,12 @@
 const sessionHandler = require("../utils/sessionHandler.js");
 const shopify = require("../utils/shopifyConfig.js");
-const TEST_QUERY = `
-{
-  shop {
-    name
-    id
-  }
-}`;
+const {
+  TEST_QUERY
+} = require("../constant.js")
 
 const verifyRequest = async (req, res, next) => {
   try {
+
     let { shop } = req.query;
 
     const sessionId = await shopify.session.getCurrentId({
@@ -34,6 +31,9 @@ const verifyRequest = async (req, res, next) => {
       req.shop = session.shop;
       req.shop_id = response?.data?.shop?.id;
       req.accessToken = session.accessToken;
+
+      // req.user = session
+      // req.shop_id = response?.data?.shop?.id;
 
       return next();
     }
