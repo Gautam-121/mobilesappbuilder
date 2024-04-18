@@ -1,5 +1,5 @@
 
-const bannerImageConfig = {
+const Banner = {
   slug: "banner",
   access: {
     create: () => true,
@@ -10,8 +10,12 @@ const bannerImageConfig = {
   fields: [
     {
       name: "data",
-      label:"Data",
+      label:"Banner Slider",
       type: "array",
+      labels: {
+        singular: 'Banner Card',
+        plural: 'Banner Card',
+      },
       required: true,
       fields: [
         {
@@ -22,25 +26,39 @@ const bannerImageConfig = {
         },
         {
           name: "imageUrl",
-          label:"Image",
+          label:"Banner Image",
           type: "relationship",
           relationTo: "media"
         },
         {
           name: "bannerType",
-          label:"Type",
+          label:"Navigate",
           type: "select",
           options: ["product", "category", "marketing"],
+          options:[
+            {
+              label: 'Product',
+              value: 'product',
+            },
+            {
+              label: 'Category',
+              value: 'category',
+            },
+            {
+              label: 'Marketing',
+              value: 'marketing',
+            },
+          ],
           required: true,
         },
         {
           name: "actionUrl",
-          label:"Action",
-          type: "text",
+          label:"Action Url",
+          type: "text"
         },
       ],
     },
   ],
 };
 
-module.exports = bannerImageConfig;
+module.exports = Banner;

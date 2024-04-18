@@ -1,5 +1,5 @@
 
-const themeConfig = {
+const Theme = {
   slug: "theme",
   admin: {
     useAsTitle: "id",
@@ -27,18 +27,33 @@ const themeConfig = {
     {
       name: "type",
       type: "select",
-      options: ["free", "payment"],
+      options:[
+        {
+          label: 'Free',
+          value: 'free',
+        },
+        {
+          label: 'Payment',
+          value: 'payment',
+        },
+      ],
       defaultValue: "free"
     },
     {
       name: "price",
       type: "number",
+      admin: {
+        condition: (data) => data.type === 'payment' // Show if appTitle is 'appText'
+      },
       defaultValue: undefined,
     },
     {
       name: "plan",
       type: "select",
-      options: ["Starter" , "Growth" , "Professional"]
+      options: ["Starter" , "Growth" , "Professional"],
+      admin: {
+        condition: (data) => data.type === 'payment' // Show if appTitle is 'appText'
+      }
     },
     {
       name:"images",
@@ -49,7 +64,7 @@ const themeConfig = {
   ],
 };
 
-module.exports = themeConfig;
+module.exports = Theme;
 
 
 

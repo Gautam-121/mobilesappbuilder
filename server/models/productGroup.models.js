@@ -1,6 +1,6 @@
 
-const featuredProductConfig = {
-  slug: "product",
+const ProductGroup = {
+  slug: "productGroup",
   admin:{
     useAsTitle:"title"
   },
@@ -20,4 +20,4 @@ const featuredProductConfig = {
   ],
 };
 
-module.exports = featuredProductConfig;
+module.exports = ProductGroup;

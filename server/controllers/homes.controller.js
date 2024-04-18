@@ -9,9 +9,25 @@ const getHomePage = asyncHandler(async (req, res, next) => {
     return next(error);
   }
 
+  const store = await Payload.find({
+    collection: 'Store',
+    where: { 
+      shopId: { equals: `gid://shopify/Shop/${req.params.shopId}` },
+      isActive : { equals: true }
+    },
+  })
+
+  if(!store.docs[0]){
+    const error = new ApiError(`Shop not found with id: ${req.params.shopId}`, 404)
+    return next(error);
+  }
+
   const homeData = await Payload.find({
-    collection: "homePage",
-    where: { shopId: { equals: `gid://shopify/Shop/${req.params.shopId}` } },
+    collection: "homeScreen",
+    where: { 
+      shopId: { equals: `gid://shopify/Shop/${req.params.shopId}` },
+      themeId: { equals: store.docs[0]?.themeId}
+    },
   });
 
   if (homeData.docs.length === 0) {
@@ -47,8 +63,26 @@ const getHomePageByWeb = asyncHandler(async (req, res, next) => {
     return next(error);
   }
 
+  const isSelectedTheme = await Payload.find({
+    collection: 'Store',
+    where: { 
+      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
+      isActive: { equals : true}
+    },
+  })
+
+  if(!isSelectedTheme.docs[0]){
+    const error = new ApiError(`store not found with id: ${req.shop_id}`, 404)
+    return next(error);
+  }
+
+  if(!isSelectedTheme.docs[0]?.themeId || isSelectedTheme.docs[0]?.themeId != req.params.themeId ){
+    const error = new ApiError("Params is not matched with store themeId", 400)
+    return next(error);
+  }
+
   const homeData = await Payload.find({
-    collection: "homePage",
+    collection: "homeScreen",
     where: {
       shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
       themeId: { equals: req.params.themeId },
@@ -89,8 +123,26 @@ const updateHomePage = asyncHandler(async (req, res, next) => {
     return next(error);
   }
 
+  const isSelectedTheme = await Payload.find({
+    collection: 'Store',
+    where: { 
+      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
+      isActive: { equals: true}
+    },
+  })
+
+  if(!isSelectedTheme.docs[0]){
+    const error = new ApiError(`store not found with id: ${req.shop_id}`, 404)
+    return next(error);
+  }
+
+  if(!isSelectedTheme.docs[0]?.themeId || isSelectedTheme.docs[0]?.themeId != req.params.themeId ){
+    const error = new ApiError("Params is not matched with store themeId", 400)
+    return next(error);
+  }
+
   const isExistHomeData = await Payload.find({
-    collection: "homePage",
+    collection: "homeScreen",
     where: {
       shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
       themeId: { equals: req.params.themeId },
@@ -102,255 +154,261 @@ const updateHomePage = asyncHandler(async (req, res, next) => {
     return next(error);
   }
 
-  for (let index in datas) {
-    if (datas[index].featureType === "banner") {
-      const isVisible = datas[index]?.data?.data.some(
-        (val) => val.isVisible === true
-      );
-
-      if (datas[index]?.data?.id) {
-        const banner = await Payload.update({
-          collection: "banner",
-          id: datas[index].data.id,
-          data: {
-            data: datas[index]?.data?.data,
-          },
-        });
-
-        datas[index].data = {
-          relationTo: "banner",
-          value: banner.id,
-        };
-
-        datas[index].isVisible = isVisible;
-      }
-      else {
-        const banner = await Payload.create({
-          collection: "banner",
-          data: {
-            data: datas[index].data?.data,
-          },
-        });
-
-        datas[index].data = {
-          relationTo: "banner",
-          value: banner.id,
-        };
-
-        datas[index].isVisible = isVisible;
-      }
-    } 
-    else if (datas[index].featureType === "announcement") {
-
-      if (datas[index]?.data?.id) {
-        const announcementBar = await Payload.update({
-          collection: "announcementBanner",
-          id: datas[index]?.data?.id,
-          data: {
-            data: datas[index]?.data,
-          },
-        });
-
-        datas[index].data = {
-          relationTo: "announcementBanner",
-          value: announcementBar.id,
-        };
-
+  try {
+    for (let index in datas) {
+      if (datas[index].featureType === "banner") {
+        const isVisible = datas[index]?.data?.data.some(
+          (val) => val.isVisible === true
+        );
+  
+        if (datas[index]?.data?.id) {
+          const banner = await Payload.update({
+            collection: "banner",
+            id: datas[index].data.id,
+            data: {
+              data: datas[index]?.data?.data,
+            },
+          });
+  
+          datas[index].data = {
+            relationTo: "banner",
+            value: banner.id,
+          };
+  
+          datas[index].isVisible = isVisible;
+        }
+        else {
+          console.log( datas[index].data?.data)
+          const banner = await Payload.create({
+            collection: "banner",
+            data: {
+              data: datas[index].data?.data,
+            },
+          });
+  
+          datas[index].data = {
+            relationTo: "banner",
+            value: banner.id,
+          };
+  
+          datas[index].isVisible = isVisible;
+        }
       } 
-      else {
-        const announcementBar = await Payload.create({
-          collection: "announcementBanner",
-          data: datas[index]?.data,
-        });
-
-        datas[index].data = {
-          relationTo: "announcementBanner",
-          value: announcementBar.id,
-        };
-      }
-    } 
-    else if (datas[index].featureType === "productGroup") {
-
-      if (datas[index]?.data?.id) {
-        const product = await Payload.update({
-          collection: "product",
-          id: datas[index]?.data?.id,
-          data: {
+      else if (datas[index].featureType === "announcement") {
+  
+        if (datas[index]?.data?.id) {
+          const announcementBar = await Payload.update({
+            collection: "announcementBanner",
+            id: datas[index]?.data?.id,
+            data: {
+              data: datas[index]?.data,
+            },
+          });
+  
+          datas[index].data = {
+            relationTo: "announcementBanner",
+            value: announcementBar.id,
+          };
+  
+        } 
+        else {
+          const announcementBar = await Payload.create({
+            collection: "announcementBanner",
             data: datas[index]?.data,
-          },
-        });
-
-        datas[index].data = {
-          relationTo: "product",
-          value: product.id,
-        };
+          });
+  
+          datas[index].data = {
+            relationTo: "announcementBanner",
+            value: announcementBar.id,
+          };
+        }
       } 
-      else {
-        const product = await Payload.create({
-          collection: "product",
-          data: datas[index]?.data,
-        });
-
-        datas[index].data = {
-          relationTo: "product",
-          value: product.id,
-        };
-      }
-    } 
-    else if (datas[index].featureType === "categories") {
-
-      if (datas[index]?.data?.id) {
-        const collection = await Payload.update({
-          collection: "collection",
-          id: datas[index].data.id,
-          data: {
-            data: datas[index]?.data?.data,
-          },
-        });
-
-        datas[index].data = {
-          relationTo: "collection",
-          value: collection.id,
-        };
+      else if (datas[index].featureType === "productGroup") {
+  
+        if (datas[index]?.data?.id) {
+          const productGroup = await Payload.update({
+            collection: "productGroup",
+            id: datas[index]?.data?.id,
+            data: {
+              data: datas[index]?.data,
+            },
+          });
+  
+          datas[index].data = {
+            relationTo: "productGroup",
+            value: productGroup.id,
+          };
+        } 
+        else {
+          const productGroup = await Payload.create({
+            collection: "productGroup",
+            data: datas[index]?.data,
+          });
+  
+          datas[index].data = {
+            relationTo: "productGroup",
+            value: productGroup.id,
+          };
+        }
       } 
-      else {
-        const collection = await Payload.create({
-          collection: "collection",
-          data: {
-            data: datas[index]?.data?.data,
-          },
-        });
-
-        datas[index].data = {
-          relationTo: "collection",
-          value: collection.id,
-        };
-      }
-    } 
-    else if (datas[index].featureType === "text_paragraph") {
-
-      if (datas[index]?.data?.id) {
-        const text_paragraph = await Payload.update({
-          collection: "paragraph",
-          id: datas[index].data.id,
-          data: {
-            data: datas[index]?.data,
-          },
-        });
-
-        datas[index].data = {
-          relationTo: "paragraph",
-          value: text_paragraph.id,
-        };
-      }
-      else {
-        const text_paragraph = await Payload.create({
-          collection: "paragraph",
-          data: {
-            data: datas[index]?.data,
-          },
-        });
-
-        datas[index].data = {
-          relationTo: "paragraph",
-          value: text_paragraph.id,
-        };
-      }
-    } 
-    else if (datas[index].featureType === "countdown") {
-
-      if (datas[index]?.data?.id) {
-        const eventTimer = await Payload.update({
-          collection: "eventTimer",
-          id: datas[index].data.id,
-          data: {
-            data: datas[index]?.data,
-          },
-        });
-
-        datas[index].data = {
-          relationTo: "eventTimer",
-          value: eventTimer.id,
-        };
-      }
-      else {
-        const eventTimer = await Payload.create({
-          collection: "eventTimer",
-          data: {
-            data: datas[index]?.data,
-          },
-        });
-
-        datas[index].data = {
-          relationTo: "eventTimer",
-          value: eventTimer.id,
-        };
-      }
-    } 
-    else if (datas[index].featureType === "social_channel") {
-
-      if (datas[index]?.data?.id) {
-        const social = await Payload.update({
-          collection: "social",
-          id: datas[index].data.id,
-          data: {
-            data: datas[index]?.data,
-          },
-        });
-
-        datas[index].data = {
-          relationTo: "social",
-          value: social.id,
-        };
+      else if (datas[index].featureType === "categories") {
+  
+        if (datas[index]?.data?.id) {
+          const categories = await Payload.update({
+            collection: "categories",
+            id: datas[index].data.id,
+            data: {
+              data: datas[index]?.data?.data,
+            },
+          });
+  
+          datas[index].data = {
+            relationTo: "categories",
+            value: categories.id,
+          };
+        } 
+        else {
+          const categories = await Payload.create({
+            collection: "categories",
+            data: {
+              data: datas[index]?.data?.data,
+            },
+          });
+  
+          datas[index].data = {
+            relationTo: "categories",
+            value: categories.id,
+          };
+        }
       } 
-      else {
-        const social = await Payload.create({
-          collection: "social",
-          data: {
-            data: datas[index]?.data,
-          },
-        });
-
-        datas[index].data = {
-          relationTo: "social",
-          value: social.id,
-        };
-      }
-    } 
-    else if (datas[index].featureType === "video") {
-
-      if (datas[index]?.data?.id) {
-        const video = await Payload.update({
-          collection: "video",
-          id: datas[index].data.id,
-          data: {
-            data: datas[index]?.data,
-          },
-        });
-
-        datas[index].data = {
-          relationTo: "video",
-          value: video.id,
-        };
-      }
-      else {
-        const video = await Payload.create({
-          collection: "video",
-          data: {
-            data: datas[index]?.data,
-          },
-        });
-
-        datas[index].data = {
-          relationTo: "video",
-          value: video.id,
-        };
+      else if (datas[index].featureType === "text_paragraph") {
+  
+        if (datas[index]?.data?.id) {
+          const textParagraph = await Payload.update({
+            collection: "textParagraph",
+            id: datas[index].data.id,
+            data: {
+              data: datas[index]?.data,
+            },
+          });
+  
+          datas[index].data = {
+            relationTo: "textParagraph",
+            value: textParagraph.id,
+          };
+        }
+        else {
+          const textParagraph = await Payload.create({
+            collection: "textParagraph",
+            data: {
+              data: datas[index]?.data,
+            },
+          });
+  
+          datas[index].data = {
+            relationTo: "textParagraph",
+            value: textParagraph.id,
+          };
+        }
+      } 
+      else if (datas[index].featureType === "countdown") {
+  
+        if (datas[index]?.data?.id) {
+          const eventTimer = await Payload.update({
+            collection: "eventTimer",
+            id: datas[index].data.id,
+            data: {
+              data: datas[index]?.data,
+            },
+          });
+  
+          datas[index].data = {
+            relationTo: "eventTimer",
+            value: eventTimer.id,
+          };
+        }
+        else {
+          const eventTimer = await Payload.create({
+            collection: "eventTimer",
+            data: {
+              data: datas[index]?.data,
+            },
+          });
+  
+          datas[index].data = {
+            relationTo: "eventTimer",
+            value: eventTimer.id,
+          };
+        }
+      } 
+      else if (datas[index].featureType === "social_channel") {
+  
+        if (datas[index]?.data?.id) {
+          const socialMedia = await Payload.update({
+            collection: "socialMedia",
+            id: datas[index].data.id,
+            data: {
+              data: datas[index]?.data,
+            },
+          });
+  
+          datas[index].data = {
+            relationTo: "socialMedia",
+            value: socialMedia.id,
+          };
+        } 
+        else {
+          const socialMedia = await Payload.create({
+            collection: "socialMedia",
+            data: {
+              data: datas[index]?.data,
+            },
+          });
+  
+          datas[index].data = {
+            relationTo: "socialMedia",
+            value: socialMedia.id,
+          };
+        }
+      } 
+      else if (datas[index].featureType === "video") {
+  
+        if (datas[index]?.data?.id) {
+          const video = await Payload.update({
+            collection: "video",
+            id: datas[index].data.id,
+            data: {
+              data: datas[index]?.data,
+            },
+          });
+  
+          datas[index].data = {
+            relationTo: "video",
+            value: video.id,
+          };
+        }
+        else {
+          const video = await Payload.create({
+            collection: "video",
+            data: {
+              data: datas[index]?.data,
+            },
+          });
+  
+          datas[index].data = {
+            relationTo: "video",
+            value: video.id,
+          };
+        }
       }
     }
+  } catch (err) {
+    const error =  new ApiError(err , 500)
+    return next(error)
   }
 
-  const homeData = await Payload.update({
-    collection: "homePage",
+   await Payload.update({
+    collection: "homeScreen",
     where: {
       shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
       themeId: { equals: req.params.themeId },
@@ -363,7 +421,6 @@ const updateHomePage = asyncHandler(async (req, res, next) => {
   return res.status(201).json({
     success: true,
     message: "Data Updated Successfully",
-    data: homeData,
   });
 
 })

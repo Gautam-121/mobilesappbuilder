@@ -9,7 +9,7 @@ const { slateEditor } = require("@payloadcms/richtext-slate");
 // Importing the actual modules for runtime
 const ProductGroup = require("./server/models/productGroup.models.js");
 const User = require("./server/models/user.models.js");
-const Banner = require("./server/models/bannerImage.models.js");
+const Banner = require("./server/models/banner.models.js");
 const Categories = require("./server/models/categories.models.js");
 const StoreSession = require("./server/models/session.models.js");
 const Store = require("./server/models/store.models.js");
@@ -31,7 +31,7 @@ module.exports = buildConfig({
   serverURL: process.env.PAYLOAD_PUBLIC_EXTERNAL_SERVER_URL,
   admin: {
     user: User.slug,
-    bundler: webpackBundler(),
+    bundler: webpackBundler()
   },
   editor: slateEditor({}),
   cors: process.env.WHITELIST_ORIGINS

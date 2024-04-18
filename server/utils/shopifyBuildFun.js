@@ -3,14 +3,18 @@ const axios = require("axios");
 const shopifyApiData = async (
   shopifyGraphQLEndpoint,
   graphqlQuery,
-  axiosShopifyConfig
+  axiosShopifyConfig,
+  variables
 ) => {
-  const shopifyResult = await axios.post(
-    shopifyGraphQLEndpoint,
-    { query: graphqlQuery },
-    axiosShopifyConfig
-  );
-  return shopifyResult;
+    const shopifyResult = await axios.post(
+      shopifyGraphQLEndpoint,
+      { 
+        query: graphqlQuery , 
+        variables: variables 
+      },
+      axiosShopifyConfig,
+    );
+    return shopifyResult;
 };
 
 const shopifyGraphQLEndpoint = (shop) =>  `https://${shop || "renergii.myshopify.com"}/admin/api/${process.env.SHOPIFY_API_VERSION}/graphql.json`;

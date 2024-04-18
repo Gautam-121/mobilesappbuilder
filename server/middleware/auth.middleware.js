@@ -49,20 +49,45 @@ const authMiddleware = (app) => {
       });
 
       const { session } = callbackResponse;
-      await sessionHandler.storeSession(session);
-
       const client = new shopify.clients.Graphql({ session });
       const response = await client.request(TEST_QUERY);
+
+      await sessionHandler.storeSession(session , response?.data?.shop?.id );
       const { shop } = session;
 
       const isShopAvaialble = await payload.find({
-        collection: "activeStores",
+        collection: "Store",
         where: {
           shopId: { equals: response?.data?.shop?.id },
         },
       });
 
-      if (!(isShopAvaialble.docs[0] && isShopAvaialble.docs[0].storefront_access_token)
+      let storefrontResponse;
+
+      if( isShopAvaialble.docs[0] && !isShopAvaialble.docs[0].storefront_access_token){
+        storefrontResponse = await axios.post(
+          `https://${shop}/admin/api/${process.env.SHOPIFY_API_VERSION}/storefront_access_tokens.json`,
+          requestBodyForStorefrontToken,
+          {
+            headers: {
+              "X-Shopify-Access-Token": session.accessToken,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        await payload.update({
+          collection: "Store",
+          where: {
+            shopId: { equals: response?.data?.shop?.id },
+          },
+          data: {
+            storefront_access_token:storefrontResponse.data?.storefront_access_token?.access_token,
+          },
+        });
+      }
+
+      if (!(isShopAvaialble.docs[0])
       ) {
         try {
           // Make the POST request to create the storefront access token
@@ -79,12 +104,12 @@ const authMiddleware = (app) => {
 
           // Create The document
           await payload.create({
-            collection: "activeStores", // required
+            collection: "Store", // required
             data: {
-              shopName: shop,
               shopId: response?.data?.shop?.id,
-              storefront_access_token:
-                storefrontResponse.data?.storefront_access_token?.access_token,
+              shopName: response?.data?.shop?.name,
+              shopify_domain: session?.shop,
+              storefront_access_token:storefrontResponse.data?.storefront_access_token?.access_token,
               isActive: false,
             },
           });
@@ -136,17 +161,18 @@ const authMiddleware = (app) => {
       });
 
       const { session } = callbackResponse;
-      await sessionHandler.storeSession(session);
+      const client = new shopify.clients.Graphql({ session });
+      const response = await client.request(TEST_QUERY);
+
+      await sessionHandler.storeSession(session , response?.data?.shop?.id);
 
       console.log("session", session);
 
-      const client = new shopify.clients.Graphql({ session });
-      const response = await client.request(TEST_QUERY);
       const host = req.query.host;
       const { shop } = session;
 
       const result = await payload.find({
-        collection: "activeStores",
+        collection: "Store",
         where: {
           shopId: { equals: response?.data?.shop?.id },
         },
@@ -154,11 +180,13 @@ const authMiddleware = (app) => {
 
       if (result.docs?.length != 0) {
         await payload.update({
-          collection: "activeStores",
+          collection: "Store",
           where: {
             shopId: { equals: response?.data?.shop?.id },
           },
           data: {
+            email: session?.onlineAccessInfo?.associated_user?.email,
+            owner: session?.onlineAccessInfo?.associated_user?.first_name + " " + session?.onlineAccessInfo?.associated_user?.last_name,
             isActive: true,
           },
         });

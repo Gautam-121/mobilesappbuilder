@@ -1,6 +1,6 @@
 
-const productPageDetailConfig = {
-  slug: "productPageDetail",
+const ProductDetailScreen = {
+  slug: "productDetailScreen",
   admin:{
     useAsTitle:"shopId"
   },
@@ -14,6 +14,13 @@ const productPageDetailConfig = {
             read : ()=>true,
             create: ()=>false, // Prevent creating a new value
         }
+    },
+    {
+        name: "themeId",
+        label: "Theme",
+        type: 'relationship',
+        relationTo: "theme",
+        unique: true
     },
     {
       name: "actions",
@@ -121,4 +128,4 @@ const productPageDetailConfig = {
   ],
 };
 
-module.exports = productPageDetailConfig;
+module.exports = ProductDetailScreen;

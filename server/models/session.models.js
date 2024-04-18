@@ -1,31 +1,43 @@
 
-const sessionConfig = {
-  slug: "session",
+const Session = {
+  slug: "Session",
   admin: {
     useAsTitle: "id",
   },
   fields: [
     {
       name: "id",
+      label: "Shopify Session Id",
+      type: "text",
+      unique: true,
+      required: true,
+    },
+    {
+      name: "token",
+      label: "Token",
       type: "text",
       required: true,
     },
     {
-      name: "content",
+      name: "shop_domain",
+      label: "Shopify Domain",
       type: "text",
       required: true,
     },
     {
-      name: "shop",
+      name: "shopId",
+      label: "Shopify Shop Id",
       type: "text",
-      required: true,
+      required: true
     },
     {
-      name: "serverKey",
-      type: "text",
-    },
+      name: "isOnline",
+      label: "Is Online",
+      type: "checkbox",
+      required: true
+    }
   ],
 };
 
-module.exports = sessionConfig;
+module.exports = Session;
 

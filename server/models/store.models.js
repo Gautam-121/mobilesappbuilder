@@ -1,40 +1,61 @@
 
-const activeStoresConfig = {
-  slug: "activeStores",
+const Store = {
+  slug: "Store",
   admin: {
     useAsTitle: "shopId",
   },
   fields: [
     {
+      name: "shopId",
+      label: "Shopify Store Id",
+      type: "text",
+      unique: true,
+      required: true
+    },
+    {
       name: "shopName",
+      label: "Shopify Shop Name",
       type: "text",
       required: true, 
     },
     {
-      name: "shopId",
+      name: "shopify_domain",
+      label: "Shopify Domain",
       type: "text",
-      unique: true,
-      defaultValue: undefined
+      required: true
+    },
+    {
+      name: "owner",
+      label: "Owner",
+      type: "text",
+    },
+    {
+      name: "email",
+      label: "Email",
+      type: "text",
     },
     {
       name: "themeId",
+      label: "Theme Id",
       type: 'text',
       defaultValue:undefined
     },
     {
       name:"storefront_access_token",
+      label: "Storefront Access Token",
       type:"text",
       defaultValue:undefined
     },
     {
       name: "isActive",
+      label: "IsActive",
       type: "checkbox",
       defaultValue: false,
     }
   ]
 };
 
-module.exports = activeStoresConfig;
+module.exports = Store;
 
 
 

@@ -1,14 +1,18 @@
 
-const featuredCollectionConfig = {
-  slug: "collection",
+const Categories = {
+  slug: "categories",
   admin: {
     useAsTitle: "title",
   },
   fields: [
     {
       name: "data",
-      label:"Data",
+      label:"Categories",
       type: "array",
+      labels: {
+        singular: 'Card',
+        plural: 'Cards',
+      },
       required: true,
       fields: [
         {
@@ -25,7 +29,7 @@ const featuredCollectionConfig = {
         },
         {
           name: "collection_id",
-          label:"CollectionId",
+          label:"Category Id",
           type: "text",
           defaultValue: undefined
         },
@@ -34,4 +38,4 @@ const featuredCollectionConfig = {
   ],
 };
 
-module.exports = featuredCollectionConfig;
+module.exports = Categories;

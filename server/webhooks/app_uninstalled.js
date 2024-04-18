@@ -15,9 +15,9 @@ const appUninstallHandler = async (
   const webhookBody = JSON.parse(webhookRequestBody);
 
   await payload.update({
-    collection: "activeStores",
+    collection: "Store",
     where: {
-      shopName: { equals: shop },
+      shopId: { equals: `gid://shopify/Shop/${webhookBody.id}` },
     },
     data: {
       isActive: false,
@@ -25,9 +25,9 @@ const appUninstallHandler = async (
   });
 
   await payload.delete({
-    collection: "session",
+    collection: "Session",
     where: {
-      shop: { equals: shop },
+      shopId: { equals: `gid://shopify/Shop/${webhookBody.id}`},
     },
   });
 };

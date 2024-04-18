@@ -1,5 +1,5 @@
 
-const announcementBannerConfig = {
+const AnnouncementBanner = {
   slug: "announcementBanner",
   admin:{
     useAsTitle:"message"
@@ -33,4 +33,4 @@ const announcementBannerConfig = {
   ],
 };
 
-module.exports = announcementBannerConfig;
+module.exports = AnnouncementBanner;

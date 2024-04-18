@@ -1,6 +1,6 @@
 
-const homePage = {
-  slug: "homePage",
+const homeScreen = {
+  slug: "homeScreen",
   admin:{
     useAsTitle: "shopId"
   },
@@ -23,8 +23,12 @@ const homePage = {
     },
     {
       name: 'homeData',
-      label: "Data",
+      label:"Home Screen Features",
       type: 'array',
+      labels: {
+        singular: 'Home Feature',
+        plural: 'Home Features',
+      },
       fields: [
         {
           name: "isVisible",
@@ -36,15 +40,65 @@ const homePage = {
           name: "featureType",
           label: "Feature Type",
           type: "select",
-          options: ["banner", "announcement" , "productGroup" , "categories" , "countdown" , "social_channel" , "text_paragraph" , "video"],
-          required: true
+          options: [
+            {
+              label: 'Banner',
+              value: 'banner',
+            },
+            {
+              label: 'Announcement',
+              value: 'announcement',
+            },
+            {
+              label: 'Product Group',
+              value: 'productGroup',
+            },
+            {
+              label: 'Categories',
+              value: 'categories',
+            },
+            {
+              label: 'Countdown',
+              value: 'countdown',
+            },
+            {
+              label: 'Social Channel',
+              value: 'social_channel',
+            },
+            {
+              label: 'Text Paragraph',
+              value: 'text_paragraph',
+            },
+            {
+              label: 'Video',
+              value: 'video',
+            },
+          ],
+          required: true,
         },
         {
           name: "layoutType",
           label: "Layout Type",
           type: "select",
-          options: ["horizontal", "vertical" , "horizontal_grid" , "vertical_grid"],
-          required: true
+          options: [
+            {
+              label: 'Horizontal',
+              value: 'horizontal',
+            },
+            {
+              label: 'Vertical',
+              value: 'vertical',
+            },
+            {
+              label: 'Horizontal Grid',
+              value: 'horizontal_grid',
+            },
+            {
+              label: 'Vertical Grid',
+              value: 'vertical_grid',
+            },
+          ],
+          required: true,
         },
         {
           name: 'data',
@@ -52,11 +106,11 @@ const homePage = {
           type: 'relationship',
           hasMany: false,
           required: true,
-          relationTo: ["announcementBanner" ,"banner" , "collection" ,"product" , "eventTimer", "social" ,"paragraph" , "video"]
+          relationTo: ["announcementBanner" ,"banner" , "categories" ,"productGroup" , "eventTimer", "socialMedia" ,"textParagraph" , "video"]
         },
       ],
     }
   ],
 };
 
-module.exports = homePage;
+module.exports = homeScreen;

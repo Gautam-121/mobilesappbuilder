@@ -1,7 +1,12 @@
 const graphqlQueryForProducts = `
-{
-  products(first: 100) {
+query Products($first: Int!, $after: String) {
+  products(first: $first, after: $after) {
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
     edges {
+      cursor
       node {
         id
         title
@@ -11,29 +16,40 @@ const graphqlQueryForProducts = `
 }
 `;
 const graphqlQueryForCollections = `
-query MyQuery {
-  collections(first: 10) {
+query MyQuery($first: Int!, $after: String) {
+  collections(first: $first, after: $after) {
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
     nodes {
+      description
       id
-      title
       image {
-        height
-        src
         url
       }
+      title
+      handle
     }
   }
-}
-`;
-const graphqlQueryForProductsByCollectionId = (collectionId) =>  `
-query MyQuery {
-  collection(id: ${collectionId}) {
-    products(first:10) {
+}`;
+
+const graphqlQueryForProductsByCollectionId =  `
+query GetProductsByCollectionId($collectionId: ID!, $first: Int!, $after: String) {
+  collection(id: $collectionId) {
+    products(first: $first, after: $after) {
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
       edges {
         node {
           id
-          productType
+          handle
           title
+          featuredImage {
+            url
+          }
           priceRange {
             maxVariantPrice {
               amount
@@ -44,20 +60,17 @@ query MyQuery {
               currencyCode
             }
           }
-          images(first: 10) {
-            edges {
-              node {
-                src
-                url
-              }
-            }
-          }
+          totalInventory
+          productType
+          isGiftCard
+  
         }
       }
     }
   }
 }
 `;
+
 const graphqlQueryForFirstCollection = `
     query MyQuery {
       collections(first: 1) {
@@ -87,11 +100,112 @@ const TEST_QUERY = `
     }
 }`;
 
+const otherScreen = {
+  "data": {
+      "productDetail": {
+          "actions": {
+              "basic": {
+                  "wishlist": true,
+                  "share": true,
+                  "cart": true
+              },
+              "advanced": {
+                  "rating_and_reviews": {
+                      "visibility": true
+                  },
+                  "recommendation": {
+                      "visibility": true,
+                      "image_adjustment": "cover",
+                      "content": "You may also like"
+                  },
+                  "recent_viewed_products": {
+                      "visibility": false,
+                      "content": "Recently viewed",
+                      "image_adjustment": "cover"
+                  },
+                  "contact_information": {
+                      "visibility": true,
+                      "title": "Contact with us",
+                      "channels": [
+                          {
+                              "title": "Facebook",
+                              "url": null,
+                              "visibility": true
+                          },
+                          {
+                              "title": "X",
+                              "url": null,
+                              "visibility": true
+                          },
+                          {
+                              "title": "Instagram",
+                              "url": null,
+                              "visibility": true
+                          },
+                          {
+                              "title": "YouTube",
+                              "url": null,
+                              "visibility": true
+                          },
+                          {
+                              "title": "TikTok",
+                              "url": null,
+                              "visibility": true
+                          }
+                      ]
+                  }
+              }
+          },
+          "faster_checkout": {
+              "buy_now": false
+          }
+      },
+      "search": {
+          "visibility": false,
+          "groups": []
+      },
+      "cart": {
+          "empty_state_illustration": {
+              "image_url": "https:\/\/static-mobile.onecommerce.io\/images\/icon\/1701773380_icon-cart.png"
+          },
+          "empty_state_texts": {
+              "title": "Nothing added to cart yet",
+              "subtitle": "It's quite lonely here, isn't it? Why don't we continue shopping?"
+          },
+          "empty_state_button": {
+              "call_to_action_text": "Continue shopping",
+              "redirect_to": "home"
+          }
+      },
+      "account": {
+          "header_bar": {
+              "cart": true,
+              "settings": true
+          },
+          "main_section": [
+              {
+                  "type": "orders",
+                  "visibility": true
+              },
+              {
+                  "type": "personal_information",
+                  "visibility": true
+              },
+              {
+                  "type": "shipping_address",
+                  "visibility": true
+              }
+          ]
+      }
+  }
+}
+
 module.exports = {
     graphqlQueryForProducts,
     graphqlQueryForCollections,
     graphqlQueryForProductsByCollectionId,
     graphqlQueryForFirstCollection,
     requestBodyForStorefrontToken,
-    TEST_QUERY
+    TEST_QUERY,
+    otherScreen
 }

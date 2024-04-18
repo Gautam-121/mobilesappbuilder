@@ -1,4 +1,6 @@
 const payload = require("payload");
+const shopify = require("../utils/shopifyConfig.js");
+
 
 const isShopActive = async (req, res, next) => {
   
@@ -9,28 +11,44 @@ const isShopActive = async (req, res, next) => {
     return;
   }
 
+  console.log("Enter after line 14")
+
+  const callbackResponse = await shopify.auth.callback({
+    rawRequest: req,
+    rawResponse: res,
+  });
+
+  const { session } = callbackResponse;
+
+  const client = new shopify.clients.Graphql({ session });
+  const response = await client.request(TEST_QUERY);
+
   const isShopAvaialble = await payload.find({
-    collection: "activeStores", // required
+    collection: "Store", // required
     where: {
-      shopName: { equals: shop },
+      id: { equals: response?.data?.shop?.id },
     },
   });
+
+  console.log("rechesTo line" , 37)
 
   if (isShopAvaialble.docs?.length === 0 || !isShopAvaialble.docs[0].isActive) {
     if (isShopAvaialble.docs?.length === 0) {
       await payload.create({
-        collection: "activeStores", // required
+        collection: "Store", // required
         data: {
-          shopName: shop,
-          isActive: false,
+            shopId: response?.data?.shop?.id,
+            shopName: response?.data?.shop?.shopName,
+            shopify_domain: session?.shop,
+            isActive: false,
         },
       });
     } 
     else if (!isShopAvaialble.docs[0].isActive) {
       await payload.update({
-        collection: "activeStores",
+        collection: "Store",
         where: {
-          shopName: { equals: shop },
+          id: { equals: response?.data?.shop?.id }
         },
         data: {
           isActive: false,

@@ -1,5 +1,5 @@
 
-const videoFeaturedConfig = {
+const Video = {
   slug: "video",
   admin: {
     useAsTitle: "title",
@@ -45,4 +45,4 @@ const videoFeaturedConfig = {
   ]
 };
 
-module.exports = videoFeaturedConfig;
+module.exports = Video;

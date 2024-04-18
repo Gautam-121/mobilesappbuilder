@@ -1,6 +1,6 @@
 
-const accountPageDetailConfig = {
-  slug: "accountPageDetail",
+const AccountScreen = {
+  slug: "accountScreen",
   admin: {
     useAsTitle: "shopId",
   },
@@ -53,4 +53,4 @@ const accountPageDetailConfig = {
   ],
 };
 
-module.exports = accountPageDetailConfig;
+module.exports = AccountScreen;

@@ -13,6 +13,7 @@ const {
   getProduct,
   getCollection,
   getProductByCollectionId,
+  metafieldByProductId
 } = require("../controllers/shopifyApi.controller.js");
 const {
   getBrandingApp,
@@ -20,11 +21,10 @@ const {
   updateBrandingApp,
 } = require("../controllers/baranding.controller.js");
 const {
-  createProductDetailPage,
+  updateProductDetail,
   createCartDetailPage,
   createAccountDetailPage,
   getOtherScreenPageDetailByWeb,
-  getOtherScreen,
   getProductDetails
 } = require("../controllers/otherScreen.controller.js");
 const {
@@ -35,6 +35,7 @@ const {
 const {
   getTabMenuDataByWeb,
   getTabMenu,
+  updateTabMenu
 } = require("../controllers/tabNavigation.controller.js");
 const {
   getAllTheme,
@@ -48,13 +49,13 @@ const router = Router();
 
 router.get("/api/storeDetail/:shopId", getStoreDetail);
 
-router.get("/api/shop/detail", verifyRequest, getStoreDetailByWeb);
+router.get("/api/shop/detail", verifyRequest , getStoreDetailByWeb);
 
-router.put("/api/updateUserThemeDetail", verifyRequest, updateStoreDetail);
+router.put("/api/store/theme" , verifyRequest ,  updateStoreDetail);
 
 /*---------------------------ShopifyRouter-------------------------------------------------- */
 
-router.get("/api/getProduct", verifyRequest, getProduct);
+router.get("/api/getProduct", verifyRequest ,  getProduct);
 
 router.get("/api/getCollection", verifyRequest, getCollection);
 
@@ -64,67 +65,76 @@ router.get(
   getProductByCollectionId
 );
 
+router.get(
+  "/api/:shopId/metafield/product/:productId",
+  metafieldByProductId
+)
+
 /*----------------------------HomePageRouter-------------------------------------------------- */
 
-router.get("/api/getHomePage/:shopId", getHomePage);
+router.get("/api/getHomePage/:shopId",  getHomePage);
 
-router.get("/api/getHomePageByShop/:themeId", verifyRequest, getHomePageByWeb);
+router.get("/api/getHomePageByShop/:themeId", verifyRequest ,  getHomePageByWeb);
 
-router.put("/api/updateHomePage/:themeId", verifyRequest, updateHomePage);
+router.put("/api/updateHomePage/:themeId", verifyRequest , updateHomePage);
 
 /*--------------------------BrandingPageRouter--------------------------------------------------*/
 
 router.get("/api/getBrandingPage/:shopId", getBrandingApp);
 
 router.get(
-  "/api/getBrandingPageByShop/:themeId",
+  "/api/branding/theme/:themeId",
   verifyRequest,
   getBrandingAppWeb
 );
 
 router.put(
-  "/api/updateBrandingPage/:branding_id",
+  "/api/branding/theme/:themeId",
   verifyRequest,
   updateBrandingApp
 );
 
 /*--------------------------themeRouting---------------------------------------*/
 
-router.get("/api/getAllTheme", verifyRequest, getAllTheme);
+router.get("/api/getAllTheme", verifyRequest ,  getAllTheme);
 
-router.get("/api/geThemeById/:themeId", verifyRequest, getThemeById);
+router.get("/api/geThemeById/:themeId", verifyRequest , getThemeById);
+
+/*-------------------------ProductDetailScreen---------------------------------------*/
+
+router.get("/api/productDetail/:shopId", getProductDetails)
+
+router.put("/api/product/detail/:themeId" ,verifyRequest , updateProductDetail);
 
 /*--------------------------OtherScreenRouting-------------------------------------- */
 
-router.post("/api/createProductDetail", createProductDetailPage);
+
+router.get("/api/other/screen/:themeId", verifyRequest , getOtherScreenPageDetailByWeb);
 
 router.post("/api/createCartDetail", createCartDetailPage);
 
 router.post("/api/createAccountDetail", createAccountDetailPage);
 
-router.get("/api/getOtherScreenDetailByWeb", getOtherScreenPageDetailByWeb);
-
-router.get("/api/getOtherScreen/:shopId", getOtherScreen);
 
 /*--------------------------TabMenuRouting--------------------------------------------*/
 
 router.get(
-  "/api/getTabMenuDataByWeb/:themeId",
-  verifyRequest,
+  "/api/bottom/theme/:themeId",
+  verifyRequest ,
   getTabMenuDataByWeb
 );
 
-router.get("/api/getTabMenu/:shopId", getTabMenu);
+router.get("/api/bottom/menu/:shopId", getTabMenu);
+
+router.put("/api/bottom/theme/:themeId", verifyRequest , updateTabMenu)
 
 /*--------------------------UploadImages-----------------------------------------------*/
 
-router.post("/api/upload/file" , multer().any() ,  uploadImages)
+router.post("/api/upload/file"  , verifyRequest ,  multer().any() ,  uploadImages)
 
 router.get("/api/getData", (req, res) => {
   const sendData = { text: "This is coming from /apps/api route." };
   return res.status(200).json(sendData);
 });
-
-router.get("/api/productDetail/:shopId", getProductDetails)
 
 module.exports = router;

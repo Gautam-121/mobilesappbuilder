@@ -1,6 +1,6 @@
 
-const emptyCartPageDetailConfig = {
-  slug: "emptyCartPageDetail",
+const EmptyCartScreen = {
+  slug: "emptyCartScreen",
   admin: {
     useAsTitle: "shopId",
   },
@@ -65,4 +65,4 @@ const emptyCartPageDetailConfig = {
   ],
 };
 
-module.exports = emptyCartPageDetailConfig;
+module.exports = EmptyCartScreen;

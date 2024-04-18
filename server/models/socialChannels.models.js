@@ -1,13 +1,13 @@
 
-const socialChannelConfig = {
-  slug: "social",
+const SocialMedia = {
+  slug: "socialMedia",
   admin: {
     useAsTitle: "blockTitle",
   },
   fields: [
     {
       name : "blockTitle",
-      label: "Channel Title",
+      label: "Title",
       type: "text",
       maxLength: 30,
       defaultValue: "Contact With Us"
@@ -27,6 +27,7 @@ const socialChannelConfig = {
         },
         {
           name: "isVisible",
+          label: "Is Visible",
           type: "checkbox",
           defaultValue: true
         }
@@ -35,4 +36,4 @@ const socialChannelConfig = {
   ],
 };
 
-module.exports = socialChannelConfig;
+module.exports = SocialMedia;

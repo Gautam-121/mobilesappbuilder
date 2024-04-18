@@ -14,7 +14,10 @@ const verifyRequest = async (req, res, next) => {
       rawRequest: req,
       rawResponse: res,
     });
+    console.log("sessionId in VerifyRequest" , sessionId)
     const session = await sessionHandler.loadSession(sessionId);
+
+    console.log(session)
 
     if (
       new Date(session?.expires) > new Date() &&

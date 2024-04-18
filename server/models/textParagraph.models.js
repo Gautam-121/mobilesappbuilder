@@ -1,6 +1,6 @@
 
-const textParagraphConfig = {
-  slug: "paragraph",
+const TextParagraph = {
+  slug: "textParagraph",
   access: {
     create: () => true,
   },
@@ -15,4 +15,4 @@ const textParagraphConfig = {
   ],
 };
 
-module.exports = textParagraphConfig;
+module.exports = TextParagraph;

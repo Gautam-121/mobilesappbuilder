@@ -1,5 +1,5 @@
 
-const eventTimerConfig = {
+const EventTimer = {
   slug: "eventTimer",
   admin:{
     useAsTitle: "title"
@@ -94,4 +94,4 @@ const eventTimerConfig = {
   ],
 };
 
-module.exports = eventTimerConfig;
+module.exports = EventTimer;

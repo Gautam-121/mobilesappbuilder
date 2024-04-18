@@ -1,12 +1,13 @@
 
-const tabMenuConfig = {
-  slug: "tabMenuNav",
+const BottomMenuPannel = {
+  slug: "bottomMenuPannel",
   admin: {
     useAsTitle: "shopId",
   },
   fields: [
     {
       name: "shopId",
+      label: "ShopId",
       type: "text",
       defaultValue: "Apprikart",
       access:{
@@ -16,6 +17,7 @@ const tabMenuConfig = {
     },
     {
       name: "themeId",
+      label:"Theme",
       type: "relationship",
       relationTo: "theme",
       required: true
@@ -28,17 +30,37 @@ const tabMenuConfig = {
         {
             name: "redirect_page",
             type: "select",
-            options: ["home", "search" , "cart" , "account" , "order"],
+            options: [
+              {
+                label: 'Home',
+                value: 'home',
+              },
+              {
+                label: 'Search',
+                value: 'search',
+              },
+              {
+                label: 'Cart',
+                value: 'cart',
+              },
+              {
+                label: 'Account',
+                value: 'account',
+              },
+              {
+                label: 'Wishlist',
+                value: 'wishlist',
+              },
+              {
+                label: 'Categories',
+                value: 'categories',
+              }
+            ],
             required: true
         },
-        {
-          name: "position",
-          type: "number",
-          required: true
-        }
       ],
     }
   ],
 };
 
-module.exports = tabMenuConfig
+module.exports = BottomMenuPannel

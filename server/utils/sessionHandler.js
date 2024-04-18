@@ -3,9 +3,11 @@ const Cryptr = require("cryptr");
 const cryption = new Cryptr(process.env.ENCRYPTION_STRING);
 const payload = require("payload");
 
-const storeSession = async (session) => {
+const storeSession = async (session , shopId) => {
+
+  console.log("Session for", session)
   const result = await payload.find({
-    collection: "session", // required
+    collection: "Session", // required
     where: {
       id: { equals: session.id },
     },
@@ -13,24 +15,28 @@ const storeSession = async (session) => {
   if (result.docs?.length != 0) {
     // Update Document
     await payload.update({
-      collection: "session",
+      collection: "Session",
       where: {
         id: { equals: session.id },
       },
       data: {
-        content: cryption.encrypt(JSON.stringify(session)),
-        shop: session.shop,
+        token: cryption.encrypt(JSON.stringify(session)),
+        shop_domain: session.shop,
+        shopId: shopId,
+        isOnline: session.isOnline
       },
     });
   } 
   else {
     // Document Created
     await payload.create({
-      collection: "session", // required
+      collection: "Session", // required
       data: {
         id: session.id,
-        content: cryption.encrypt(JSON.stringify(session)),
-        shop: session.shop,
+        token: cryption.encrypt(JSON.stringify(session)),
+        shop_domain: session.shop,
+        shopId: shopId,
+        isOnline: session.isOnline
       },
     });
   }
@@ -39,7 +45,7 @@ const storeSession = async (session) => {
 
 const loadSession = async (id) => {
   const sessionResult = await payload.find({
-    collection: "session", // required
+    collection: "Session", // required
     where: {
       id: { equals: id },
     },
@@ -48,9 +54,9 @@ const loadSession = async (id) => {
   if (sessionResult.docs.length === 0) {
     return undefined;
   }
-  if (sessionResult.docs[0].content.length > 0) {
+  if (sessionResult.docs[0].token.length > 0) {
     const sessionObj = JSON.parse(
-      cryption.decrypt(sessionResult.docs[0].content)
+      cryption.decrypt(sessionResult.docs[0].token)
     );
     const returnSession = new Session(sessionObj);
     return returnSession;
@@ -60,7 +66,7 @@ const loadSession = async (id) => {
 
 const deleteSession = async (id) => {
   await payload.delete({
-    collection: "session",
+    collection: "Session",
     where: {
       id: { equals: id },
     },

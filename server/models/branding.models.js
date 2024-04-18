@@ -1,6 +1,6 @@
 
-const brandingThemeConfig = {
-  slug: "brandingTheme",
+const Branding = {
+  slug: "branding",
   admin:{
     useAsTitle:"shopId"
   },
@@ -24,6 +24,7 @@ const brandingThemeConfig = {
     },
     {
       name: 'app_title', // required
+      label: "App Title",
       type: 'radio', // required
       options: [
         // required
@@ -43,6 +44,7 @@ const brandingThemeConfig = {
     },
     {
       name: "app_title_text",
+      label: "App Title Text",
       type: "group",
       fields:[
         {
@@ -96,17 +98,29 @@ const brandingThemeConfig = {
     },
     {
       name: "primary_btn_bg_Color",
-      label:"Primary Background Color",
+      label:"Primary Button Background Color",
       type: "text",
       defaultValue: "#323470",
     },
     {
       name: "primary_btn_text_color",
-      label:"Primary Text Color",
+      label:"Primary Button Text Color",
       type: "text",
       defaultValue: "#FFFFFF",
     },
+    {
+      name: "label_bg_color",
+      label:"Label Background Color",
+      type: "text",
+      defaultValue: "#323470",
+    },
+    {
+      name: "label_text_color",
+      label:"Label Text Color",
+      type: "text",
+      defaultValue: "#323470",
+    }
   ],
 };
 
-module.exports = brandingThemeConfig;
+module.exports = Branding;
