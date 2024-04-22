@@ -48,7 +48,7 @@ import Video from '../components/announcementBar/Video';
         }}
       >
         {/* <AnnouncementBar handleEdit={handleEdit} data={data} style={style} text={text} textColor={textColor} backgroundColor={backgroundColor} /> */}
-       <Video handleEdit={handleEdit} element={gridItems}  />
+       <Video handleEdit={handleEdit} element={gridItems}  style={style}/>
         <EditPopup componentData={gridItems} />
       </div>
     );

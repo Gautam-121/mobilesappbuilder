@@ -1,12 +1,17 @@
 /* eslint-disable react/prop-types */
 import {useRef} from 'react'
 import {uid} from 'uid'
+import ImageChecker from '../../../../components/image-checker/ImageChecker';
+import "./HorizontalCollectionGrid.css";
+import styled from 'styled-components';
+
 
 
 export default function HorizontalCollectionGrid({
   gridItems,
   addComponents,
   handleEdit,
+  style,
   draggable,
   text
 }) {
@@ -71,25 +76,41 @@ export default function HorizontalCollectionGrid({
       document.body.removeChild(dragImage);
     }, 0);
   };
+
+
+
+
   return (
     <div
-    onClick={addComponents}
+    onClick={addComponents || handleEdit}
     draggable={draggable}
       ref={dragRef}
       onDragStart={draggable ? handleDragStart : undefined}
       onDragEnd={(e) => e.preventDefault()}
     >
+
       <strong>{text}</strong>
 
-      <div className="collection-grid" style={horizontalCollectionstyle}>
-        <div style={horizontalCollectionGridstyle}>
-          {gridItems.data.data.map((item, index) => (
-            <p key={index} style={horizonalComponentElemstyle}>
-              {item.title}
-            </p>
-          ))}
+      <div style={style}>
+
+        {gridItems.data.data.map((item, subIndex) => {
+          console.log("item?.imageUrl?.src}: ",item?.imageUrl?.src);
+          return(
+
+<div style={{backgroundColor:'white', border:'1px solid #f1f1f1', padding:'5px'}}>
+        <ImageChecker url={item?.imageUrl?.src} width={120} height={120}/>
+        {/* <img src={item?.imageUrl?.src} className="image-dimension" /> */}
+
+        <p key={subIndex} className="text-style">
+        {item.title}
+        </p>
+        
+        
         </div>
-      </div>
+        )})}
+        </div>
+        {/* You can customize the content based on your needs */}
+     
     </div>
   );
 }

@@ -4,6 +4,7 @@
   border: 8px solid rgb(26, 26, 26);
   border-radius: 55px;
   margin-top: 20px;
+  margin-bottom: 20px;
   background-color: #f2f2f3;
   display: flex;
   flex-direction: column;

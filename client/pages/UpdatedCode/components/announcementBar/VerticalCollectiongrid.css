@@ -1,0 +1,34 @@
+.collection-images-main-div{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+
+.vertical-collection-main-div{
+    border: "1px solid grey";
+    padding: "10px";
+    border-radius: "5px";
+    cursor: "pointer";
+    background-color: "#ffffff";
+    color: "#000000";
+    display: "grid";
+    grid-template-columns: repeat(1, 1fr);
+    gap: "16px";
+    text-align: "center";
+}
+
+
+.text-style{
+    padding: "10px";
+    display: "grid";
+    grid-template-columns: repeat(1, 1fr);
+    gap: "16px";
+    text-align: "center";
+}
+
+
+.image-dimension{
+    height: 168px;
+    width: auto;
+}

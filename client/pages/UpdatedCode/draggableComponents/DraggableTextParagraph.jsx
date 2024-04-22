@@ -48,7 +48,7 @@ import Textparagraph from '../components/announcementBar/Textparagraph';
         }}
       >
         {/* <AnnouncementBar handleEdit={handleEdit} data={data} style={style} text={text} textColor={textColor} backgroundColor={backgroundColor} /> */}
-       <Textparagraph handleEdit={handleEdit} gridItems={gridItems}  />
+       <Textparagraph handleEdit={handleEdit} gridItems={gridItems}  style={style}/>
         <EditPopup componentData={gridItems} />
       </div>
     );
