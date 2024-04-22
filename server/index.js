@@ -6,22 +6,22 @@ const { resolve } = require("path");
 const shopify = require("./utils/shopifyConfig.js");
 const cors = require("cors");
 const sessionHandler = require("./utils/sessionHandler.js");
-const csp = require("./middleware/csp.js");
+const csp = require("./middleware/csp.middleware.js");
 const setupCheck = require("./utils/setupCheck.js");
 const {
   customerDataRequest,
   customerRedact,
   shopRedact,
 } = require("./controllers/gdpr.js");
-const applyAuthMiddleware = require("./middleware/auth.js");
-const isShopActive = require("./middleware/isShopActive.js");
-const verifyHmac = require("./middleware/verifyHmac.js");
-const verifyProxy = require("./middleware/verifyProxy.js");
-const verifyRequest = require("./middleware/verifyRequest.js");
+const applyAuthMiddleware = require("./middleware/auth.middleware.js");
+const isShopActive = require("./middleware/isShopActive.middleware.js");
+const verifyHmac = require("./middleware/verifyHmac.middleware.js");
+const verifyProxy = require("./middleware/verifyProxy.middleware.js");
+const verifyRequest = require("./middleware/verifyRequest.middleware.js");
 const proxyRouter = require("./routes/app_proxy/index.js");
 const router = require("./routes/index.js");
 const webhookRegistrar = require("./webhooks/index.js");
-const errorMiddleware = require("./middleware/error.js");
+const errorMiddleware = require("./middleware/error.middleware.js");
 require("events").EventEmitter.prototype._maxListeners = 70;
 dotenv.config();
 // Run a check to ensure everything is setup properly
@@ -35,8 +35,17 @@ webhookRegistrar();
 const app = express();
 app.use(cors());
 
+// Handling Uncaught Exception
+process.on("uncaughtException", (err) => {
+  console.log(`Error: ${err.message}`);
+  console.log(`Shutting down the server due to Uncaught Exception`);
+  process.exit(1);
+});
+
 const start = async () => {
   try {
+
+    // Payload configration
     await payload.init({
       secret: process.env.PAYLOAD_SECRET,
       express: app,
@@ -75,7 +84,7 @@ const start = async () => {
         }
       }
     );
-
+    
     app.use(express.json());
 
     app.post("/api/graphql", verifyRequest, async (req, res) => {
@@ -158,9 +167,20 @@ const start = async () => {
       });
     }
 
-    app.listen(PORT, () => {
+    const server = app.listen(PORT, () => {
       console.log(`Server running at http://localhost:${process.env.PORT}`);
     });
+
+    // Unhandled Promise Rejection
+    process.on("unhandledRejection", (err) => {
+      console.log(`Error: ${err.message}`);
+      console.log(`Shutting down the server due to Unhandled Promise Rejection`);
+      
+      server.close(() => {
+        process.exit(1);
+      });
+    });
+
   } catch (error) {
     console.log("error is ", error);
   }

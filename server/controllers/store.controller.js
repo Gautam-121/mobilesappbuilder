@@ -1,0 +1,318 @@
+const Payload = require("payload");
+const {
+  shopifyApiData,
+  axiosShopifyConfig,
+  shopifyGraphQLEndpoint
+} = require("../utils/shopifyBuildFun.js");
+const {
+  graphqlQueryForFirstCollection
+} = require("../constant.js") 
+const ApiError = require("../utils/ApiError.js");
+const asyncHandler = require("../utils/asyncHandler.js");
+
+
+const updateStoreDetail = asyncHandler(  async (req, res, next) => {
+  
+  const {themeId} = req.body
+
+  if (!themeId) {
+    const error = new ApiError("theme id missing", 400)
+    return next(error);
+  }
+
+  let UserStoreData = await Payload.find({
+    collection: "Store",
+    where: {
+      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
+      isActive: { equals : true }
+    },
+  });
+
+  if(!UserStoreData?.docs[0]){
+    const error = new ApiError("store not found", 404)
+    return next(error);
+  }
+
+  if (
+    UserStoreData?.docs[0]?.themeId &&
+    UserStoreData?.docs[0]?.themeId === themeId
+  ) {
+    return res.status(200).json({
+      success: true,
+      message: "UserStoreData Update Successfully",
+    });
+  }
+
+  if (UserStoreData?.docs[0]?.themeId) {
+    const isDataByThemeExist = await Payload.find({
+      collection: "branding",
+      where: {
+        shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
+        themeId: { equals: themeId },
+      },
+    });
+
+    if (isDataByThemeExist.docs[0]?.themeId) {
+      UserStoreData = await Payload.update({
+        collection: "Store",
+        where: {
+          shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
+        },
+        data: {
+          themeId: themeId
+        },
+      });
+
+      return res.status(200).json({
+        success: true,
+        message: "UserStoreData Update Successfully",
+      });
+    }
+  }
+
+  const shop = req.query.shop || "renergii.myshopify.com";
+
+  const fetchCollections = await shopifyApiData(
+    shopifyGraphQLEndpoint(shop),
+    graphqlQueryForFirstCollection,
+    axiosShopifyConfig(req.accessToken || "shpua_8f55d655921140091487fb890fc5071e")
+  );
+
+  const collections = fetchCollections?.data?.data?.collections?.nodes[0];
+
+  const homeData = await Payload.find({
+    collection: "homeScreen",
+    where: {
+      themeId: { equals: themeId },
+      shopId: { equals: "Apprikart" },
+    },
+  });
+
+  const brandingData = await Payload.find({
+    collection: "branding",
+    where: {
+      themeId: { equals: themeId },
+      shopId: { equals: "Apprikart" },
+    },
+  });
+
+  const tabMenuData = await Payload.find({
+    collection: "bottomMenuPannel",
+    where: {
+      themeId: { equals: themeId },
+      shopId: { equals: "Apprikart" },
+    },
+  });
+
+  for (val of homeData?.docs[0].homeData) {
+
+    if (val.featureType === "banner") {
+      val?.data?.value?.data.forEach((element) => {
+        element.imageUrl = element.imageUrl.id;
+      });
+
+      const banner = await Payload.create({
+        collection: "banner",
+        data: {
+          data: val?.data?.value?.data,
+        },
+      });
+
+      val.data = {
+        relationTo: "banner",
+        value: banner.id,
+      };
+    } 
+    else if (val.featureType === "announcement") {
+      const announcementBar = await Payload.create({
+        collection: "announcementBanner",
+        data: val?.data?.value,
+      });
+
+      val.data = {
+        relationTo: "announcementBanner",
+        value: announcementBar.id,
+      };
+    } 
+    else if (val.featureType === "productGroup") {
+      const productGroup = await Payload.create({
+        collection: "productGroup",
+        data: {
+          ...val?.data?.value,
+          productGroupId: collections?.id,
+        },
+      });
+
+      val.data = {
+        relationTo: "productGroup",
+        value: productGroup.id,
+      };
+    } 
+    else if (val.featureType === "categories") {
+      const categories = await Payload.create({
+        collection: "categories",
+        data: {
+          data: [
+            {
+              title: collections?.title,
+              imageUrl: collections?.image,
+              collection_id: collections?.id,
+            },
+          ],
+        },
+      });
+
+      val.data = {
+        relationTo: "categories",
+        value: categories.id,
+      };
+    } 
+    else if (val.featureType === "text_paragraph") {
+      const textParagraph = await Payload.create({
+        collection: "textParagraph",
+        data: val?.data?.value,
+      });
+
+      val.data = {
+        relationTo: "textParagraph",
+        value: textParagraph.id,
+      };
+    } 
+    else if (val.featureType === "countdown") {
+      const eventTimer = await Payload.create({
+        collection: "eventTimer",
+        data: val?.data?.value,
+      });
+
+      val.data = {
+        relationTo: "eventTimer",
+        value: eventTimer.id,
+      };
+    } 
+    else if (val.featureType === "social_channel") {
+      const socialMedia = await Payload.create({
+        collection: "socialMedia",
+        data: val?.data?.value,
+      });
+
+      val.data = {
+        relationTo: "socialMedia",
+        value: socialMedia.id,
+      };
+    } 
+    else if (val.featureType === "video") {
+      const video = await Payload.create({
+        collection: "video",
+        data: val?.data?.value,
+      });
+
+      val.data = {
+        relationTo: "video",
+        value: video.id,
+      };
+    }
+  }
+
+  await Payload.create({
+    collection: "homeScreen",
+    data: {
+      shopId: req.shop_id || "gid://shopify/Shop/81447387454",
+      themeId: themeId,
+      homeData: homeData?.docs[0].homeData,
+    },
+  });
+
+  await Payload.create({
+    collection: "bottomMenuPannel",
+    data: {
+      setting: tabMenuData.docs[0]?.setting,
+      shopId: req.shop_id || "gid://shopify/Shop/81447387454",
+      themeId: themeId,
+    },
+  });
+
+  if (brandingData?.docs[0]?.app_title === "appText") {
+    brandingData.docs[0].app_title_text.app_name = UserStoreData?.docs[0]?.shopName;
+  }
+
+  await Payload.create({
+    collection: "branding",
+    data: {
+      ...brandingData.docs[0],
+      shopId: req.shop_id || "gid://shopify/Shop/81447387454",
+      themeId: themeId,
+    },
+  });
+
+  UserStoreData = await Payload.update({
+    collection: "Store",
+    where: {
+      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
+    },
+    data: req.body,
+  });
+
+  return res.status(200).json({
+    success: true,
+    message: "UserStoreData Update Successfully",
+  });
+
+})
+
+const getStoreDetail = asyncHandler( async(req,res,next)=> {
+
+  if (!req.params.shopId) {
+    const error = new ApiError("shop_id is missing",400)
+    return next(error)
+  }
+
+  const store = await Payload.find({
+    collection: "Store",
+    where: { 
+      shopId: { equals: `gid://shopify/Shop/${req.params.shopId}` },
+      isActive: { equals: true }
+    },
+  });
+
+  if (store.docs.length === 0) {
+    const error = new ApiError("store not found with id: "+ req.params.shopId , 400)
+    return next(error)
+  }
+
+  return res.status(200).json({
+    success: true,
+    message: "Data Send Successfully",
+    data: store.docs[0]
+})
+
+})
+
+const getStoreDetailByWeb = asyncHandler( async(req,res,next)=>{
+   
+  const store = await Payload.find({
+    collection: 'Store',
+    where: { 
+      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
+      isActive: { equals : true }
+    },
+  })
+
+  if (store.docs.length === 0) {
+    const error = new ApiError("store not found with id: "+ req.params.shopId , 400)
+    return next(error)
+  }
+
+  return res.status(200).json({
+    success: true,
+    message: "Data Send Successfully",
+    data: store.docs[0]
+  })
+
+})
+
+
+module.exports = {
+  updateStoreDetail, 
+  getStoreDetail , 
+  getStoreDetailByWeb
+}
