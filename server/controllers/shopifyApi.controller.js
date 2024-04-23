@@ -7,7 +7,8 @@ const {
 const {
   graphqlQueryForProducts,
   graphqlQueryForCollections,
-  graphqlQueryForProductsByCollectionId
+  graphqlQueryForProductsByCollectionId,
+  graphqlQueryForSegments
 } = require("../constant.js");
 const asyncHandler = require("../utils/asyncHandler.js");
 const Payload = require("payload")
@@ -147,11 +148,6 @@ const getProductByCollectionId = asyncHandler( async (req, res, next) => {
   const nextCursor = hasNextPage ? collectionProducts.pageInfo.endCursor : null;
   const products = collectionProducts.edges.map((edge) => edge.node);
 
-  // const collectionsProducts =
-  //   fetchCollectionsProducts?.data?.data?.collection?.products?.edges?.map(
-  //     (edge) => edge.node
-  //   );
-
   return res.status(200).json({
     success: true,
     hasNextPage,
@@ -231,10 +227,54 @@ const metafieldByProductId = asyncHandler( async(req,res,next)=>{
 
 })
 
+const getAllSegment = asyncHandler( async (req, res , next) => {
+
+  const store = await Payload.find({
+    collection: 'Store',
+    where: { 
+      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
+      isActive: { equals : true}
+    },
+  })
+
+  if(!store.docs[0]){
+    const error = new ApiError(`store not found with id: ${req.shop_id}`, 404)
+    return next(error);
+  }
+
+  const per_page = req.query?.per_page ?  parseInt(req.query.per_page) : 8
+  const next_page = req.query.next_page || null
+
+  const fetchSegment = await shopifyApiData(
+    shopifyGraphQLEndpoint(req?.shop),
+    graphqlQueryForSegments,
+    axiosShopifyConfig(req.accessToken),
+    {first: per_page , after: next_page}
+  );
+
+  if(fetchSegment?.data?.errors?.length > 0){
+    const error = new ApiError("Something went wrong while fetching graphql query" , 500)
+    return next(error)
+  }
+
+  const segments = fetchSegment?.data?.data?.segments;
+  const hasNextPage = segments.pageInfo.hasNextPage;
+  const nextCursor = hasNextPage ? segments.pageInfo.endCursor : null;
+  const segmentItems = segments.edges.map((edge) => edge.node);
+
+  return res.status(200).json({
+    success: true,
+    hasNextPage,
+    nextCursor,
+    segments:segmentItems
+  })
+})
+
 module.exports = { 
   getProduct , 
   getCollection , 
   getProductByCollectionId,
-  metafieldByProductId
+  metafieldByProductId,
+  getAllSegment
 }
 

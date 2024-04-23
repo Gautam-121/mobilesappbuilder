@@ -13,7 +13,8 @@ const {
   getProduct,
   getCollection,
   getProductByCollectionId,
-  metafieldByProductId
+  metafieldByProductId,
+  getAllSegment
 } = require("../controllers/shopifyApi.controller.js");
 const {
   getBrandingApp,
@@ -41,7 +42,10 @@ const {
   getAllTheme,
   getThemeById,
 } = require("../controllers/theme.Controller.js");
-
+const {
+  getServerKey,
+  updateServerKey
+} = require("../controllers/firebase.controller.js")
 
 const router = Router();
 
@@ -69,6 +73,14 @@ router.get(
   "/api/:shopId/metafield/product/:productId",
   metafieldByProductId
 )
+
+router.get("/api/shopify/segment",verifyRequest,getAllSegment)
+
+/*----------------------------FirebaseRouting-------------------------------------------------*/
+
+router.get("/api/firebase/server-key", verifyRequest , getServerKey)
+
+router.put("/api/firebase/server-key", verifyRequest , updateServerKey)
 
 /*----------------------------HomePageRouter-------------------------------------------------- */
 

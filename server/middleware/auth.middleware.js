@@ -15,7 +15,6 @@ const {
   TEST_QUERY
 } = require("../constant.js")
 
-
 const authMiddleware = (app) => {
 
   app.get("/auth", async (req, res) => {
@@ -26,12 +25,11 @@ const authMiddleware = (app) => {
       const { shop } = req.query;
       switch (true) {
         case e instanceof CookieNotFound:
+          return res.redirect(`/exitframe/${shop}`);
+          break;
         case e instanceof InvalidOAuthError:
         case e instanceof InvalidSession:
           res.redirect(`/auth?shop=${shop}`);
-          break;
-        case e instanceof BotActivityDetected:
-          res.status(410).send(e.message);
           break;
         default:
           res.status(500).send(e.message);
@@ -41,8 +39,8 @@ const authMiddleware = (app) => {
   });
 
   app.get("/auth/tokens", async (req, res) => {
-    try {
 
+    try {
       const callbackResponse = await shopify.auth.callback({
         rawRequest: req,
         rawResponse: res,

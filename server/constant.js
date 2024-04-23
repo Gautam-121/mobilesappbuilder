@@ -33,7 +33,6 @@ query MyQuery($first: Int!, $after: String) {
     }
   }
 }`;
-
 const graphqlQueryForProductsByCollectionId =  `
 query GetProductsByCollectionId($collectionId: ID!, $first: Int!, $after: String) {
   collection(id: $collectionId) {
@@ -70,7 +69,6 @@ query GetProductsByCollectionId($collectionId: ID!, $first: Int!, $after: String
   }
 }
 `;
-
 const graphqlQueryForFirstCollection = `
     query MyQuery {
       collections(first: 1) {
@@ -86,6 +84,76 @@ const graphqlQueryForFirstCollection = `
       }
     }
 `;
+const graphqlQueryForSegments = `
+query Segments($first: Int!, $after: String) {
+  segments(first: $first, after: $after) {
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    edges {
+      cursor
+      node {
+        id
+        name
+        query
+        creationDate
+        lastEditDate
+      }
+    }
+  }
+}
+`;
+const customerSegmentBulkQuery = (id) =>  `
+     mutation {
+     bulkOperationRunQuery(
+     query: """
+     {
+      customerSegmentMembers(
+          first: 100
+          segmentId: "${id}"
+      ) {
+          edges {
+              node {
+              firstName
+              metafield(key: "custom.firebase_token") {
+                key
+                value
+              }
+  
+              }
+          }
+      }
+     }
+      """
+    ) {
+      bulkOperation {
+        id
+        status
+      }
+      userErrors {
+        field
+        message
+      }
+    }
+}`
+const operationQuery = (operationId)=>`{
+  node(id: "${operationId}") {
+  ... on BulkOperation {
+    url
+    partialDataUrl
+    errorCode
+    status
+  }
+}
+}
+`;
+const subscribeTopicApiEndpoint = "https://iid.googleapis.com/iid/v1:batchAdd"
+
+const sendNotificationApiEndpoint = "https://fcm.googleapis.com/fcm/send"
+
+const unsuscribeTopicApiEndpoint = "https://iid.googleapis.com/iid/v1:batchRemove"
+
 // Define the request body
 const requestBodyForStorefrontToken = {
     storefront_access_token: {
@@ -99,7 +167,6 @@ const TEST_QUERY = `
       id
     }
 }`;
-
 const otherScreen = {
   "data": {
       "productDetail": {
@@ -207,5 +274,11 @@ module.exports = {
     graphqlQueryForFirstCollection,
     requestBodyForStorefrontToken,
     TEST_QUERY,
-    otherScreen
+    graphqlQueryForSegments,
+    otherScreen,
+    customerSegmentBulkQuery,
+    operationQuery,
+    subscribeTopicApiEndpoint,
+    sendNotificationApiEndpoint,
+    unsuscribeTopicApiEndpoint
 }
