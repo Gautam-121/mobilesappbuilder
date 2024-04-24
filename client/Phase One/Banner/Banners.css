@@ -1,0 +1,109 @@
+.banners-main-div {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 20px;
+    background-color: white;
+    height: 100vh;
+}
+
+
+.banners-catgory-product-image-main-div {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 15px;
+    border: 1px solid rgb(231, 229, 229);
+    border-radius: 8px;
+}
+
+.banners-catgory-product-div{
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+   
+}
+
+
+
+.custom-dropzone {
+    min-height: 600px; /* Set the minimum height */
+    border: 2px dashed #ccc; /* Add a dashed border */
+    padding: 20px; /* Add some padding for better appearance */
+}
+
+
+.uploaded-image-container {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    padding: 25px;
+    border: 1px solid rgb(231, 229, 229);
+    border-radius: 5px;
+    
+  }
+  
+  .delete-button-div {
+    position: absolute;
+    top:5px; /* Adjust top positioning */
+    right: 5px; /* Adjust right positioning */
+    width: 24px; /* Adjust width */
+    height: 24px; /* Adjust height */
+    border-radius: 50%; /* Make it circular */
+    border: 1px solid red;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer; /* Cursor property applied only to the delete button */
+}
+
+.delete-button-div:hover {
+border: 1px solid red;
+
+}
+
+
+
+/* Apply cursor: default to the uploaded image */
+.uploaded-image-container img {
+    cursor: none;
+    pointer-events: none;
+}
+  
+
+
+.banners-radio-btns {
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    gap: 20px;
+}
+
+
+
+
+.banners-category-dropdown-main-div {
+    display: flex;
+    flex-direction: column;
+    
+    gap: 10px;
+}
+
+
+.banners-category-dropdown {
+    border: 1px solid rgb(231, 229, 229);
+    border-radius: 5px;
+    padding: 5px;
+    font-size: 13px;
+    
+}
+
+.banners-save-btn {
+    border: 1px solid rgb(73, 134, 247);
+    border-radius: 6px;
+    background-color: rgb(73, 134, 247);
+    color: white;
+    float: right;
+    padding: 6px;
+}
