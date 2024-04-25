@@ -128,7 +128,7 @@ const getProductByCollectionId = asyncHandler( async (req, res, next) => {
     return next(error);
   }
 
-  const per_page = req.query?.per_page ?  parseInt(req.query.per_page) : 8
+  const per_page = req.query?.per_page ?  parseInt(req.query.per_page) : 5
   const next_page = req.query.next_page || null
 
   const fetchCollectionsProducts = await shopifyApiData(
