@@ -18,7 +18,31 @@ const SocialMedia = {
       fields: [
         {
           name: "title",
-          type: "text",
+          label: "Title",
+          type: "select",
+          options: [
+            {
+              label: 'Instagram',
+              value: 'instagram',
+            },
+            {
+              label: 'Facebook',
+              value: 'facebook',
+            },
+            {
+              label: 'Twitter',
+              value: 'twitter',
+            },
+            {
+              label: 'WhatsApp',
+              value: 'whatsApp',
+            },
+            {
+              label: "YouTube",
+              value: "youTube"
+            }
+          ],
+          required: true,
         },
         {
           name: "profileUrl",

@@ -14,7 +14,9 @@ const {
   getCollection,
   getProductByCollectionId,
   metafieldByProductId,
-  getAllSegment
+  getAllSegment,
+  updateShopPolicies,
+  getShopPolicies
 } = require("../controllers/shopifyApi.controller.js");
 const {
   getBrandingApp,
@@ -29,9 +31,10 @@ const {
   getProductDetails
 } = require("../controllers/otherScreen.controller.js");
 const {
-  updateStoreDetail,
+  updateStoreAppDesignDetail,
   getStoreDetail,
   getStoreDetailByWeb,
+  updateSocialMediaOfStore,
 } = require("../controllers/store.controller.js");
 const {
   getTabMenuDataByWeb,
@@ -44,7 +47,8 @@ const {
 } = require("../controllers/theme.Controller.js");
 const {
   getServerKey,
-  updateServerKey
+  updateServerKey,
+  sendNotification
 } = require("../controllers/firebase.controller.js")
 
 const router = Router();
@@ -55,7 +59,12 @@ router.get("/api/storeDetail/:shopId", getStoreDetail);
 
 router.get("/api/shop/detail", verifyRequest , getStoreDetailByWeb);
 
-router.put("/api/store/theme" , verifyRequest ,  updateStoreDetail);
+router.put("/api/store/appDesign/theme" , verifyRequest ,  updateStoreAppDesignDetail);
+
+router.put("/api/store/social-media", verifyRequest , updateSocialMediaOfStore)
+
+router.put("/api/store/update-shop-policies", verifyRequest ,  updateShopPolicies)
+
 
 /*---------------------------ShopifyRouter-------------------------------------------------- */
 
@@ -64,7 +73,7 @@ router.get("/api/getProduct", verifyRequest ,  getProduct);
 router.get("/api/getCollection", verifyRequest, getCollection);
 
 router.get(
-  "/api/getProductByCollectionId",
+  "/api/shopify/product/collectionId",
   verifyRequest,
   getProductByCollectionId
 );
@@ -74,13 +83,17 @@ router.get(
   metafieldByProductId
 )
 
-router.get("/api/shopify/segment",verifyRequest,getAllSegment)
+router.get("/api/shopify/segment", verifyRequest , getAllSegment)
+
+router.get("/api/shopify/shop-policies" , verifyRequest ,  getShopPolicies)
 
 /*----------------------------FirebaseRouting-------------------------------------------------*/
 
 router.get("/api/firebase/server-key", verifyRequest , getServerKey)
 
 router.put("/api/firebase/server-key", verifyRequest , updateServerKey)
+
+router.post("/api/firebase/send-notification", verifyRequest , sendNotification)
 
 /*----------------------------HomePageRouter-------------------------------------------------- */
 

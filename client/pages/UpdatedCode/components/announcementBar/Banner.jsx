@@ -109,7 +109,7 @@ if(typeof(element?.data?.data[index]?.imageUrl)==="object"){
           </img>
           <div
               style={{
-                marginTop:'-40px',
+                marginTop:'-38px',
                fontSize:"50px"
               }}
             >

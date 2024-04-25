@@ -8,6 +8,9 @@ import Landing from "./pages/PushNotification/Landing/LandingPage";
 import Templates from "./pages/PushNotification/Template/Templates";
 import CreateNotification from "./pages/PushNotification/CreateNotification/CreateNotification";
 import SettingsPage from "./pages/PushNotification/Settings/SettingsPage";
+import Banners from "./Phase One/Banner/Banners";
+import StoreConfigurations from "./Phase One/Store Configuration/StoreConfigurations";
+import ChatSupport from "./Phase One/ChatSupport/ChatSupport";
 
 const routes = {
   "/app-design": () => <GetData />,
@@ -15,6 +18,10 @@ const routes = {
   "/push-notification/template":()=><Templates/>,
   "/push-notification/createNotification":()=><CreateNotification/>,
   "/push-notification/settings":()=><SettingsPage/>,
+
+  "/banners": () => <Banners />,
+  "/store-configuration": () => <StoreConfigurations />,
+  "/support": () => <ChatSupport />,
   "/app-design/customize": () => <AppDesign />,
   "/exitframe": () => <ExitFrame />,
   "/exitframe/:shop": ({ shop }) => <ExitFrame shop={shop} />,

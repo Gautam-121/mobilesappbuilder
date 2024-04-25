@@ -94,9 +94,9 @@ const HomeTab = (props) => {
     const fetchData = async () => {
       console.log("fetch data triggered");
       setData("");
-      const result = await (await fetch(url, options)).json();
+      const result = await (await fetch(url, options))?.json();
       // console.log("result", result?.collections);
-      console.log("result", result.products);
+      console.log("result", result?.products);
       console.log("result", result);
       setData(result);
     };

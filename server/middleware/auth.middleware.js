@@ -113,7 +113,13 @@ const authMiddleware = (app) => {
           });
 
         } catch (error) {
-          console.error("Error creating storefront access token:", error);
+        console.error("Error creating storefront access token:", error);
+        res
+        .status(403)
+        .setHeader("Verify-Request-Failure", "1")
+        .setHeader("Verify-Request-Reauth-URL", `/exitframe/${shop}`)
+        .end();
+         return;
         }
       }
 

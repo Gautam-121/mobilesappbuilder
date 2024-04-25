@@ -72,6 +72,61 @@ export default function MobilePreview() {
     e.preventDefault();
   };
 
+  //styles to pass as props to have different style in the mobile view. this way wont affect the left side draggable components
+
+  const horizontalCollectionGridStyle = {
+    //padding: "15px",
+    cursor: "pointer",
+    backgroundColor: "#f1f1f1",
+    color: "black",
+    display: "grid",
+    gridTemplateColumns: "repeat(2, 1fr)",
+    gap: "1px",
+    textAlign: "center",
+  };
+
+  const verticalCollectionGridStyle = {
+    //padding: "15px",
+    cursor: "pointer",
+    backgroundColor: "#f1f1f1",
+    color: "black",
+    display: "grid",
+    gridTemplateColumns: "repeat(1, 1fr)",
+    gap: "1px",
+    textAlign: "center",
+  };
+
+  const verticalProductGridStyle = {
+    //padding: "15px",
+    cursor: "pointer",
+    backgroundColor: "white",
+    color: "black",
+    display: "grid",
+    gridTemplateColumns: "repeat(1, 1fr)",
+    gap: "1px",
+    textAlign: "center",
+  };
+
+  const videoComponentStyle = {
+    //padding: "15px",
+    cursor: "pointer",
+    backgroundColor: "#f1f1f1",
+    color: "black",
+    display: "grid",
+    gridTemplateColumns: "repeat(1, 1fr)",
+    gap: "1px",
+    textAlign: "center",
+  };
+
+  const textParagraphStyle = {
+    cursor: "pointer",
+    backgroundColor: "white",
+    border: "1px solid #f1f1f1",
+    padding: "5px",
+    color: "black",
+    textAlign: "left",
+  };
+
   return (
     <div className="mobilePreviewContainer" onClick={handleOutsideClick}>
       {componentListArray !== null && componentListArray.length > 0 ? (
@@ -120,19 +175,19 @@ export default function MobilePreview() {
                       //     </div>
                       //   }
                       // >
-                        <DraggableAnnouncementBar
-                          key={ele.id}
-                          id={ele.id}
-                          index={index}
-                          moveComponent={moveComponent}
-                          handleEdit={() => handleEditButtonClick(ele.id)}
-                          textColor={ele.data.textColor}
-                          backgroundColor={ele.data.backgroundColor}
-                          animationType={ele.data.animationType}
-                          style={ele.style}
-                          text={ele.data.message}
-                          data={ele}
-                        />
+                      <DraggableAnnouncementBar
+                        key={ele.id}
+                        id={ele.id}
+                        index={index}
+                        moveComponent={moveComponent}
+                        handleEdit={() => handleEditButtonClick(ele.id)}
+                        textColor={ele.data.textColor}
+                        backgroundColor={ele.data.backgroundColor}
+                        animationType={ele.data.animationType}
+                        style={ele.style}
+                        text={ele.data.message}
+                        data={ele}
+                      />
                       // </Tooltip>
                     );
                   case "categories":

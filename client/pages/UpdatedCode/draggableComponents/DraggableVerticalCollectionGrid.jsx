@@ -51,7 +51,7 @@ import VerticalCollectionGrid from '../components/announcementBar/VerticalCollec
         }}
       >
         {/* <AnnouncementBar handleEdit={handleEdit} data={data} style={style} text={text} textColor={textColor} backgroundColor={backgroundColor} /> */}
-       <VerticalCollectionGrid handleEdit={handleEdit} gridItems={gridItems}  />
+       <VerticalCollectionGrid handleEdit={handleEdit} gridItems={gridItems} style={style} />
         <EditPopup componentData={gridItems} />
       </div>
     );

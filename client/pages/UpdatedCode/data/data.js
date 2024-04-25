@@ -82,12 +82,12 @@ export const data = [
       {
         title: "Title 3",
         imageUrl: null,
-        collection_id: "2",
+        collection_id: "3",
       },
       {
         title: "Title 4",
         imageUrl: null,
-        collection_id: "2",
+        collection_id: "4",
       },
     ]
   }
@@ -142,6 +142,17 @@ export const data = [
     
 //   ]
 // },
+
+{
+id:6,
+isVisible:true,
+featureType: "productGroup",
+layoutType: "horizontal_grid",
+data: {
+  title: "New Products",
+  productGroupId: null
+}
+},
 // {
 //   id:7,
 //   isVisible: true,

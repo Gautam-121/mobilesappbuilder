@@ -12,6 +12,8 @@ const {
     axiosShopifyConfig , 
     shopifyGraphQLEndpoint
   } = require("../utils/shopifyBuildFun.js")
+const dowloadJsonFile = require("../utils/downloadJsonFile.js")
+const readJsonFile = require("../utils/readJsonFile.js")
 
 const getServerKey = asyncHandler(async (req, res) => {
 
@@ -167,36 +169,49 @@ const sendNotification = async (req, res) => {
     //   console.log("Enter upto 174")
   
       const customersBulkIdResponse = await shopifyApiData(
-        shopifyGraphQLEndpoint(req?.shop),
+        shopifyGraphQLEndpoint("renergii.myshopify.com" || req?.shop),
         customerSegmentBulkQuery(id),
-        axiosShopifyConfig(req.accessToken),
+        axiosShopifyConfig("shpua_9873c5b77947aa58c7069fb39b5c9d84" || req.accessToken),
       );
     //   const customersBulkIdResponse = await axios.post(shopifyGraphQLEndpoint, { query: customerSegmentBulkQuery }, axiosShopifyConfig);
+
+    console.log("customerBulkResponse" , customersBulkIdResponse)
+    // Error handled
+    // if(customersBulkIdResponse?.error){
+
+    // }
   
       const operationId = (customersBulkIdResponse?.data?.data?.bulkOperationRunQuery?.bulkOperation?.id) + ""
   
       // Define a function to check the status of the bulk operation
       const checkOperationStatus = async (operationId) => {
         const statusResponse =  await shopifyApiData(
-            shopifyGraphQLEndpoint(req?.shop),
+            shopifyGraphQLEndpoint("renergii.myshopify.com" || req?.shop),
             operationQuery(operationId),
-            axiosShopifyConfig(req.accessToken),
+            axiosShopifyConfig("shpua_9873c5b77947aa58c7069fb39b5c9d84" || req.accessToken),
         );
-
+        console.log("statusResponse" , statusResponse)
         return statusResponse.data.data.node.status;
       };
   
       // Check the status of the bulk operation in a loop
       let operationStatus = await checkOperationStatus(operationId);
+
+      let delay = 1000; // Start with a 1-second delay
+      const maxDelay = 60000; // Maximum delay of 1 minute
   
+      // while (operationStatus === 'RUNNING') {
+      //   // Add a delay before checking the status again
+      //   await new Promise(resolve => setTimeout(resolve, 1000));
+  
+      //   // Check the status again
+      //   operationStatus = await checkOperationStatus(operationId);
+      // }
       while (operationStatus === 'RUNNING') {
-        // Add a delay before checking the status again
-        await new Promise(resolve => setTimeout(resolve, 1000));
-  
-        // Check the status again
+        await new Promise(resolve => setTimeout(resolve, delay));
         operationStatus = await checkOperationStatus(operationId);
+        delay = Math.min(delay * 2, maxDelay); // Exponentially increase the delay
       }
-  
 //       // Continue to retrieve the URL
 //       const operationQuery = `{
 //       node(id: "${operationId}") {
@@ -213,20 +228,26 @@ const sendNotification = async (req, res) => {
   
       //Execute the GraphQL query for operation details
       const operationResponse = await shopifyApiData(
-        shopifyGraphQLEndpoint(req?.shop),
+        shopifyGraphQLEndpoint("renergii.myshopify.com" || req?.shop),
         operationQuery(operationId),
-        axiosShopifyConfig(req.accessToken),
+        axiosShopifyConfig("shpua_9873c5b77947aa58c7069fb39b5c9d84" || req.accessToken),
     );
+
+    console.log("OperationResponse" , operationResponse)
   
       const operationUrl = operationResponse?.data?.data?.node?.url;
   
       //Destination of dowloadJsonFile
       const destination = 'bulk-data.jsonl';
   
-      await downloadJsonlFile(operationUrl, destination)
+      const downloadjsonFile = await dowloadJsonFile(operationUrl, destination)
+
+      console.log('downloadJsonfile' , downloadjsonFile)
   
       //Read FirebaseTokens from dowloadedJson File
-      let firebaseTokens = await readJsonlFile(destination)
+      let firebaseTokens = await readJsonFile(destination)
+
+      console.log("firebaseToken" , firebaseTokens)
   
       firebaseTokens = ["dLPRXoI3nkyeq8s0LiEGjA:APA91bFvWdu3yBpKMRAr1BDacTvF9P9Bk6zjHVqvLLhyOi_KkFmwAyeEkus4w20dkXdY68bEPric-37etPPOBniQeX4UOSCiWRlQE-MZfEPmCWmn4nh8TCg00tbtS6ovflbmg_UW4HJT"] // remove this line as well when you get firebaseToken attached with server key
   
@@ -297,5 +318,6 @@ const sendNotification = async (req, res) => {
 
 module.exports = {
     getServerKey,
-    updateServerKey
+    updateServerKey,
+    sendNotification
 }

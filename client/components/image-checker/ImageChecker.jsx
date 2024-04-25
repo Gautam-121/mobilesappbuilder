@@ -1,8 +1,15 @@
 import React, { useState } from 'react';
+import styled from 'styled-components';
 import image_placeholder from "../../assets/images/image_placeholder.png";
 
-import "../../pages/Home/Home.css";
-import "../../pages/Home/SelectedTheme/SelectedTheme.css";
+const ImageContainer = styled.div`
+  text-align: center;
+`;
+
+const StyledImage = styled.img`
+  width: ${({ width }) => width || 'auto'};
+  height: ${({ height }) => height || 'auto'};
+`;
 
 const ImageChecker = (props) => {
   const [imageLoaded, setImageLoaded] = useState(false);
@@ -11,23 +18,30 @@ const ImageChecker = (props) => {
     setImageLoaded(true);
   };
 
-  
   return (
-    <div>
+    <ImageContainer>
       <img
-        src={props?.src?.images[0].url}
-        alt="Check Image"
+        src={props?.url}
+        alt={props.alt || 'Check Image'}
         onLoad={handleImageLoaded}
         style={{ display: 'none' }}
       />
       {imageLoaded ? (
-          <img src={props?.src?.images[0].url} alt="theme image" className={props?.cardImageCss} />
-          
+        <StyledImage
+          src={props?.url}
+          alt={props.alt || 'theme image'}
+          width={props.width}
+          height={props.height}
+        />
       ) : (
-          <img src={image_placeholder} alt="image not available" className={props?.cardImageCss} />
-          
+        <StyledImage
+          src={image_placeholder}
+          alt="image not available"
+          width={props.width}
+          height={props.height}
+        />
       )}
-    </div>
+    </ImageContainer>
   );
 };
 

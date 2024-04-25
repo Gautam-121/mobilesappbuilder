@@ -1,12 +1,20 @@
 /* eslint-disable react/prop-types */
 import {useRef} from 'react'
 import {uid} from 'uid'
+import ImageChecker from '../../../../components/image-checker/ImageChecker';
+import "./HorizontalCollectionGrid.css";
+import styled from 'styled-components';
+import ImgIcon from '../../../../images/imgIcon.jpg'
+import { Scrollable } from '@shopify/polaris';
+
+
 
 
 export default function HorizontalCollectionGrid({
   gridItems,
   addComponents,
   handleEdit,
+  style,
   draggable,
   text
 }) {
@@ -22,11 +30,14 @@ export default function HorizontalCollectionGrid({
     color: "#000000",
   };
   const horizontalCollectionGridstyle = {
-    display: "grid",
-    gridTemplateColumns: "repeat(2, 1fr)",
-    gap: "4px",
-    textAlign: "center",
-    // paddingBottom: "20px",
+  //   display: "grid", UI for grid commented due to updated requirements
+  //   gridTemplateColumns: "repeat(2, 1fr)",
+  //   gap: "4px",
+  //   textAlign: "center",
+  // marginTop:'10px'
+  display:'flex',
+  overflow:'scroll',
+  gap:'10px'
   };
   const titleStyle = {
     position: "absolute",
@@ -84,36 +95,59 @@ export default function HorizontalCollectionGrid({
       document.body.removeChild(dragImage);
     }, 0);
   };
+
+
+
+
   return (
     <div
-    onClick={handleEdit?handleEdit:addComponents}
+    onClick={addComponents || handleEdit}
     draggable={draggable}
       ref={dragRef}
       onDragStart={draggable ? handleDragStart : undefined}
       onDragEnd={(e) => e.preventDefault()}
     >
+
       <strong>{text}</strong>
 
       <div className="collection-grid" style={horizontalCollectionstyle}>
-        <div style={horizontalCollectionGridstyle}>
+   {handleEdit && <span
+   style={{
+    fontWeight:'bold',
+    marginBottom:'20px'
+   }}
+   >Shop by Category</span>}
+        <Scrollable scrollbarWidth='none' style={horizontalCollectionGridstyle}
+        className='collection-grid-container'
+        >
           {gridItems.data.data.map((item, index) => (
-            <div key={index}  style={{height:'5rem',
-            position: "relative", 
-            border: "1px solid grey", 
-            padding: "10px", 
-            borderRadius: "5px", 
-            cursor: "pointer", 
-            backgroundImage: `url(${item?.imageUrl?.url})`,
-            backgroundSize: "cover", 
-            backgroundRepeat:'no-repeat',
-            backgroundPosition: "center center"}}>
-                <div style={titleStyle} >
+            <div key={index}  
+            style={{display:'flex', flexDirection:'column', alignItems:'center',fontWeight:'450',fontSize:'10px', lineHeight:'20px',}}
+            // style={{height:'5rem',
+            // position: "relative", 
+            // border: "1px solid grey", 
+            // padding: "10px", 
+            // borderRadius: "5px", 
+            // cursor: "pointer", 
+            // backgroundImage: `url(${item?.imageUrl?.url})`,
+            // backgroundSize: "cover", 
+            // backgroundRepeat:'no-repeat',
+            // backgroundPosition: "center center"}}
+            
+            >
+               
+                  <img style={{
+                    border:'1px solid #0000003d',
+                    borderRadius:'7px',
+                    width:'5rem',
+                    height:'5rem',
+          
+                  }} src={item?.imageUrl?.url||ImgIcon} alt="" />
             <span >    {item.title}</span>
-              </div>
             </div>
  
           ))}
-        </div>
+        </Scrollable>
       </div>
     </div>
   );

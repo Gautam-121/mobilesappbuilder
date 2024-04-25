@@ -1,130 +1,131 @@
-import React, { useState ,useEffect} from 'react';
-
-import { Text } from '@shopify/polaris';
-
-import { Button } from "@shopify/polaris";
-import { useRecoilState,useRecoilValue } from "recoil";
-import { productsAtom, componentListArrayAtom } from "../../recoil/store";
+import React, { useState, useEffect } from "react";
+import { Button, TextField } from "@shopify/polaris";
+import { useRecoilState } from "recoil";
+import { componentListArrayAtom, collectionsAtom, productsByCollectionAtom } from "../../recoil/store";
+import styles from "./verticalProductGridEdit.module.css";
+import useFetch from "../../../../hooks/useFetch";
 
 export default function VerticalProductgridEdit(props) {
-    const [componentListArray, setComponentListArray] = useRecoilState(
-        componentListArrayAtom
-      );
-      const [collections, setCollections] = useRecoilState(productsAtom)
-      if(collections===undefined)
-      setCollections([])
-      useEffect(()=>{
-        console.log(collections)
-      },[collections])
-    
-    const data = props.data
-    console.log("productdata",data)
-    const [currentObject, setCurrentObject] = useState({...data})
-    console.log("curenttObject",currentObject)
-    useEffect(()=>{
-        console.log("ProductCollections", collections)
-    },[collections])
+  // let collectionId = "gid://shopify/Collection/471598170430"
+  const [collectionId, setCollectionId] = useState("")
+  const [products, setProducts] = useRecoilState(productsByCollectionAtom)
+  const getProducts = {
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    method: "GET",    
+  }
 
-    console.log('VerticalProductGridEDit: currentObject:', currentObject);
-console.log('VerticalProductGridEDit: currentObject.data:', currentObject.data);
-console.log('VerticalProductGridEDit: currentObject.data.data:', currentObject.data.data);
+  const useDataFetcherForShopifyData = (initialState, url, options) => {
+    const [data, setData] = useState(initialState);
+    const fetch = useFetch();
 
-const handleCheckboxChange = (id) => {
-  // Find the selected checkbox item
-  const selectedCheckboxItem = collections.find((item) => item.id === id);
+    const fetchData = async () => {
+      console.log("fetch data triggered");
+      setData("");
+      const result = await (await fetch(url, options))?.json();
+      // console.log("result", result?.collections);
+      console.log("result", result?.products);
+      console.log("result", result);
+      setData(result.data);
+      if(result.data.length>0){
+        setProducts(result.data)
+      }
+    };
+    return [data, fetchData];
+  };
 
-  // Check if the selected item is already in the data array
-  const newData = currentObject.data.filter(
-    (dataItem) => dataItem.productGroupId === id
+  const [responseData, fetchProducts] = useDataFetcherForShopifyData(
+    "",
+    `/apps/api/shopify/product/collectionId?collectionId=${collectionId}`,
+    getProducts
   );
 
-  // Check if the selected item is already in newData
-  const isSelected = newData.length > 0;
+  const [componentListArray, setComponentListArray] = useRecoilState(
+    componentListArrayAtom
+  );
+  const [collections, setCollections] = useRecoilState(collectionsAtom);
 
-  console.log("selectedCheckboxItem.title", selectedCheckboxItem.title);
+  // Ensure collections is initialized as an empty array if undefined
+  useEffect(() => {
+    if (!collections) {
+      setCollections([]);
+      // setProducts(responseData)
+    }
+  }, [collections,]);
 
-  // Toggle the selection
-  if (isSelected) {
-    // Deselect the item (remove from newData)
-    const updatedData = currentObject.data.filter(
-      (item) => item.productGroupId !== id
+  const data = props.data;
+  const [currentObject, setCurrentObject] = useState({ ...data });
+
+  const handleCheckboxChange = (id) => {
+    const selectedCheckboxItem = collections.find((item) => item.id === id);
+    console.log(selectedCheckboxItem);
+    let updatedObject = JSON.parse(JSON.stringify(currentObject));
+    updatedObject.data.productGroupId = selectedCheckboxItem.id;
+  setCollectionId(selectedCheckboxItem.id)
+    // fetchProducts()
+    console.log(updatedObject);
+    setCurrentObject(updatedObject);
+  };
+useEffect(()=>{fetchProducts()},[collectionId])
+  const handleTitleChange = (newValue) => {
+    console.log(newValue);
+    let updatedObject = JSON.parse(JSON.stringify(currentObject));
+    updatedObject.data.title = newValue;
+    setCurrentObject(updatedObject);
+  };
+  const handleDelete = () => {
+    const updatedArray = componentListArray.filter(
+      (ele) => ele.id !== currentObject.id
     );
-    setCurrentObject((prevObject) => ({
-      ...prevObject,
-      data: updatedData,
-    }));
-  } else {
-    // Select the item (add to newData)
-    const updatedData = [...currentObject.data, {
-      title: selectedCheckboxItem.title,
-      imageUrl: selectedCheckboxItem.image,
-      productGroupId: selectedCheckboxItem.id,
-    }];
+    setComponentListArray(updatedArray);
+  };
 
-    // Update the currentObject
-    setCurrentObject((prevObject) => ({
-      ...prevObject,
-      data: updatedData,
-    }));
-  }
-};
-
-    
-      const handleDelete = ()=>{
-       let newArray =[...componentListArray]
-      let updatedArray = newArray.filter((ele)=>ele.id!=currentObject.id)
-      setComponentListArray(updatedArray) 
-      }
-      
-      useEffect(()=>{
-          console.log(currentObject, "Current object changed")
-      },[currentObject])
-      
-      function updateComponentListArray() {
-          setComponentListArray((prevArray) => {
-            const updatedArray = prevArray.map((item) =>
-              item.id === currentObject.id ? currentObject : item
-            );
-            return updatedArray;
-          });
-          setCurrentObject((prevObject) => ({ ...prevObject, isEditVisible: false }));
-        }
- 
-
-    
+  const updateComponentListArray = () => {
+    setComponentListArray((prevArray) => {
+      const updatedArray = prevArray.map((item) =>
+        item.id === currentObject.id ? currentObject : item
+      );
+      return updatedArray;
+    });
+    setCurrentObject((prevObject) => ({ ...prevObject, isEditVisible: false }));
+  };
 
   return (
-    <div  style={data.isEditVisible ? {} : { display: "none" }}
-    className="editPopupContainer">
-    
-    
-    {collections===undefined?"":collections?.map((item) => {
-      
-      console.log("VerticalProductGridEDit: collections item: ", currentObject?.productGroupId, item);
+    <div
+      style={data.isEditVisible ? {} : { display: "none" }}
+      className="editPopupContainer"
+    >
+      <span className="editHeading">Edit Product Grid</span>
+      <span>Edit Title</span>
+      <TextField
+        value={currentObject.data.title}
+        onChange={handleTitleChange}
+      />
+      <span>Select Collections</span>
+      {collections &&
+        collections.map((item) => (
+          <div key={item.id}>
+            <label htmlFor="">
+              <input
+                type="radio"
+                checked={currentObject.data.productGroupId === item.id}
+                onChange={() => handleCheckboxChange(item.id)}
+              />
+              {item.title}
+            </label>
+          </div>
+        ))}
 
-      return(
-        <div key={item.id}>
-          <label htmlFor="">
-            <input
-              type="checkbox"
-              checked={currentObject?.data && currentObject?.productGroupId === item?.id}
-
-              onChange={() => handleCheckboxChange(item.id)}
-            />
-            {item.title}
-          </label>
+      <div className={styles.btnSection}>
+        <Button variant="primary" tone="critical" onClick={handleDelete}>
+          Delete Component
+        </Button>
+        <div className="primaryBtn" onClick={updateComponentListArray}>
+          Save Changes
         </div>
-      )
-      }
-      )} 
-
-        <Button
-          variant="primary"
-          tone="critical"
-          onClick={updateComponentListArray}  >Save  </Button>
-
-<Button onClick={handleDelete} variant="primary" tone="critical"> Delete</Button>
-
+      </div>
     </div>
   );
 }

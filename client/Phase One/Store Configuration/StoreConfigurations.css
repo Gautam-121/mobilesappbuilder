@@ -1,0 +1,199 @@
+.storeconfig-main-div{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background-color: white;
+    height: 100vh;
+}
+
+.storeconfig-header-div{
+
+    display: flex;
+    flex-direction: column;
+
+}
+
+
+.storeconfig-social-tab-btn{
+    cursor: pointer;
+    border: 1px solid rgb(236, 233, 233);
+    border-radius: 50px;
+    background-color: rgb(236, 233, 233);
+    color: black;
+    padding: 8px;
+
+}
+
+.storeconfig-social-tab-btn.active {
+    border: 1px solid rgb(73, 134, 247);
+    background-color: rgb(73, 134, 247);
+    color: white;
+
+}
+
+
+.storeconfig-store-policy-tab-btn{
+    cursor: pointer;
+    border: 1px solid rgb(236, 233, 233);
+    border-radius: 50px;
+    background-color: rgb(236, 233, 233);
+    color: black;
+    padding: 8px;
+}
+
+
+.storeconfig-store-policy-tab-btn.active{
+    border: 1px solid rgb(73, 134, 247);
+    background-color: rgb(73, 134, 247);
+    color: white;
+}
+
+
+
+
+
+.storeconfig-header-tabs-main-div{
+    display: flex;
+    justify-content: flex-start;
+    gap: 20px;
+    padding: 20px;
+}
+
+.storeconfig-social-media-section-main-div{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    
+    gap: 40px;
+    padding: 10px 20px 20px 20px;
+    background-color: white;
+}
+
+.storeconfig-instagram-main-div{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    
+    gap: 25px;
+}
+
+
+.storeconfig-social-icons{
+    padding: 8px;
+    border: 1px solid rgb(236, 233, 233);
+    border-radius: 50px;
+    background-color: rgb(236, 233, 233);
+}
+
+.storeconfig-social-media-section-container {
+    position: relative;
+    overflow: auto;
+}
+
+
+
+
+.save-btn{
+    border-radius: 4px;
+    padding: 8px 20px 8px 20px;
+    cursor: pointer;
+    background-color: white;
+    border: 1px solid rgb(73, 134, 247);
+    float: right;
+}
+
+.save-btn:hover{
+    background-color: rgb(73, 134, 247);
+    border: 1px solid rgb(73, 134, 247);
+    color: white;
+
+}
+
+
+.social-textfields{
+    border: none;
+}
+
+
+/* store policy css */
+
+
+
+.store-policies-main-div{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    gap: 20px;
+    padding: 10px 20px 20px 20px;
+    background-color: white;
+    overflow: auto;
+}
+
+
+
+.policy-main-div{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+
+
+.policy-save-btn{
+
+    border-radius: 4px;
+    padding: 8px 20px 8px 20px;
+    cursor: pointer;
+    background-color: white;
+    border: 1px solid rgb(73, 134, 247);
+    float: right;
+}
+
+.policy-save-btn:hover{
+    background-color: rgb(73, 134, 247);
+    border: 1px solid rgb(73, 134, 247);
+    color: white;
+
+}
+
+
+
+
+
+
+/* General styles */
+
+
+
+.text-inputs {
+    width: 100%; /* Full width */
+}
+
+/* Save button positioning */
+.save-btn-div {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.policy-save-btn-div{
+    display: flex;
+    justify-content: flex-end;
+}
+
+/* .save-btn-div{
+    padding: 10px 20px 20px 0px;
+} */
+
+
+/* @media screen and (max-width: 768px) {
+    .storeconfig-social-media-section-main-div{
+
+        gap: 20px;
+
+    }
+} */
+
+
+
+
+

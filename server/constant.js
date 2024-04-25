@@ -154,6 +154,21 @@ const sendNotificationApiEndpoint = "https://fcm.googleapis.com/fcm/send"
 
 const unsuscribeTopicApiEndpoint = "https://iid.googleapis.com/iid/v1:batchRemove"
 
+const shopPolicyUpdateMutation = `
+  mutation shopPolicyUpdate($shopPolicy: ShopPolicyInput!) {
+    shopPolicyUpdate(shopPolicy: $shopPolicy) {
+      shopPolicy {
+        id
+        body
+       }
+       userErrors {
+         field
+         message
+       }
+    }
+  }
+`;
+
 // Define the request body
 const requestBodyForStorefrontToken = {
     storefront_access_token: {
@@ -280,5 +295,6 @@ module.exports = {
     operationQuery,
     subscribeTopicApiEndpoint,
     sendNotificationApiEndpoint,
-    unsuscribeTopicApiEndpoint
+    unsuscribeTopicApiEndpoint,
+    shopPolicyUpdateMutation
 }

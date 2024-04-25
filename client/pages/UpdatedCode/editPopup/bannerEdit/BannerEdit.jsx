@@ -222,12 +222,13 @@ export default function BannerEdit({ data, handleDelete }) {
       style={data?.isEditVisible ? {} : { display: "none" }}
       className="editPopupContainer"
     >
+      <span className="editHeading">Edit Banner</span>
       <div
         onDragOver={handleDragOver}
         onDrop={handleDrop}
   
       className={styles.imgListSection}>
-        <Scrollable className={styles.scrollableSection} vertical={false} scrollbarWidth='none' shadow>
+        <Scrollable className={styles.scrollableSection} vertical={false} scrollbarWidth='none' >
         {currentObject.data.data.map((ele, ind) => (
         <div
         key={ele?.id}
@@ -350,9 +351,9 @@ export default function BannerEdit({ data, handleDelete }) {
         <Button variant="primary" tone="critical" onClick={handleDeleteItem}>
           Delete Component
         </Button>
-        <Button variant="primary" onClick={updateComponentListArray}>
+        <div className="primaryBtn" onClick={updateComponentListArray}>
           Save Changes
-        </Button>
+        </div>
       </div>
     </div>
   );

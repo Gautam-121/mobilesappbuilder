@@ -49,7 +49,7 @@ const AccountScreen = {
               defaultValue:true
           }
         ]
-      }
+    }
   ],
 };
 

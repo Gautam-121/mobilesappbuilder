@@ -1,14 +1,21 @@
 /* eslint-disable react/prop-types */
-import React from 'react';
-import {useRef} from 'react'
-import {uid} from 'uid'
-
-export default function Horizontalproductgrid({ gridItems,text,  addComponents,
+import React from "react";
+import { useRef } from "react";
+import { uid } from "uid";
+import imgIcon from '../../../../images/imgIcon.jpg'
+import { Scrollable } from "@shopify/polaris";
+import './HorizontalProductGrid.css'
+import { useRecoilValue } from "recoil";
+import { productsByCollectionAtom } from "../../recoil/store";
+export default function Horizontalproductgrid({
+  gridItems,
+  text,
+  addComponents,
   handleEdit,
-  draggable,}) {
+  draggable,
+}) {
   const dragRef = useRef(null);
-
-  
+  const products = useRecoilValue(productsByCollectionAtom)
   const handleDragStart = (e) => {
     console.log(gridItems);
     const newElement = { ...gridItems };
@@ -50,12 +57,69 @@ export default function Horizontalproductgrid({ gridItems,text,  addComponents,
       onDragStart={draggable ? handleDragStart : undefined}
       onDragEnd={(e) => e.preventDefault()}
     >
-   <strong>{text}</strong>
-      <div className="collection-grid" style={{ border: "1px solid grey", margin: "5px", padding: "10px", borderRadius: "5px", cursor: "pointer", backgroundColor: "#ffffff", color: '#000000', }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '4px', textAlign: "center",  }}>
-          {gridItems.data.map((subItem, subIndex) => (
-            <p key={subIndex} style={{ border: "1px solid #cccccc", flex: "1", backgroundColor: "#cccccc", display: "flex", justifyContent: "center", alignItems: "center", height: "80%", }}>{subItem.title}</p>
-          ))}
+      <strong>{text}</strong>
+      <div
+        className="collection-grid"
+        style={{
+          border: "1px solid grey",
+          margin: "5px",
+          padding: "10px",
+          borderRadius: "5px",
+          cursor: "pointer",
+          backgroundColor: "#ffffff",
+          color: "#000000",
+        }}
+      >
+        <div
+          style={{
+            // display: "grid",
+            // gridTemplateColumns: "repeat(2, 1fr)",
+            // gap: "4px",
+            // textAlign: "center",
+
+          }}
+        >
+          {/* {gridItems.data.map((subItem, subIndex) => (
+            <p
+              key={subIndex}
+              style={{
+                border: "1px solid #cccccc",
+                flex: "1",
+                backgroundColor: "#cccccc",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "80%",
+              }}
+            >
+              {subItem.title}
+            </p>
+          ))} */}
+          <span>{gridItems.data.title}</span>
+          {!handleEdit?(
+            <Scrollable scrollbarWidth="none"
+            className="ScrollableImgContainer">
+              <img className="demoImg" src={imgIcon} alt="" />
+              <img className="demoImg" src={imgIcon} alt="" />
+              <img className="demoImg" src={imgIcon} alt="" />
+              <img className="demoImg" src={imgIcon} alt="" />
+              <img className="demoImg" src={imgIcon} alt="" />
+      
+            
+            </Scrollable>
+          ):(
+            <Scrollable
+            className="ScrollableImgContainer"
+            scrollbarWidth="none"
+            >
+               { products.map((ele)=>(
+                  <div className="productsWrapper">
+                    <img src={ele?.featuredImage?.url} alt="" />
+                    <span>{ele.title}</span>
+                  </div>
+                ))}
+            </Scrollable>
+          )}
         </div>
       </div>
     </div>

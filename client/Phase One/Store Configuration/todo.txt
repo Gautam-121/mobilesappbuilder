@@ -1,0 +1,5 @@
+1) social media updates startegy:
+if previous text and currently entered text dont' match then update otherwise do nothing
+
+
+2) 

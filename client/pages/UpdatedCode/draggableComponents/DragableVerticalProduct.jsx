@@ -49,7 +49,7 @@ import Verticalproductgrid from '../components/announcementBar/Verticalproductgr
         }}
       >
         {/* <AnnouncementBar handleEdit={handleEdit} data={data} style={style} text={text} textColor={textColor} backgroundColor={backgroundColor} /> */}
-       {/* <Verticalproductgrid handleEdit={handleEdit} gridItems={gridItems}  /> */}
+       <Verticalproductgrid handleEdit={handleEdit} gridItems={gridItems}  style={style}/>
         <EditPopup componentData={gridItems} />
       </div>
     );

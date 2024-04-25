@@ -57,4 +57,9 @@ export const templateAtom = atom({
     key:'templateAtom',
     default:""
 })
+// Atom to store the products for product group being fetched by collectionId
+export const productsByCollectionAtom = atom({
+    key:'productsByCollectionAtom',
+    default:[]
+})
 

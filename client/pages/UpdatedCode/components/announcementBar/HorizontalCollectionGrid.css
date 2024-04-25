@@ -1,0 +1,40 @@
+.collection-images-main-div{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+
+.vertical-collection-main-div{
+    border: "1px solid grey";
+    padding: "10px";
+    border-radius: "5px";
+    cursor: "pointer";
+    background-color: "#ffffff";
+    color: "#000000";
+    display: "grid";
+    grid-template-rows: repeat(5, 1fr);
+    gap: "5px";
+    text-align: "center";
+}
+
+
+.text-style{
+    padding: "10px";
+    display: "grid";
+    grid-template-columns: repeat(1, 1fr);
+    gap: "16px";
+    text-align: "right";
+}
+
+
+.image-dimension{
+    height: 168px;
+    width: 50px;
+}
+.collection-grid-container{
+margin-top: 10px;
+}
+.collection-grid-container ::-webkit-scrollbar {
+    display: none;
+}

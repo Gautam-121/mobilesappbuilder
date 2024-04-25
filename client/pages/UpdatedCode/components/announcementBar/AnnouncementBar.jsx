@@ -64,7 +64,9 @@ console.log("Announcement Bar after changes", props?.data?.data)
     color: props.textColor ? props.textColor : "#000000",
     transition: "transform 0.5s ease-in-out",
     overflow:"hidden",
-    minHeight:"3rem"
+    minHeight:"3rem",
+    display: 'flex',
+    alignItems: "center"
   };
 
   
