@@ -70,6 +70,70 @@ export default function MobilePreview() {
     e.preventDefault();
   };
 
+
+    //styles to pass as props to have different style in the mobile view. this way wont affect the left side draggable components
+
+const horizontalCollectionGridStyle = {
+      //padding: "15px",
+      cursor: "pointer",
+      backgroundColor: "#f1f1f1",
+      color: "black",
+      display: "grid",
+      gridTemplateColumns: 'repeat(2, 1fr)',
+      gap: "1px",
+      textAlign: "center",
+}
+
+
+
+
+const verticalCollectionGridStyle = {
+  //padding: "15px",
+  cursor: "pointer",
+  backgroundColor: "#f1f1f1",
+  color: "black",
+  display: "grid",
+  gridTemplateColumns: 'repeat(1, 1fr)',
+  gap: "1px",
+  textAlign: "center",
+}
+
+
+const verticalProductGridStyle = {
+  //padding: "15px",
+  cursor: "pointer",
+  backgroundColor: "white",
+  color: "black",
+  display: "grid",
+  gridTemplateColumns: 'repeat(1, 1fr)',
+  gap: "1px",
+  textAlign: "center",
+}
+
+const videoComponentStyle = {
+  //padding: "15px",
+  cursor: "pointer",
+  backgroundColor: "#f1f1f1",
+  color: "black",
+  display: "grid",
+  gridTemplateColumns: 'repeat(1, 1fr)',
+  gap: "1px",
+  textAlign: "center",
+}
+
+const textParagraphStyle = {
+  cursor: "pointer",
+  backgroundColor: "white",
+  border:'1px solid #f1f1f1',
+  padding:'5px',
+  color: "black",
+  textAlign: "left",
+}
+
+
+
+
+
   return (
     <div className="mobilePreviewContainer" onClick={handleOutsideClick}>
       {
@@ -127,6 +191,7 @@ export default function MobilePreview() {
                           key={ele.id}
                           gridItems={ele}
                           index={index}
+                          style={verticalCollectionGridStyle}
                           moveComponent={moveComponent}
                           handleEdit={() => handleEditButtonClick(ele.id)}
                         />
@@ -134,6 +199,7 @@ export default function MobilePreview() {
                         <DraggableHorizontalCollectionGrid
                           key={ele.id}
                           index={index}
+                          style={horizontalCollectionGridStyle}
                           moveComponent={moveComponent}
                           handleEdit={() => handleEditButtonClick(ele.id)}
                           gridItems={ele}
@@ -145,6 +211,8 @@ export default function MobilePreview() {
                           key={ele.id}
                           gridItems={ele}
                           index={index}
+                          style={textParagraphStyle}
+
                           moveComponent={moveComponent}
                           handleEdit={() => handleEditButtonClick(ele.id)}
                         />
@@ -167,6 +235,7 @@ export default function MobilePreview() {
                           index={index}
                           moveComponent={moveComponent}
                           handleEdit={() => handleEditButtonClick(ele.id)}
+                          style={videoComponentStyle}
                         />
                       );
                     case "productGroup":
@@ -175,6 +244,7 @@ export default function MobilePreview() {
                           key={ele.id}
                           gridItems={ele}
                           index={index}
+                          style={verticalProductGridStyle}
                           moveComponent={moveComponent}
                           handleEdit={() => handleEditButtonClick(ele.id)}
                         />

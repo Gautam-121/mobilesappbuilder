@@ -2,7 +2,7 @@ import React, { useRef } from "react";
 import { uid } from "uid";
 // import ReactHtmlParser from 'react-html-parser'; // Import the library
 
-export default function Textparagraph({ gridItems, text, element, draggable, handleEdit, addComponents }) {
+export default function Textparagraph({ gridItems, text, element,style, draggable, handleEdit, addComponents }) {
   const dragRef = useRef(null);
   const handleDragStart = (e) => {
 
@@ -48,19 +48,7 @@ export default function Textparagraph({ gridItems, text, element, draggable, han
 
       <strong>{text}</strong>
 
-      <div className="text-para" style={{
-        border: "1px solid grey",
-        // margin: "5px",
-        padding: "10px",
-        borderRadius: "5px",
-        cursor: "pointer",
-        backgroundColor: "#ffffff",
-        color: "#000000",
-        display: "grid",
-        gridTemplateColumns: `repeat(1, 1fr)`,
-        gap: "16px",
-        textAlign: "center",
-      }}>
+      <div  style={style}>
 
         <div>{gridItems.data.content}</div>
 

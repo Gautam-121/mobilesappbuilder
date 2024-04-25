@@ -18,6 +18,11 @@ export default function App() {
       <PolarisProvider i18n={translations}>
         <AppBridgeProvider>
           <ui-nav-menu>
+            <a href="/push-notifications">Push Notifications</a>
+            <a href="/banners">Banners</a>
+            <a href="/store-configuration">Store Configuration</a>
+            <a href="/support">Support Queries</a>
+
             <a href="/app-design">App Design</a>
           </ui-nav-menu>
           {RouteComponents}

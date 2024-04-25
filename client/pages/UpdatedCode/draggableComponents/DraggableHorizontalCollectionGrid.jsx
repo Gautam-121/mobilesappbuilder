@@ -48,7 +48,7 @@ import HorizontalCollectionGrid from '../components/announcementBar/HorizontalCo
         }}
       >
         {/* <AnnouncementBar handleEdit={handleEdit} data={data} style={style} text={text} textColor={textColor} backgroundColor={backgroundColor} /> */}
-       <HorizontalCollectionGrid handleEdit={handleEdit} gridItems={gridItems}  />
+       <HorizontalCollectionGrid handleEdit={handleEdit} gridItems={gridItems}  style={style}/>
         <EditPopup componentData={gridItems} />
       </div>
     );

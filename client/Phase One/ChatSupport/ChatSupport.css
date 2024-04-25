@@ -1,0 +1,93 @@
+.chat-main-div {
+    background-color: white;
+}
+
+.columns-padding {
+    padding: 20px;
+}
+
+.user-cards-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.user-card {
+    display: flex;
+    gap: 20px;
+    padding: 10px;
+    max-width: 250px;
+    border: 1px solid rgb(230, 222, 222);
+    border-radius: 12px;
+    cursor: pointer;
+}
+
+.user-card.active .user-letter-text {
+    background-color: lightblue; /* Apply background color only to the selected card */
+}
+
+.user-letter-text {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.user-letter-text p {
+    text-align: center;
+    margin: 0;
+    padding: 20px;
+}
+
+.user-name-user-message {
+    display: flex;
+    flex-direction: column;
+}
+
+.user-name {
+    font-size: 18px;
+}
+
+.user-message {
+    color: grey;
+}
+
+.clicked-card-content {
+    padding: 20px;
+    background-color: lightgrey;
+    border-radius: 12px;
+}
+
+/* Define color classes */
+.red {
+    background-color: red;
+}
+
+.blue {
+    background-color: blue;
+}
+
+.purple {
+    background-color: purple;
+}
+
+.orange {
+    background-color: orange;
+}
+
+.yellow {
+    background-color: yellow;
+}
+
+.green {
+    background-color: green;
+}
+
+.magenta {
+    background-color: magenta;
+}
+
+.cyan {
+    background-color: cyan;
+}

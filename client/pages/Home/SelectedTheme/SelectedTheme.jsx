@@ -66,7 +66,7 @@ const SelectedTheme = (props) => {
 
             <div className='side-image-div'>
 
-                <ImageChecker src={theTheme} cardImageCss={'images'} />
+                <ImageChecker src={theTheme?.images[0].ur} cardImageCss={'images'} />
 
             </div>
 

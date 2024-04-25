@@ -11,14 +11,13 @@ export default function VerticalGridEdit(props) {
   );
   const [collections, setCollections] = useRecoilState(collectionsAtom)
   if(collections===undefined)
-  setCollections([])
-  useEffect(()=>{
-    console.log(collections)
-  },[collections])
-console.log(collections)
-const data = props.data
-console.log(data)
-const [currentObject, setCurrentObject] = useState({...data})
+  setCollections([]);
+
+
+  const data = props.data
+
+const [currentObject, setCurrentObject] = useState({...data});
+
 useEffect(()=>{
     console.log("Collections", collections)
 },[collections])
@@ -83,6 +82,7 @@ function updateComponentListArray() {
     });
     setCurrentObject((prevObject) => ({ ...prevObject, isEditVisible: false }));
   }
+  
 return (
     <div
       style={data.isEditVisible ? {} : { display: "none" }}

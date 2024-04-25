@@ -37,6 +37,21 @@ export default function ComponentsList() {
     newArray.push(newData);
     setComponentListArray(newArray);
   }
+
+
+
+
+  const horizontalCollectionGridStyle = {
+    //padding: "15px",
+   
+    display: "grid",
+    gridTemplateColumns: 'repeat(2, 1fr)',
+    gap: "1px",
+   
+}
+
+
+
   return (
     <div>
       <div className="ComponentListContainer">
@@ -81,6 +96,7 @@ export default function ComponentsList() {
                     addComponents={() => addComponents(ele)}
                     key={ele.id}
                     gridItems={ele}
+
                   // text= "Vertical Collection Grid"
                   />
                 );
@@ -92,6 +108,7 @@ export default function ComponentsList() {
                     addComponents={() => addComponents(ele)}
                     key={ele.id}
                     gridItems={ele}
+                    style={horizontalCollectionGridStyle}
                   // text= "Horizontal Collection Grid"
                   />
                 );

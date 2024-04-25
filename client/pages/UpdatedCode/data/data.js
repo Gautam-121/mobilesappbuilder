@@ -82,12 +82,12 @@ export const data = [
       {
         title: "3",
         imageUrl: null,
-        collection_id: "2",
+        collection_id: "3",
       },
       {
         title: "4",
         imageUrl: null,
-        collection_id: "2",
+        collection_id: "4",
       },
     ]
   }
