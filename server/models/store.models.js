@@ -51,6 +51,51 @@ const Store = {
       label: "IsActive",
       type: "checkbox",
       defaultValue: false,
+    },
+    {
+      name: "socialMediaAccount",
+      type: "array",
+      fields: [
+        {
+          name: "title",
+          label: "Title",
+          type: "select",
+          options: [
+            {
+              label: 'Instagram',
+              value: 'instagram',
+            },
+            {
+              label: 'Facebook',
+              value: 'facebook',
+            },
+            {
+              label: 'Twitter',
+              value: 'twitter',
+            },
+            {
+              label: 'WhatsApp',
+              value: 'whatsApp',
+            },
+            {
+              label: "YouTube",
+              value: "youTube"
+            }
+          ],
+          required:true
+        },
+        {
+          name: "profileUrl",
+          type: "text",
+          defaultValue: undefined
+        },
+        {
+          name: "isVisible",
+          label: "Is Visible",
+          type: "checkbox",
+          defaultValue: true
+        }
+      ]
     }
   ]
 };

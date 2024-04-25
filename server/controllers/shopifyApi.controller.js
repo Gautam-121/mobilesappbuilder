@@ -270,11 +270,152 @@ const getAllSegment = asyncHandler( async (req, res , next) => {
   })
 })
 
+const getShopPolicies = asyncHandler( async(req,res,next)=>{
+
+  const store = await Payload.find({
+    collection: 'Store',
+    where: { 
+      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
+      isActive: { equals : true}
+    },
+  })
+
+  if(!store.docs[0]){
+    const error = new ApiError(`store not found with id: ${req.shop_id}`, 404)
+    return next(error);
+  }
+
+  try {
+    // Fetch shop policies from Shopify API
+    const response = await axios.get(
+      `https://${req?.shop || "renergii.myshopify.com"}/admin/api/2024-01/policies.json`,
+      {
+        headers: {
+          'X-Shopify-Access-Token': req?.accessToken || "shpua_bc161c745338c326e583c1efad096ade",
+        },
+      }
+    );
+
+    // Check if the response contains policies
+    if (!response.data.policies || response.data.policies.length === 0) {
+      const error = new ApiError('No shop policies found', 404);
+      return next(error);
+    }
+
+    res.status(200).json(response.data);
+  } catch (error) {
+    // Handle Shopify API errors
+    if (error.response && error.response.data) {
+      const shopifyError = new ApiError(
+        error.response.data.errors || 'Shopify API error',
+        error.response.status
+      );
+      return next(shopifyError);
+    }
+
+    // Handle other errors
+    const generalError = new ApiError(
+      error.message || 'Something went wrong',
+      500
+    );
+    return next(generalError);
+  }
+  
+})
+
+const updateShopPolicies = async (req, res) => {
+
+  const shopPolicies = req.body.shopPolicies;
+
+  const store = await Payload.find({
+    collection: 'Store',
+    where: { 
+      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
+      isActive: { equals: true}
+    },
+  })
+
+  if(!store.docs[0]){
+    return next(
+      new ApiError(
+        `store not found with id: ${req.shop_id}`,
+        404
+      )
+    )
+  }
+
+  if (!Array.isArray(shopPolicies) || shopPolicies.length === 0) {
+    return next(
+      new ApiError(
+        'Invalid shop policies data',
+        400
+      )
+    )
+  }
+
+  const promises = shopPolicies.map(async (policy) => {
+    const { body, type } = policy;
+
+    if (!body || !type) {
+      return { error: 'Missing required fields (body or type)' };
+    }
+
+    const variables = { shopPolicy: { body, type } };
+
+    try {
+      const response = await fetch(shopifyGraphQLEndpoint(req?.shop), {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Shopify-Access-Token': "shpua_99b2e0d318036dd12fe2300e9f95c5fb" || req.accessToken,
+        },
+        body: JSON.stringify({ query: shopPolicyUpdateMutation, variables }),
+      });
+
+      const data = await response.json();
+
+      if (data.errors) {
+        return { error: data.errors };
+      }
+
+      return data.data.shopPolicyUpdate;
+    } catch (error) {
+      return { error: error.message };
+    }
+  });
+
+  const results = await Promise.all(promises);
+
+  const errors = results.filter((result) => result.error);
+  const updates = results.filter((result) => !result.error);
+
+  if (errors.length > 0) {
+    return next(
+      new ApiError(
+        errors,
+        400
+      )
+    )
+  }
+
+  return res.status(200).json(
+    {
+      success: true,
+      message: "Policy update successfully",
+      updates
+    }
+  )
+};
+
+
 module.exports = { 
   getProduct , 
   getCollection , 
   getProductByCollectionId,
   metafieldByProductId,
-  getAllSegment
+  getAllSegment,
+  updateShopPolicies,
+  getShopPolicies
 }
+
 
