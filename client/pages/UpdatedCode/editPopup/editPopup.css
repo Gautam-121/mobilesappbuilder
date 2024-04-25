@@ -1,6 +1,7 @@
 .editPopupContainer {
   position: absolute;
-  height:21rem;
+  top: 66px;
+  height:85vh ;
   width: 21rem;
  
   background-color: white;
@@ -10,5 +11,11 @@
   overflow: scroll;
 }
 .editPopupContainer::-webkit-scrollbar{
+  display: none;
+}
+.editPopupMainDiv{
+  font-family: "Figtree", sans-serif;
+}
+body::-webkit-scrollbar{
   display: none;
 }

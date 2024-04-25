@@ -18,7 +18,7 @@ export default function EditPopup(props) {
   );
 
   const data = props.componentData;
-  console.log("data inside EditPopup: data?.isEditVisible: ", data);
+   console.log("data inside EditPopup: data?.isEditVisible: ", data);
   const [componentListArray, setComponentListArray] = useRecoilState(
     componentListArrayAtom
   );
@@ -57,7 +57,7 @@ export default function EditPopup(props) {
   }
 
   return (
-    <>
+    <div className="editPopupMainDiv">
       {isAnyComponentEditing ? (
         data?.isEditVisible && (
           <>
@@ -96,6 +96,6 @@ export default function EditPopup(props) {
       ) : (
         <PopupEditPlaceholder />
       )}
-    </>
+    </div>
   );
 }

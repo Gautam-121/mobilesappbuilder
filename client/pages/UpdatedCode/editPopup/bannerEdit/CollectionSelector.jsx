@@ -1,8 +1,19 @@
 import { Autocomplete, Icon } from '@shopify/polaris';
 import { SearchIcon } from '@shopify/polaris-icons';
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useEffect } from 'react';
 
-export default function CollectionSelector({ collections, onSelect }) {
+export default function CollectionSelector({ collections, onSelect, value }) {
+  const [inputValue, setInputValue] = useState("");
+  let valueForSelect = ""
+  useEffect(()=>{
+   let selectedIndex = collections.findIndex((ele)=>ele.id===value)
+  if(selectedIndex>=0){
+    valueForSelect = collections[selectedIndex].title
+    setInputValue(valueForSelect)
+  }
+   console.log("value", valueForSelect)
+
+  },[value])
   console.log(collections)
   const deselectedOptions = useMemo(
     () =>
@@ -13,7 +24,7 @@ export default function CollectionSelector({ collections, onSelect }) {
     [collections]
   );
   const [selectedOption, setSelectedOption] = useState([]);
-  const [inputValue, setInputValue] = useState('');
+  
   const [options, setOptions] = useState(deselectedOptions);
 
   const updateText = useCallback(
@@ -61,7 +72,7 @@ export default function CollectionSelector({ collections, onSelect }) {
   );
 
   return (
-    <div style={{ height: '225px' }}>
+    <div style={{  }}>
       <Autocomplete
         options={options}
         selected={selectedOption}

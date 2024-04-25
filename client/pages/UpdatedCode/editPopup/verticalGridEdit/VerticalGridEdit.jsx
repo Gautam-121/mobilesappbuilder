@@ -100,8 +100,16 @@ return (
           </label>
         </div>
       ))} 
-      <Button onClick={updateComponentListArray}>Save</Button>
-      <Button onClick={handleDelete} variant="primary" tone="critical"> Delete</Button>
+      {/* <Button onClick={updateComponentListArray}>Save</Button>
+      <Button onClick={handleDelete} variant="primary" tone="critical"> Delete</Button> */}
+      <div className={styles.btnSection}>
+        <Button variant="primary" tone="critical" onClick={handleDeleteItem}>
+          Delete Component
+        </Button>
+        <Button variant="primary" onClick={updateComponentListArray}>
+          Save Changes
+        </Button>
+      </div>
     </div> 
   )
 }

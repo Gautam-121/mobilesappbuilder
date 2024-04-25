@@ -19,6 +19,7 @@ export default function App() {
         <AppBridgeProvider>
           <ui-nav-menu>
             <a href="/app-design">App Design</a>
+            <a href="/push-notification">Push Notification</a>
           </ui-nav-menu>
           {RouteComponents}
         </AppBridgeProvider>

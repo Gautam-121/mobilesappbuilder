@@ -22,9 +22,10 @@ import { componentListArrayAtom } from "../UpdatedCode/recoil/store";
 const AppDesign = (props) => {
 const [componentListArray, setComponentListArray] = useRecoilState(componentListArrayAtom)
 const [dataForBackend, setDataForBackend] = useState([])
-
+const [loading, setLoading] = useState(false)
 
 useEffect(()=>{
+ 
  let modifiedArray = componentListArray.map((item)=>{
     if (item.featureType === "banner") {
       // Modify the objects inside the data array
@@ -162,12 +163,22 @@ useEffect(()=>{
     const fetch = useFetch();
 
     const fetchData = async () => {
+      setLoading(true);
       setData("");
-      const result = await (await fetch(url, options)).json();
-      console.log(result);
-      if ("serverKey" in result) setData(result.serverKey);
-      else if ("message" in result) setData(result.message);
+    
+      try {
+        const result = await (await fetch(url, options)).json();
+        console.log("result after publishing changes", result);
+    
+  
+      } catch (error) {
+        console.error("Error while fetching data:", error);
+        // Handle error here, such as setting an error state or displaying a message to the user
+      } finally {
+        setLoading(false);
+      }
     };
+    
     return [data, fetchData];
   };
 
@@ -212,7 +223,7 @@ useEffect(()=>{
             </Button>
           </div>
           {/* <div className='appdesign-preview-btn'><HiQrCode className='appdesign-qr'/> Preview on mobile</div> */}
-          <button onClick={handlePublish} className="appdesign-publish-btn">Publish changes</button>
+          <button onClick={handlePublish} className="appdesign-publish-btn">{loading?"loading":"Publish changes"}</button>
         </div>
       </div>
 
@@ -222,7 +233,7 @@ useEffect(()=>{
       </div>
 
       <div className="appdesign-body-main-div">
-        {internetStatus && internetStatus ? (
+        {/* {internetStatus && internetStatus ? (
           <div className="appdesign-body-side-menu-icons">
             <Tooltip content="App design" preferredPosition="mostSpace">
               <div
@@ -338,18 +349,18 @@ useEffect(()=>{
             <SkeletonThumbnail size="small" />
             <SkeletonThumbnail size="small" />
           </div>
-        )}
+        )} */}
 
-        <div>
+        {/* <div>
           <hr className="appdesign-hr-line-left" />
-        </div>
+        </div> */}
 
         {/* <div className='appdesign-tabs-div'> */}
 
-        <div style={{ width: "100%" }}>
+        {/* <div style={{ width: "100%" }}>
           {internetStatus ? (
-            <div className="appdesign-tab-menu">
-              <div className="appdesign-tabs-buttons-div">
+               <div className="appdesign-tab-menu">
+            <div className="appdesign-tabs-buttons-div">
                 <button
                   className={`appdesign-tab-btn ${
                     activeIndex === 0 ? "active" : ""
@@ -397,8 +408,9 @@ useEffect(()=>{
                   <Button>Cancel</Button>
                   <Button variant="primary">Save</Button>
                 </ButtonGroup>
-              </div>
+              </div> 
             </div>
+            
           ) : (
             // <Tabs
             //   tabs={tabs}
@@ -413,15 +425,17 @@ useEffect(()=>{
 
             // </Tabs>
 
-            <div className="appdesign-tab-menu">
-              <SkeletonTabs count={4} />
-            </div>
+            // <div className="appdesign-tab-menu">
+            //   <SkeletonTabs count={4} />
+            // </div>
           )}
           <div className="appdesign-hr-line">
             <Divider />
           </div>
 
-          <div>
+   
+        </div> */}
+       <div>
             {activeIndex === 0 ? (
               <HomeTab />
             ) : activeIndex === 1 ? (
@@ -436,8 +450,6 @@ useEffect(()=>{
               ""
             )}
           </div>
-        </div>
-
         {/* <div className='appdesign-cancel-save-btns-div'>
             <ButtonGroup>
               <Button>Cancel</Button>

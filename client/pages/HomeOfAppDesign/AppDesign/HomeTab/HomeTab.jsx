@@ -37,12 +37,13 @@ const HomeTab = (props) => {
       let dataFromApi = result.data.homeData
 
       const modifiedArray = dataFromApi.map((item) => {
+
         if (item.featureType === "categories") {
           // Modify the objects inside the data array
           const modifiedData = item.data.data.map((dataItem) => ({
             title: dataItem.title,
-            imageUrl: dataItem.imageUrl,
-            id: dataItem.collection_id, // Change the field name
+            imageUrl: JSON.parse(dataItem.imageUrl),
+            collection_id: dataItem.collection_id, // Change the field name
           }));
 
           // Return the modified object
@@ -53,7 +54,12 @@ const HomeTab = (props) => {
               data: modifiedData,
             },
           };
-        } else {
+         
+        } 
+        else if(item.featureType ===''){
+            
+        }
+        else {
           // Return the unchanged object for other feature types
           return item;
         }

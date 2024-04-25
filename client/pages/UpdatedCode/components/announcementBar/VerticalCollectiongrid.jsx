@@ -26,15 +26,24 @@ export default function VerticalCollectionGrid({
   };
 
   const verticalCollectionGridstyle = {
-    border: "1px solid #cccccc",
-    backgroundColor: "#cccccc",
-    padding: "10px",
-    display: "grid",
-    gridTemplateColumns: `repeat(1, 1fr)`,
-    gap: "16px",
-    textAlign: "center",
+  
   };
 
+  
+const titleStyle = {
+  position: "absolute",
+  top: 0,
+  bottom: 0,
+  left: 0,
+  right: 0,
+  display:'flex',
+  justifyContent:'center',
+  height:'5rem',
+  alignItems:'center',
+  backgroundColor: "rgba(255, 255, 255, 0.5)", /* Adjust opacity as needed */
+  
+  fontWeight:'bold'
+};
   const handleDragStart = (e) => {
     console.log(gridItems)
    const newElement = {...gridItems}
@@ -80,12 +89,22 @@ export default function VerticalCollectionGrid({
       <strong>{text}</strong>
       <div className="collection-grid" style={verticalCollectionstyle}>
         {gridItems.data.data.map((item, subIndex) => (
-          <p key={subIndex} style={verticalCollectionGridstyle}>
-            {item.title}
-          </p>
-          // You can add more elements based on your data structure
+            <div key={subIndex}  style={{height:'5rem',
+            position: "relative", 
+            border: "1px solid grey", 
+            padding: "10px", 
+            borderRadius: "5px", 
+            cursor: "pointer", 
+            backgroundImage: `url(${item?.imageUrl?.url})`,
+            backgroundSize: "contain", 
+            backgroundRepeat:'no-repeat',
+            backgroundPosition: "center center"}}>
+                <div style={titleStyle} >
+            <span >    {item.title}</span>
+              </div>
+            </div>
+    
         ))}
-        {/* You can customize the content based on your needs */}
       </div>
     </div>
   );

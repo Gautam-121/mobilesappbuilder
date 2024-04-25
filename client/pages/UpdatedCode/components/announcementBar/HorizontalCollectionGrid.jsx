@@ -28,7 +28,20 @@ export default function HorizontalCollectionGrid({
     textAlign: "center",
     // paddingBottom: "20px",
   };
-
+  const titleStyle = {
+    position: "absolute",
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    display:'flex',
+    justifyContent:'center',
+    height:'5rem',
+    alignItems:'center',
+    backgroundColor: "rgba(255, 255, 255, 0.5)", /* Adjust opacity as needed */
+    
+    fontWeight:'bold'
+  };
   const horizonalComponentElemstyle = {
     border: "1px solid #cccccc",
     flex: "1",
@@ -73,7 +86,7 @@ export default function HorizontalCollectionGrid({
   };
   return (
     <div
-    onClick={addComponents}
+    onClick={handleEdit?handleEdit:addComponents}
     draggable={draggable}
       ref={dragRef}
       onDragStart={draggable ? handleDragStart : undefined}
@@ -84,9 +97,21 @@ export default function HorizontalCollectionGrid({
       <div className="collection-grid" style={horizontalCollectionstyle}>
         <div style={horizontalCollectionGridstyle}>
           {gridItems.data.data.map((item, index) => (
-            <p key={index} style={horizonalComponentElemstyle}>
-              {item.title}
-            </p>
+            <div key={index}  style={{height:'5rem',
+            position: "relative", 
+            border: "1px solid grey", 
+            padding: "10px", 
+            borderRadius: "5px", 
+            cursor: "pointer", 
+            backgroundImage: `url(${item?.imageUrl?.url})`,
+            backgroundSize: "cover", 
+            backgroundRepeat:'no-repeat',
+            backgroundPosition: "center center"}}>
+                <div style={titleStyle} >
+            <span >    {item.title}</span>
+              </div>
+            </div>
+ 
           ))}
         </div>
       </div>

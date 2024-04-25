@@ -4,11 +4,17 @@ import ExitFrame from "./ExitFrame";
 import BillingAPI from "./pages/debug/Billing";
 import GetData from "./pages/debug/Data";
 import AppDesign from "./pages/HomeOfAppDesign/AppDesign";
-// import Templates from "./pages/Templates";
-// import Segment from "./pages/Index"
+import Landing from "./pages/PushNotification/Landing/LandingPage";
+import Templates from "./pages/PushNotification/Template/Templates";
+import CreateNotification from "./pages/PushNotification/CreateNotification/CreateNotification";
+import SettingsPage from "./pages/PushNotification/Settings/SettingsPage";
 
 const routes = {
   "/app-design": () => <GetData />,
+  "/push-notification":()=><Landing/>,
+  "/push-notification/template":()=><Templates/>,
+  "/push-notification/createNotification":()=><CreateNotification/>,
+  "/push-notification/settings":()=><SettingsPage/>,
   "/app-design/customize": () => <AppDesign />,
   "/exitframe": () => <ExitFrame />,
   "/exitframe/:shop": ({ shop }) => <ExitFrame shop={shop} />,

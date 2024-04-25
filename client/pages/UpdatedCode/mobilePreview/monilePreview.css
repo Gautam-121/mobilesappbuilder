@@ -1,9 +1,9 @@
 .mobilePreviewContainer {
-  height: 35rem;
-  width: 18.3rem;
+  height: 28rem;
+  width: 15.3rem;
   border: 8px solid rgb(26, 26, 26);
   border-radius: 55px;
-  margin-top: 20px;
+  margin-top: 5px;
   background-color: #f2f2f3;
   display: flex;
   flex-direction: column;
@@ -11,15 +11,13 @@
 }
 
 .the-spinner {
-  text-align: 'center';
+  text-align: "center";
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
   padding-top: 20px;
 }
-
-
 
 .content-container {
   overflow-y: auto;
@@ -31,7 +29,6 @@
   /* Firefox */
   -ms-overflow-style: none;
   /* IE and Edge */
-
 }
 
 .scrollable-content {
@@ -40,11 +37,10 @@
   flex-direction: column;
   padding: 0;
   flex-direction: column;
-
-  padding: 0px;
+  gap: 5px;
+  padding: 2px;
   /* Add padding to prevent content from touching the edges */
 }
-
 
 .content-container::-webkit-scrollbar {
   display: none;
@@ -71,6 +67,7 @@
   border-top: 8px solid white;
   /* Added top border */
   z-index: 100;
+  padding-bottom: 10px;
   /* Ensure the header is above other content */
 }
 
@@ -99,15 +96,11 @@
 }
 
 /* Show menu when checkbox is checked */
-#menu-toggle:checked+.menu {
+#menu-toggle:checked + .menu {
   display: block;
 }
 
-
-
-
 /* footer design */
-
 
 .footer-main-mobile-preview-div {
   position: sticky;
@@ -128,7 +121,6 @@
   z-index: 100;
 }
 
-
 .home-footer-icon {
   font-size: large;
   cursor: pointer;
@@ -141,8 +133,6 @@
 .cart-footer-icon {
   cursor: pointer;
 }
-
-
 
 .editBtn {
   display: none;

@@ -5,8 +5,10 @@ const asyncHandler = require("../utils/asyncHandler.js");
 dotenv.config();
 
 const uploadImages = asyncHandler(async (req, res, next) => {
-    
+    console.log("enetr")
   const file = req.files
+
+  console.log("file from API",file)
 
   if (!file) {
     return next(new ApiError("file is missing",400))
