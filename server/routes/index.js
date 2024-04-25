@@ -63,9 +63,6 @@ router.put("/api/store/appDesign/theme" , verifyRequest ,  updateStoreAppDesignD
 
 router.put("/api/store/social-media", verifyRequest , updateSocialMediaOfStore)
 
-router.put("/api/store/update-shop-policies", verifyRequest ,  updateShopPolicies)
-
-
 /*---------------------------ShopifyRouter-------------------------------------------------- */
 
 router.get("/api/getProduct", verifyRequest ,  getProduct);
@@ -86,6 +83,9 @@ router.get(
 router.get("/api/shopify/segment", verifyRequest , getAllSegment)
 
 router.get("/api/shopify/shop-policies" , verifyRequest ,  getShopPolicies)
+
+router.put("/api/shopify/update-shop-policies", verifyRequest ,  updateShopPolicies)
+
 
 /*----------------------------FirebaseRouting-------------------------------------------------*/
 
