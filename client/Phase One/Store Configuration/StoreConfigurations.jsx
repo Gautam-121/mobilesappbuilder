@@ -165,6 +165,209 @@ const StoreConfigurations = () => {
 
 
 
+
+    //store policy section
+
+
+    //PrivacyPolicy
+    const [PrivacyPolicy, setPrivacyPolicyHandle] = useState('');
+    const [errorPrivacyPolicyMessage, setErrorPrivacyPolicyMessage] = useState('');
+
+    const handlePrivacyPolicyTextFieldChange = useCallback(
+        (value) => {
+            setPrivacyPolicyHandle(value);
+            if (!isValidPrivacyPolicyHandle(value)) {
+                setErrorPrivacyPolicyMessage("Invalid text input");
+            } else {
+                setErrorPrivacyPolicyMessage("");
+            }
+        },
+        [],
+    );
+
+
+    const handlePrivacyPolicyClearButtonClick = useCallback(() => setPrivacyPolicyHandle(''), []);
+
+
+    function isValidPrivacyPolicyHandle(input) {
+        if (!input) {
+            return false;
+        }
+
+        if (!/\D/.test(input)) {
+            return false;
+        }
+
+        const regex = /^[a-zA-Z0-9 !@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]*$/;
+        if (!regex.test(input)) {
+            return false;
+        }
+
+        const words = input.trim().split(/\s+/);
+        if (words.length > 500) {
+            return false;
+        }
+
+        return true;
+    }
+
+
+
+
+
+
+
+    //TermsConditions
+    const [TermsConditions, setTermsConditionsHandle] = useState('');
+    const [errorTermsConditionsMessage, setErrorTermsConditionsMessage] = useState('');
+
+    const handleTermsConditionsTextFieldChange = useCallback(
+        (value) => {
+            setTermsConditionsHandle(value);
+            if (!isValidTermsConditionsHandle(value)) {
+                setErrorTermsConditionsMessage("Invalid text input");
+            } else {
+                setErrorTermsConditionsMessage("");
+            }
+        },
+        [],
+    );
+
+
+    const handleTermsConditionsClearButtonClick = useCallback(() => setTermsConditionsHandle(''), []);
+
+
+    function isValidTermsConditionsHandle(input) {
+        if (!input) {
+            return false;
+        }
+
+        if (!/\D/.test(input)) {
+            return false;
+        }
+
+        const regex = /^[a-zA-Z0-9 !@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]*$/;
+        if (!regex.test(input)) {
+            return false;
+        }
+
+        const words = input.trim().split(/\s+/);
+        if (words.length > 500) {
+            return false;
+        }
+
+        return true;
+    }
+
+
+
+
+
+    //ReturnPolicy
+    const [ReturnPolicy, setReturnPolicyHandle] = useState('');
+    const [errorReturnPolicyMessage, setErrorReturnPolicyMessage] = useState('');
+
+    const handleReturnPolicyTextFieldChange = useCallback(
+        (value) => {
+            setReturnPolicyHandle(value);
+            if (!isValidReturnPolicyHandle(value)) {
+                setErrorReturnPolicyMessage("Invalid text input");
+            } else {
+                setErrorReturnPolicyMessage("");
+            }
+        },
+        [],
+    );
+
+
+    const handleReturnPolicyClearButtonClick = useCallback(() => setReturnPolicyHandle(''), []);
+
+
+    function isValidReturnPolicyHandle(input) {
+        if (!input) {
+            return false;
+        }
+
+        if (!/\D/.test(input)) {
+            return false;
+        }
+
+        const regex = /^[a-zA-Z0-9 !@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]*$/;
+        if (!regex.test(input)) {
+            return false;
+        }
+
+        const words = input.trim().split(/\s+/);
+        if (words.length > 500) {
+            return false;
+        }
+
+        return true;
+    }
+
+
+
+
+
+
+
+    //Shipping Policy
+    const [ShippingPolicy, setShippingPolicyHandle] = useState('');
+    const [errorShippingPolicyMessage, setErrorShippingPolicyMessage] = useState('');
+
+    const handleShippingPolicyTextFieldChange = useCallback(
+        (value) => {
+            setShippingPolicyHandle(value);
+            if (!isValidShippingPolicyHandle(value)) {
+                setErrorShippingPolicyMessage("Invalid text input");
+            } else {
+                setErrorShippingPolicyMessage("");
+            }
+        },
+        [],
+    );
+
+
+    const handleShippingPolicyClearButtonClick = useCallback(() => setShippingPolicyHandle(''), []);
+
+
+    function isValidShippingPolicyHandle(input) {
+        // Check if input is null or empty
+        if (!input) {
+            return false;
+        }
+
+        // Check if input contains at least one non-numeric character
+        if (!/\D/.test(input)) {
+            return false;
+        }
+
+        // Check if input contains only alphanumeric characters and symbols
+        const regex = /^[a-zA-Z0-9 !@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]*$/;
+        if (!regex.test(input)) {
+            return false;
+        }
+
+        // Split the input into words and count the number of words
+        const words = input.trim().split(/\s+/);
+        if (words.length > 500) {
+            return false;
+        }
+
+        return true;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
     const [selectedTab, setSelectedTab] = useState('social');
 
     const handleTabClick = (tab) => {
@@ -187,115 +390,228 @@ const StoreConfigurations = () => {
 
                 <Divider borderColor="border" />
             </div>
-{
+            {
 
-selectedTab === 'social' ? 
-<div className='storeconfig-social-media-section-container'>
-            <div className='storeconfig-social-media-section-main-div'>
+                selectedTab === 'social' ?
+                    <div className='storeconfig-social-media-section-container'>
+                        <div className='storeconfig-social-media-section-main-div'>
 
-                <div className='storeconfig-instagram-main-div'>
+                            <div className='storeconfig-instagram-main-div'>
 
-                    <div className='storeconfig-social-icons'><Icon source={LogoInstagramIcon} tone="critical" /></div>
+                                <div className='storeconfig-social-icons'><Icon source={LogoInstagramIcon} tone="critical" /></div>
 
-                    <div>Instagram</div>
-                    <div className='text-inputs'>
+                                <div>Instagram</div>
+                                <div className='text-inputs'>
 
-                        <TextField
-                            clearButton
-                            autoSize
-                            value={instagramHandle}
-                            onChange={handleInstagramTextFieldChange}
-                            onClearButtonClick={handleInstagramClearButtonClick}
-                            error={InstagramerrorMessage} autoComplete="off"
-                            placeholder='Add your Instagram handle here'
-                        />
+                                    <TextField
+                                    className="social-textfields"
+                                        clearButton
+                                        autoSize
+                                        value={instagramHandle}
+                                        onChange={handleInstagramTextFieldChange}
+                                        onClearButtonClick={handleInstagramClearButtonClick}
+                                        error={InstagramerrorMessage} autoComplete="off"
+                                        placeholder='Add your Instagram handle here'
+                                    />
+
+                                </div>
+
+                            </div>
+
+
+                            <div className='storeconfig-instagram-main-div'>
+
+                                <div className='storeconfig-social-icons'><Icon source={LogoFacebookIcon} tone="info" /></div>
+                                <div>Facebook</div>
+                                <div className='text-inputs'>
+
+                                    <TextField
+                                        clearButton
+                                        autoSize
+                                        value={FacebookHandle}
+                                        onChange={handleFacebookTextFieldChange}
+                                        onClearButtonClick={handleFacebookClearButtonClick}
+                                        error={FacebookerrorMessage} autoComplete="off"
+                                        placeholder='Add your Facebook handle here'
+                                    />
+
+
+                                </div>
+
+                            </div>
+
+                            <div className='storeconfig-instagram-main-div'>
+
+                                <div className='storeconfig-social-icons'><Icon source={LogoXIcon} tone="primary" /></div>
+                                <div>X (Twitter)</div>
+                                <div className='text-inputs'>
+
+                                    <TextField
+                                        clearButton
+                                        autoSize
+                                        value={TwitterHandle}
+                                        onChange={handleTwitterTextFieldChange}
+                                        onClearButtonClick={handleTwitterClearButtonClick}
+
+                                        error={TwittererrorMessage} autoComplete="off"
+                                        placeholder='Add your X (witter) handle here'
+                                    />
+
+
+                                </div>
+
+                            </div>
+
+                            <div className='storeconfig-instagram-main-div'>
+
+                                <div className='storeconfig-social-icons'><Icon source={LogoYoutubeIcon} tone="critical" /></div>
+                                <div>YouTube</div>
+                                <div className='text-inputs'>
+
+                                    <TextField
+                                        clearButton
+                                        autoSize
+
+                                        value={youtubeHandle}
+                                        onChange={handleyoutubeTextFieldChange}
+                                        onClearButtonClick={handleyoutubeClearButtonClick}
+                                        error={erroryoutubeMessage}
+                                        autoComplete="off"
+                                        placeholder='Add your YouTube handle here'
+                                    />
+
+
+                                </div>
+
+
+
+                            </div>
+
+                            <div className='save-btn-div'><button className='save-btn' size='large'>save</button></div>
+
+
+                        </div>
 
                     </div>
 
-                </div>
+
+                    :
+
+                    (<div className='store-policies-main-div'>
+                        <div className='policy-main-div'>
 
 
-                <div className='storeconfig-instagram-main-div'>
+                            <h2>Privacy Policy</h2>
+                            <div className='text-inputs'>
 
-                    <div className='storeconfig-social-icons'><Icon source={LogoFacebookIcon} tone="info" /></div>
-                    <div>Facebook</div>
-                    <div className='text-inputs'>
+                                <TextField
+                                    multiline={4}
+                                    loading
+                                    clearButton
+                                    autoSize
+                                    value={PrivacyPolicy}
+                                    onChange={handlePrivacyPolicyTextFieldChange}
+                                    onClearButtonClick={handlePrivacyPolicyClearButtonClick}
 
-                        <TextField
-                            clearButton
-                            autoSize
-                            value={FacebookHandle}
-                            onChange={handleFacebookTextFieldChange}
-                            onClearButtonClick={handleFacebookClearButtonClick}
-                            error={FacebookerrorMessage} autoComplete="off"
-                            placeholder='Add your Facebook handle here'
-                        />
-
-
-                    </div>
-
-                </div>
-
-                <div className='storeconfig-instagram-main-div'>
-
-                    <div className='storeconfig-social-icons'><Icon source={LogoXIcon} tone="primary" /></div>
-                    <div>X (Twitter)</div>
-                    <div className='text-inputs'>
-
-                        <TextField
-                            clearButton
-                            autoSize
-                            value={TwitterHandle}
-                            onChange={handleTwitterTextFieldChange}
-                            onClearButtonClick={handleTwitterClearButtonClick}
-
-                            error={TwittererrorMessage} autoComplete="off"
-                            placeholder='Add your X (witter) handle here'
-                        />
+                                    error={errorPrivacyPolicyMessage} autoComplete="off"
+                                    placeholder='Add your privacy policy here'
+                                />
 
 
-                    </div>
-
-                </div>
-
-                <div className='storeconfig-instagram-main-div'>
-
-                    <div className='storeconfig-social-icons'><Icon source={LogoYoutubeIcon} tone="critical" /></div>
-                    <div>YouTube</div>
-                    <div className='text-inputs'>
-
-                        <TextField
-                            clearButton
-                            autoSize
-
-                            value={youtubeHandle}
-                            onChange={handleyoutubeTextFieldChange}
-                            onClearButtonClick={handleyoutubeClearButtonClick}
-                            error={erroryoutubeMessage}
-                            autoComplete="off"
-                            placeholder='Add your YouTube handle here'
-                        />
+                            </div>
+                            <div className='policy-save-btn-div'>
+                                <button className='policy-save-btn' size='small'>save</button>
+                            </div>
+                        </div>
 
 
-                    </div>
 
-                    
-
-                </div>
-
-                <div className='save-btn-div'><button  className='save-btn' size='large'>save</button></div>
+                        <div className='policy-main-div'>
 
 
-            </div>
+                            <h2>Terms and Conditions</h2>
+                            <div className='text-inputs'>
 
-            </div>
+                                <TextField
+                                    multiline={4}
+                                    loading
+                                    clearButton
+                                    autoSize
+                                    value={TermsConditions}
+                                    onChange={handleTermsConditionsTextFieldChange}
+                                    onClearButtonClick={handleTermsConditionsClearButtonClick}
+
+                                    error={errorTermsConditionsMessage} autoComplete="off"
+                                    placeholder='Add your Terms and Conditions here'
+                                />
 
 
-:
+                            </div>
+                            <div className='policy-save-btn-div'>
+                                <button className='policy-save-btn' size='small'>save</button>
+                            </div>
+                        </div>
 
-    (<div>Store Policies</div>)
 
-}
+
+                        <div className='policy-main-div'>
+
+
+                            <h2>Return Policy</h2>
+                            <div className='text-inputs'>
+
+                                <TextField
+                                    multiline={4}
+                                    loading
+                                    clearButton
+                                    autoSize
+                                    value={ReturnPolicy}
+                                    onChange={handleReturnPolicyTextFieldChange}
+                                    onClearButtonClick={handleReturnPolicyClearButtonClick}
+
+                                    error={errorReturnPolicyMessage} autoComplete="off"
+                                    placeholder='Add your return policy here'
+                                />
+
+
+                            </div>
+                            <div className='policy-save-btn-div'>
+                                <button className='policy-save-btn' size='small'>save</button>
+                            </div>
+                        </div>
+
+
+
+                        <div className='policy-main-div'>
+
+
+                            <h2>Shipping Policy</h2>
+                            <div className='text-inputs'>
+
+                                <TextField
+                                    multiline={4}
+                                    loading
+                                    clearButton
+                                    autoSize
+                                    value={ShippingPolicy}
+                                    onChange={handleShippingPolicyTextFieldChange}
+                                    onClearButtonClick={handleShippingPolicyClearButtonClick}
+
+                                    error={errorShippingPolicyMessage} autoComplete="off"
+                                    placeholder='Add your shipping policy here'
+                                />
+
+
+                            </div>
+                            <div className='policy-save-btn-div'>
+                                <button className='policy-save-btn' size='small'>save</button>
+                            </div>
+                        </div>
+
+
+                    </div>)
+
+            }
 
 
         </div>

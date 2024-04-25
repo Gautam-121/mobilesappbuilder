@@ -1,5 +1,3 @@
-
-
 .storeconfig-main-div{
     display: flex;
     flex-direction: column;
@@ -65,7 +63,8 @@
     display: flex;
     flex-direction: column;
     justify-content: space-around;
-    gap: 20px;
+    
+    gap: 40px;
     padding: 10px 20px 20px 20px;
     background-color: white;
 }
@@ -88,16 +87,10 @@
 
 .storeconfig-social-media-section-container {
     position: relative;
-}
-
-.text-inputs{
-    width: 40%;
+    overflow: auto;
 }
 
 
-.save-btn-div{
-    padding: 10px 20px 20px 0px;
-}
 
 
 .save-btn{
@@ -106,12 +99,7 @@
     cursor: pointer;
     background-color: white;
     border: 1px solid rgb(73, 134, 247);
-    position: absolute;
-
-    bottom: 0px; 
-    right: 45%; 
-    margin: 20px;
-
+    float: right;
 }
 
 .save-btn:hover{
@@ -120,6 +108,90 @@
     color: white;
 
 }
+
+
+.social-textfields{
+    border: none;
+}
+
+
+/* store policy css */
+
+
+
+.store-policies-main-div{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    gap: 20px;
+    padding: 10px 20px 20px 20px;
+    background-color: white;
+    overflow: auto;
+}
+
+
+
+.policy-main-div{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+
+
+.policy-save-btn{
+
+    border-radius: 4px;
+    padding: 8px 20px 8px 20px;
+    cursor: pointer;
+    background-color: white;
+    border: 1px solid rgb(73, 134, 247);
+    float: right;
+}
+
+.policy-save-btn:hover{
+    background-color: rgb(73, 134, 247);
+    border: 1px solid rgb(73, 134, 247);
+    color: white;
+
+}
+
+
+
+
+
+
+/* General styles */
+
+
+
+.text-inputs {
+    width: 100%; /* Full width */
+}
+
+/* Save button positioning */
+.save-btn-div {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.policy-save-btn-div{
+    display: flex;
+    justify-content: flex-end;
+}
+
+/* .save-btn-div{
+    padding: 10px 20px 20px 0px;
+} */
+
+
+/* @media screen and (max-width: 768px) {
+    .storeconfig-social-media-section-main-div{
+
+        gap: 20px;
+
+    }
+} */
 
 
 
