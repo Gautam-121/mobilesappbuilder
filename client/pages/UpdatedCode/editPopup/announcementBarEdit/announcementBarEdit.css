@@ -9,7 +9,7 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    gap: 30px;
+    /* gap: 30px; */
 
 }
 
@@ -33,8 +33,9 @@
 
 .announcementbar-save-btns-div{
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+    justify-content: space-around;
+    width: 100%;
+    
 }
 
 .announcementbar-animation-section-main-div {
@@ -44,12 +45,34 @@
 }
 
 .label-element-placement{
-   
 }
+.common-style label{
+    font-size: 15px;
+}
+.label-element-placement input{
+margin-top: 5px;
 
+}
 
 .announcementbar-animation-section-bullets {
 
   
 }
 
+.announcementbar-edit-heading{
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 17px;
+}
+
+.announcementbar-animation-section-bullets label{
+    font-size: 14px;
+   border: 1px solid rgba(0, 0, 0, 0.139);
+   padding: 5px;
+   border-radius: 6px;
+   cursor: pointer;
+}
+.announcementbar-animation-section-bullets input{
+/* justify-self: center; */
+/* align-self: center; */
+}

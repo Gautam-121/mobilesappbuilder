@@ -123,7 +123,6 @@ const getCollection = asyncHandler( async (req, res, next) => {
 } )
 
 const getProductByCollectionId = asyncHandler( async (req, res, next) => {
-
   if (!req.query.collectionId) {
     return next(
       new ApiError(
@@ -159,7 +158,7 @@ const getProductByCollectionId = asyncHandler( async (req, res, next) => {
     axiosShopifyConfig(req.accessToken),
     { collectionId: req.query.collectionId, first: per_page, after: next_page }
   );
-
+console.log("data",fetchCollectionsProducts.data.data.collection)
   if(fetchCollectionsProducts?.data?.errors?.length > 0){
     return next(
       new ApiError(

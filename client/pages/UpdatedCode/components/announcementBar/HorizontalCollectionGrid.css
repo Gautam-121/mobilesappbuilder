@@ -32,3 +32,9 @@
     height: 168px;
     width: 50px;
 }
+.collection-grid-container{
+margin-top: 10px;
+}
+.collection-grid-container ::-webkit-scrollbar {
+    display: none;
+}

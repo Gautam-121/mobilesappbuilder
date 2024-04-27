@@ -1,19 +1,16 @@
-import React from 'react'
-import './announcementBarEdit.css'
+import React from "react";
+import "./announcementBarEdit.css";
 import { useState, useEffect } from "react";
 import { componentListArrayAtom } from "../../recoil/store";
-import { useRecoilState } from 'recoil';
+import { useRecoilState } from "recoil";
 import { Button, ButtonGroup } from "@shopify/polaris";
 
-
-
 export default function AnnouncementBarEdit(props) {
-  let data = props.data
+  let data = props.data;
 
   const [componentListArray, setComponentListArray] = useRecoilState(
     componentListArrayAtom
   );
-
 
   const [currentObject, setCurrentObject] = useState({});
   const proxyArray = [...componentListArray];
@@ -24,13 +21,12 @@ export default function AnnouncementBarEdit(props) {
     }
   }, []);
 
-
   useEffect(() => {
     console.log(currentObject);
   }, [currentObject]);
 
-
   function handleTextChange(event) {
+    console.log("text change triggered");
     let newText = event.target.value;
     // Check if the text has actually changed before updating the state
     if (newText !== currentObject.data.message) {
@@ -43,7 +39,6 @@ export default function AnnouncementBarEdit(props) {
       }));
     }
   }
-
 
   function handleBGColorChange(event) {
     let newColor = event.target.value;
@@ -59,7 +54,6 @@ export default function AnnouncementBarEdit(props) {
       }));
     }
   }
-
 
   function handleFontColorChange(event) {
     let newColor = event.target.value;
@@ -87,7 +81,6 @@ export default function AnnouncementBarEdit(props) {
     setCurrentObject((prevObject) => ({ ...prevObject, isEditVisible: false }));
   }
 
-
   const handleRadioChange = (newAnimation) => {
     // let newAnimation = event.target.value
     console.log(newAnimation);
@@ -95,17 +88,16 @@ export default function AnnouncementBarEdit(props) {
     if (newAnimation !== currentObject.data.animationType) {
       setCurrentObject((prevObject) => ({
         ...prevObject,
-        data: [
-          {
-            ...prevObject.data,
-            animationType: newAnimation,
-          },
-        ],
+        data: {
+          ...prevObject.data,
+          animationType: newAnimation,
+        },
       }));
     }
   };
-
-
+  useEffect(() => {
+    console.log("currentObject changed", currentObject);
+  }, [currentObject]);
 
   return (
     <>
@@ -114,85 +106,122 @@ export default function AnnouncementBarEdit(props) {
           style={data.isEditVisible ? {} : { display: "none" }}
           className="editPopupContainer"
         >
-          <div className='announcementbar-main-div common-style'>
+          <span className="announcementbar-edit-heading">
+            Edit Announcement Bar
+          </span>
 
-            <div className='announcementbar-color-pickers-div common-style'>
-
-              <div className='label-element-placement common-style'>
-                <label htmlFor="">Enter text</label>
-                <input
-                  onChange={(e) => handleTextChange(e)}
-                  placeholder={
-                    currentObject.data.message ? currentObject.data.message : ""
-                  }
-                  type="text"
-                  className='announcementbar-text-field'
-                />
+          <div className="announcementbar-main-div common-style">
+            <div className="announcementbar-color-pickers-div common-style">
+              <div className="label-element-placement common-style">
+                <div>
+                  <label htmlFor="">Enter text:</label>
+                  <br />
+                  <input
+                    onChange={(e) => handleTextChange(e)}
+                    value={
+                      currentObject.data.message
+                        ? currentObject.data.message
+                        : ""
+                    }
+                    type="text"
+                    className="announcementbar-text-field"
+                  />
+                </div>
               </div>
 
-              <div className='label-element-placement common-style'>
-                <label htmlFor="">Select text color</label>
-                <input
-                  onChange={handleFontColorChange}
-                  value={currentObject.data.textColor}
-                  type="color"
-                />
+              <div className="label-element-placement common-style">
+                <div>
+                  <label htmlFor="">Select text color:</label>
+                  <br />
+                  <input
+                    onChange={handleFontColorChange}
+                    value={currentObject.data.textColor}
+                    type="color"
+                  />
+                </div>
               </div>
 
-              <div className='label-element-placement common-style'>
-                <label htmlFor="">Select background color</label>
-
-                <input
-                  onChange={handleBGColorChange}
-                  value={currentObject.data.backgroundColor}
-                  type="color"
-                />
+              <div className="label-element-placement common-style">
+                <div>
+                  <label htmlFor="">Select background color:</label>
+                  <br />
+                  <input
+                    onChange={handleBGColorChange}
+                    value={currentObject.data.backgroundColor}
+                    type="color"
+                  />
+                </div>
               </div>
-
             </div>
 
-
-            <div className='announcementbar-animation-section-main-div common-style'>
-
+            <div className="announcementbar-animation-section-main-div common-style">
               <div>
-                <label htmlFor="">Animation</label>
-
+                <label htmlFor="">Select Animation:</label>
               </div>
 
-              <div className='announcementbar-animation-section-bullets common-style'>
-                <label>
+              <div className="announcementbar-animation-section-bullets common-style">
+                <label
+                  style={
+                    currentObject.data.animationType == "None"
+                      ? { border: "1px solid rgba(0, 0, 0, 0.500)" }
+                      : {}
+                  }
+                >
                   None
                   <input
                     type="radio"
-                    checked={currentObject.data.animationType === "none"}
+                    checked={currentObject.data.animationType == "None"}
                     onChange={() => handleRadioChange("None")}
                   />
                 </label>
-                <label>
+                <label
+                  style={
+                    currentObject.data.animationType == "Left To Right"
+                      ? { border: "1px solid rgba(0, 0, 0, 0.500)" }
+                      : {}
+                  }
+                >
                   Left to Right
                   <input
                     type="radio"
-                    checked={currentObject.data.animationType === "moveLeftToRight"}
+                    checked={
+                      currentObject.data.animationType === "Left To Right"
+                    }
                     onChange={() => handleRadioChange("Left To Right")}
                   />
                 </label>
-                <label>
+                <label
+                style={
+                  currentObject.data.animationType == "Right To Left"
+                    ? { border: "1px solid rgba(0, 0, 0, 0.500)" }
+                    : {}
+                }
+                >
                   Right to Left
                   <input
                     type="radio"
-                    checked={currentObject.data.animationType === "moveRightToLeft"}
+                    checked={
+                      currentObject.data.animationType === "Right To Left"
+                    }
                     onChange={() => handleRadioChange("Right To Left")}
                   />
                 </label>
               </div>
-
             </div>
 
-            <div className='announcementbar-save-btns-div'>
-              <ButtonGroup>
-                <Button onClick={updateComponentListArray} variant="primary" tone="critical">Cancel</Button>
-                <Button onClick={props.handleDeleteItem} variant="primary">Save</Button>
-              </ButtonGroup>
+            <div className="announcementbar-save-btns-div">
+              {/* <ButtonGroup> */}
+              <Button
+                onClick={props.handleDeleteItem}
+                variant="primary"
+                tone="critical"
+              >
+                Delete Component
+              </Button>
+              <Button onClick={updateComponentListArray} variant="primary">
+                Save Changes
+              </Button>
+              {/* </ButtonGroup> */}
             </div>
           </div>
         </div>
@@ -200,6 +229,5 @@ export default function AnnouncementBarEdit(props) {
         <></>
       )}
     </>
-
-  )
+  );
 }

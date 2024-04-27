@@ -4,14 +4,21 @@ import ExitFrame from "./ExitFrame";
 import BillingAPI from "./pages/debug/Billing";
 import GetData from "./pages/debug/Data";
 import AppDesign from "./pages/HomeOfAppDesign/AppDesign";
+import Landing from "./pages/PushNotification/Landing/LandingPage";
+import Templates from "./pages/PushNotification/Template/Templates";
+import CreateNotification from "./pages/PushNotification/CreateNotification/CreateNotification";
+import SettingsPage from "./pages/PushNotification/Settings/SettingsPage";
 import Banners from "./Phase One/Banner/Banners";
 import StoreConfigurations from "./Phase One/Store Configuration/StoreConfigurations";
 import ChatSupport from "./Phase One/ChatSupport/ChatSupport";
-// import Templates from "./pages/Templates";
-// import Segment from "./pages/Index"
 
 const routes = {
   "/app-design": () => <GetData />,
+  "/push-notification":()=><Landing/>,
+  "/push-notification/template":()=><Templates/>,
+  "/push-notification/createNotification":()=><CreateNotification/>,
+  "/push-notification/settings":()=><SettingsPage/>,
+
   "/banners": () => <Banners />,
   "/store-configuration": () => <StoreConfigurations />,
   "/support": () => <ChatSupport />,

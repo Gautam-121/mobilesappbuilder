@@ -11,4 +11,12 @@ body {
     font-size: 16px;
     line-height: 22px;
     font-weight: 500;
+
+}
+body::-webkit-scrollbar{
+    background-color: red;
+    color: green;
+    border: 1px solid blue;
+    width: 0px;
+    height: 0px;
 }

@@ -1,70 +1,86 @@
-import React, { useState, useEffect } from 'react';
-import { Button } from "@shopify/polaris";
+import React, { useState, useEffect } from "react";
+import { Button, TextField } from "@shopify/polaris";
 import { useRecoilState } from "recoil";
-import { productsAtom, componentListArrayAtom } from "../../recoil/store";
+import { componentListArrayAtom, collectionsAtom, productsByCollectionAtom } from "../../recoil/store";
+import styles from "./verticalProductGridEdit.module.css";
+import useFetch from "../../../../hooks/useFetch";
 
 export default function VerticalProductgridEdit(props) {
-  const [componentListArray, setComponentListArray] = useRecoilState(componentListArrayAtom);
-  const [collections, setCollections] = useRecoilState(productsAtom);
-  
+  // let collectionId = "gid://shopify/Collection/471598170430"
+  const [collectionId, setCollectionId] = useState("")
+  const [products, setProducts] = useRecoilState(productsByCollectionAtom)
+  const getProducts = {
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    method: "GET",    
+  }
+
+  const useDataFetcherForShopifyData = (initialState, url, options) => {
+    const [data, setData] = useState(initialState);
+    const fetch = useFetch();
+
+    const fetchData = async () => {
+      console.log("fetch data triggered");
+      setData("");
+      const result = await (await fetch(url, options))?.json();
+      // console.log("result", result?.collections);
+      console.log("result", result?.products);
+      console.log("result", result);
+      setData(result.data);
+      if(result.data.length>0){
+        setProducts(result.data)
+      }
+    };
+    return [data, fetchData];
+  };
+
+  const [responseData, fetchProducts] = useDataFetcherForShopifyData(
+    "",
+    `/apps/api/shopify/product/collectionId?collectionId=${collectionId}`,
+    getProducts
+  );
+
+  const [componentListArray, setComponentListArray] = useRecoilState(
+    componentListArrayAtom
+  );
+  const [collections, setCollections] = useRecoilState(collectionsAtom);
+
   // Ensure collections is initialized as an empty array if undefined
   useEffect(() => {
     if (!collections) {
       setCollections([]);
+      // setProducts(responseData)
     }
-  }, [collections, setCollections]);
-  
-  const data = props.data;
-  const [currentObject, setCurrentObject] = useState({...data});
+  }, [collections,]);
 
-  useEffect(() => {
-    console.log("Product list: ", collections);
-  }, [collections]);
+  const data = props.data;
+  const [currentObject, setCurrentObject] = useState({ ...data });
 
   const handleCheckboxChange = (id) => {
-    console.log("handleCheckboxChange Collections:", collections);
-    console.log("handleCheckboxChange CurrentObject:", currentObject);
-
     const selectedCheckboxItem = collections.find((item) => item.id === id);
-
-    console.log("SelectedCheckboxItem:", selectedCheckboxItem);
-
-    // Ensure currentObject.data is initialized as an array
-    const newData = Array.isArray(currentObject.data) ? currentObject.data : [];
-
-    // Check if any item with the same productGroupId exists in newData
-    const isSelected = newData.some((dataItem) => dataItem.productGroupId === id);
-
-    console.log("IsSelected:", isSelected);
-
-    if (isSelected) {
-      // Deselect the item
-      const updatedData = newData.filter((dataItem) => dataItem.productGroupId !== id);
-      setCurrentObject((prevObject) => ({ ...prevObject, data: updatedData }));
-    } else {
-      // Select the item
-      setCurrentObject((prevObject) => ({
-        ...prevObject,
-        data: [
-          ...newData,
-          {
-            title: selectedCheckboxItem.title,
-            imageUrl: selectedCheckboxItem.image,
-            productGroupId: selectedCheckboxItem.id,
-          },
-        ],
-      }));
-    }
+    console.log(selectedCheckboxItem);
+    let updatedObject = JSON.parse(JSON.stringify(currentObject));
+    updatedObject.data.productGroupId = selectedCheckboxItem.id;
+  setCollectionId(selectedCheckboxItem.id)
+    // fetchProducts()
+    console.log(updatedObject);
+    setCurrentObject(updatedObject);
   };
-
+useEffect(()=>{fetchProducts()},[collectionId])
+  const handleTitleChange = (newValue) => {
+    console.log(newValue);
+    let updatedObject = JSON.parse(JSON.stringify(currentObject));
+    updatedObject.data.title = newValue;
+    setCurrentObject(updatedObject);
+  };
   const handleDelete = () => {
-    const updatedArray = componentListArray.filter((ele) => ele.id !== currentObject.id);
+    const updatedArray = componentListArray.filter(
+      (ele) => ele.id !== currentObject.id
+    );
     setComponentListArray(updatedArray);
   };
-
-  useEffect(() => {
-    console.log("Current object: ", currentObject);
-  }, [currentObject]);
 
   const updateComponentListArray = () => {
     setComponentListArray((prevArray) => {
@@ -77,21 +93,39 @@ export default function VerticalProductgridEdit(props) {
   };
 
   return (
-    <div style={data.isEditVisible ? {} : { display: "none" }} className="editPopupContainer">
-      {collections && collections.map((item) => (
-        <div key={item.id}>
-          <label htmlFor="">
-            <input
-              type="checkbox"
-              checked={Array.isArray(currentObject.data) && currentObject.data.some((dataItem) => dataItem.productGroupId === item.id)}
-              onChange={() => handleCheckboxChange(item.id)}
-            />
-            {item.title}
-          </label>
+    <div
+      style={data.isEditVisible ? {} : { display: "none" }}
+      className="editPopupContainer"
+    >
+      <span className="editHeading">Edit Product Grid</span>
+      <span>Edit Title</span>
+      <TextField
+        value={currentObject.data.title}
+        onChange={handleTitleChange}
+      />
+      <span>Select Collections</span>
+      {collections &&
+        collections.map((item) => (
+          <div key={item.id}>
+            <label htmlFor="">
+              <input
+                type="radio"
+                checked={currentObject.data.productGroupId === item.id}
+                onChange={() => handleCheckboxChange(item.id)}
+              />
+              {item.title}
+            </label>
+          </div>
+        ))}
+
+      <div className={styles.btnSection}>
+        <Button variant="primary" tone="critical" onClick={handleDelete}>
+          Delete Component
+        </Button>
+        <div className="primaryBtn" onClick={updateComponentListArray}>
+          Save Changes
         </div>
-      ))}
-      <Button variant="primary" tone="critical" onClick={updateComponentListArray}>Save</Button>
-      <Button onClick={handleDelete} variant="primary" tone="critical">Delete</Button>
+      </div>
     </div>
   );
 }

@@ -88,10 +88,16 @@ return (
       style={data.isEditVisible ? {} : { display: "none" }}
       className="editPopupContainer"
     >
-       {collections.map((item) => (
-        <div key={item.id}>
-          <label htmlFor="">
+      <div className={styles.container}>
+        <span className="editHeading">Edit Collection Grid</span>
+        <span>Select Collections to be displayed</span>
+      {collections.map((item) => (
+        <div  key={item.id}>
+          <label  
+          style={currentObject.data.data.some(dataItem => dataItem.collection_id === item.id)?{border:'1.5px solid black'}:{}}
+          className={styles.collectionContainer}htmlFor={item.id}>
             <input
+            id={item.id}
               type="checkbox"
               checked={currentObject.data.data.some(dataItem => dataItem.collection_id === item.id)}
               onChange={() => handleCheckboxChange(item.id)}
@@ -100,8 +106,17 @@ return (
           </label>
         </div>
       ))} 
-      <Button onClick={updateComponentListArray}>Save</Button>
-      <Button onClick={handleDelete} variant="primary" tone="critical"> Delete</Button>
+      </div>
+      {/* <Button onClick={updateComponentListArray}>Save</Button>
+      <Button onClick={handleDelete} variant="primary" tone="critical"> Delete</Button> */}
+      <div className={styles.btnSection}>
+        <Button variant="primary" tone="critical" onClick={handleDelete}>
+          Delete Component
+        </Button>
+        <div  className={styles.primaryBtn} onClick={updateComponentListArray}>
+          Save Changes
+        </div>
+      </div>
     </div> 
   )
 }

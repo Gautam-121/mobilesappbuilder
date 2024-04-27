@@ -9,7 +9,7 @@ import Banner from '../components/announcementBar/Banner';
  const DraggableBanner = ({ id, index, moveComponent, handleEdit, style, text, gridItems, textColor, backgroundColor}) => {
     const dragRef = useRef(null);
   console.log("component data in DraggableBanner", gridItems)
-    const [{isDragging }, drag] = useDrag({
+    const [{isDragging }, drag, dragPreview] = useDrag({
       type: 'COMPONENT',
       item: { id, index },
       collect: (monitor) => ({
@@ -49,7 +49,9 @@ import Banner from '../components/announcementBar/Banner';
         }}
       >
         {/* <AnnouncementBar handleEdit={handleEdit} data={data} style={style} text={text} textColor={textColor} backgroundColor={backgroundColor} /> */}
-       <Banner handleEdit={handleEdit} element={gridItems} i={0} />
+    {dragPreview(<div>
+      <Banner handleEdit={handleEdit} element={gridItems} i={0} />
+    </div>)}
         <EditPopup componentData={gridItems} />
       </div>
     );

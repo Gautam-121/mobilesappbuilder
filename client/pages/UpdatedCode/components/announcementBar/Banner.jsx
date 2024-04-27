@@ -103,13 +103,13 @@ if(typeof(element?.data?.data[index]?.imageUrl)==="object"){
            
           {/* </div> */}
           <img src={selectedImg?selectedImg:ImgIcon} alt=""
-          style={{width:"9rem", height:'7rem',margin:'auto' }}
+          style={{width:"9rem", height:'7rem',margin:'auto', objectFit:'cover'}}
           
           >
           </img>
           <div
               style={{
-                marginTop:'-40px',
+                marginTop:'-38px',
                fontSize:"50px"
               }}
             >
