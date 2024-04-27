@@ -6,7 +6,6 @@ const {
 } = require("../utils/shopifyBuildFun.js");
 const {
   graphqlQueryForFirstCollection,
-  shopPolicyUpdateMutation
 } = require("../constant.js") 
 const ApiError = require("../utils/ApiError.js");
 const asyncHandler = require("../utils/asyncHandler.js");
@@ -19,8 +18,12 @@ const updateStoreAppDesignDetail = asyncHandler(  async (req, res, next) => {
   const {themeId} = req.body
 
   if (!themeId) {
-    const error = new ApiError("theme id missing", 400)
-    return next(error);
+    return next(
+      new ApiError(
+        "ThemeId is missing",
+        400
+      )
+    )
   }
 
   let UserStoreData = await Payload.find({
@@ -32,8 +35,12 @@ const updateStoreAppDesignDetail = asyncHandler(  async (req, res, next) => {
   });
 
   if(!UserStoreData?.docs[0]){
-    const error = new ApiError("store not found", 404)
-    return next(error);
+    return next(
+      new ApiError(
+        "Store not found",
+        404
+      )
+    )
   }
 
   if (
@@ -265,8 +272,12 @@ const updateStoreAppDesignDetail = asyncHandler(  async (req, res, next) => {
 const getStoreDetail = asyncHandler( async(req,res,next)=> {
 
   if (!req.params.shopId) {
-    const error = new ApiError("shop_id is missing",400)
-    return next(error)
+    return next(
+      new ApiError(
+        "shopId is missing",
+        400
+      )
+    )
   }
 
   const store = await Payload.find({
@@ -278,8 +289,12 @@ const getStoreDetail = asyncHandler( async(req,res,next)=> {
   });
 
   if (store.docs.length === 0) {
-    const error = new ApiError("store not found with id: "+ req.params.shopId , 400)
-    return next(error)
+    return next(
+      new ApiError(
+        "store not found with id: "+ req.params.shopId,
+        400
+      )
+    )
   }
 
   const offlineAccessToken =  await Payload.find({
@@ -291,8 +306,12 @@ const getStoreDetail = asyncHandler( async(req,res,next)=> {
   })
 
   if(!offlineAccessToken?.docs[0]){
-    const error = new ApiError(`store not found with id: ${req.params?.shopId}`, 404)
-    return next(error);
+    return next(
+      new ApiError(
+        `store not found with id: ${req.params?.shopId}`,
+        404
+      )
+    )
   }
 
   // fetch metafield of product from shopify
@@ -325,12 +344,21 @@ const getStoreDetail = asyncHandler( async(req,res,next)=> {
   } catch (error) {
     if (error.response) {
       // The error is from the server's response
-      const apiError = new ApiError(error.message, error.response.status);
-      return next(apiError);
+      return next(
+        new ApiError(
+          error.message,
+          error.response?.status || 500
+        )
+      )
+
     } else {
       // The error is not from the server's response
-      const apiError = new ApiError(error.message, 500);
-      return next(apiError);
+      return next(
+        new ApiError(
+          error.message,
+          500
+        )
+      )
     }
   }
 })
@@ -346,8 +374,12 @@ const getStoreDetailByWeb = asyncHandler( async(req,res,next)=>{
   })
 
   if (store.docs.length === 0) {
-    const error = new ApiError("store not found with id: "+ req.params.shopId , 400)
-    return next(error)
+    return next(
+      new ApiError(
+        "store not found with id: "+ req.params.shopId ,
+        400
+      )
+    )
   }
 
   return res.status(200).json({
@@ -382,7 +414,8 @@ const updateSocialMediaOfStore = asyncHandler( async(req,res,next)=>{
   if(!socialMedia || !Array.isArray(socialMedia) || socialMedia.length == 0){
     return next(
       new ApiError(
-        "Please Provide all mandatory fields"
+        "Please Provide all mandatory fields",
+        400
       )
     )
   }

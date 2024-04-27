@@ -168,7 +168,6 @@ const shopPolicyUpdateMutation = `
     }
   }
 `;
-
 // Define the request body
 const requestBodyForStorefrontToken = {
     storefront_access_token: {

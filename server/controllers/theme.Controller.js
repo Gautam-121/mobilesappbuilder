@@ -13,8 +13,12 @@ const getAllTheme = asyncHandler( async (req, res, next) => {
   })
 
   if(!store.docs[0]){
-    const error = new ApiError(`store not found with id: ${req.shop_id}`, 404)
-    return next(error);
+    return next(
+      new ApiError(
+        `store not found with id: ${req.shop_id}`,
+        404
+      )
+    )
   }
 
   const theme = await Payload.find({
@@ -31,8 +35,12 @@ const getAllTheme = asyncHandler( async (req, res, next) => {
 const getThemeById = asyncHandler( async (req, res, next) => {
 
   if (!req.params.themeId) {
-    const error = new ApiError("Theme_id is missing", 400)
-    return next(error);
+    return next(
+      new ApiError(
+        "Theme_id is missing",
+         400
+      )
+    )
   }
 
   const store = await Payload.find({
@@ -44,8 +52,12 @@ const getThemeById = asyncHandler( async (req, res, next) => {
   })
 
   if(!store.docs[0]){
-    const error = new ApiError(`store not found with id: ${req.shop_id}`, 404)
-    return next(error);
+    return next(
+      new ApiError(
+        `store not found with id: ${req.shop_id}`,
+         404
+      )
+    )
   }
 
   const theme = await Payload.findByID({
@@ -54,7 +66,12 @@ const getThemeById = asyncHandler( async (req, res, next) => {
   });
 
   if (!theme) {
-    return next(new ApiError("Theme not found", 400));
+    return next(
+      new ApiError(
+        "Theme not found",
+         400
+      )
+    )
   }
 
   return res.status(200).json({

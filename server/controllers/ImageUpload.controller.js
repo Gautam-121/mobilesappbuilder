@@ -9,7 +9,12 @@ const uploadImages = asyncHandler(async (req, res, next) => {
   const file = req.files
 
   if (!file) {
-    return next(new ApiError("file is missing",400))
+    return next(
+      new ApiError(
+        "file is missing",
+         400
+      )
+    )
   }
 
   const image = await Payload.create({

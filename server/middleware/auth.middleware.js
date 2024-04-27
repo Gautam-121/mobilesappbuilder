@@ -62,7 +62,7 @@ const authMiddleware = (app) => {
 
       let storefrontResponse;
 
-      if( isShopAvaialble.docs[0] && !isShopAvaialble.docs[0].storefront_access_token){
+      if( !isShopAvaialble.docs[0] || (isShopAvaialble.docs[0] && !isShopAvaialble.docs[0].storefront_access_token)){
         storefrontResponse = await axios.post(
           `https://${shop}/admin/api/${process.env.SHOPIFY_API_VERSION}/storefront_access_tokens.json`,
           requestBodyForStorefrontToken,
@@ -89,7 +89,7 @@ const authMiddleware = (app) => {
       ) {
         try {
           // Make the POST request to create the storefront access token
-          const storefrontResponse = await axios.post(
+          storefrontResponse = await axios.post(
             `https://${shop}/admin/api/${process.env.SHOPIFY_API_VERSION}/storefront_access_tokens.json`,
             requestBodyForStorefrontToken,
             {
@@ -170,7 +170,6 @@ const authMiddleware = (app) => {
 
       await sessionHandler.storeSession(session , response?.data?.shop?.id);
 
-      console.log("session", session);
 
       const host = req.query.host;
       const { shop } = session;

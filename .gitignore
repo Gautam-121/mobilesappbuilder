@@ -4,6 +4,8 @@
 # Personal Dev Content
 mongo/
 
+.env
+
 # macOS
 .DS_Store
 

@@ -14,14 +14,12 @@ const verifyRequest = async (req, res, next) => {
       rawRequest: req,
       rawResponse: res,
     });
+    
     console.log("sessionId in VerifyRequest" , sessionId)
     const session = await sessionHandler.loadSession(sessionId);
 
-    console.log(session)
-
     if (
-      new Date(session?.expires) > new Date() &&
-      shopify.config.scopes.equals(session.scope)
+      new Date(session?.expires) > new Date()
     ) {
       const client = new shopify.clients.Graphql({ session });
       const response = await client.request(TEST_QUERY);
@@ -34,9 +32,6 @@ const verifyRequest = async (req, res, next) => {
       req.shop = session.shop;
       req.shop_id = response?.data?.shop?.id;
       req.accessToken = session.accessToken;
-
-      // req.user = session
-      // req.shop_id = response?.data?.shop?.id;
 
       return next();
     }
