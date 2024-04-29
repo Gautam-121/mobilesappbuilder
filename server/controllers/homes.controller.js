@@ -5,8 +5,12 @@ const asyncHandler = require("../utils/asyncHandler.js");
 const getHomePage = asyncHandler(async (req, res, next) => {
 
   if (!req.params.shopId) {
-    const error = new ApiError("Shop_id is Missing", 400);
-    return next(error);
+    return next(
+      new ApiError(
+        "ShopId is missing",
+         400
+      )
+    )
   }
 
   const store = await Payload.find({
@@ -18,8 +22,12 @@ const getHomePage = asyncHandler(async (req, res, next) => {
   })
 
   if(!store.docs[0]){
-    const error = new ApiError(`Shop not found with id: ${req.params.shopId}`, 404)
-    return next(error);
+    return next(
+      new ApiError(
+        `Shop not found with id: ${req.params.shopId}`,
+         404
+      )
+    )
   }
 
   const homeData = await Payload.find({
@@ -31,8 +39,12 @@ const getHomePage = asyncHandler(async (req, res, next) => {
   });
 
   if (homeData.docs.length === 0) {
-    const error = new ApiError(`No data found with shopId: ${req.params.shopId}`, 400);
-    return next(error);
+    return next(
+      new ApiError(
+        `No data found with shopId: ${req.params.shopId}`,
+         400
+      )
+    )
   }
 
   // Update the homeData.docs[0].homeData array
@@ -59,8 +71,12 @@ const getHomePage = asyncHandler(async (req, res, next) => {
 const getHomePageByWeb = asyncHandler(async (req, res, next) => {
     
   if (!req.params.themeId) {
-    const error = new ApiError("themeId is missing", 400);
-    return next(error);
+    return next(
+      new ApiError(
+        "themeId is missing",
+         400
+      )
+    )
   }
 
   const isSelectedTheme = await Payload.find({
@@ -72,13 +88,21 @@ const getHomePageByWeb = asyncHandler(async (req, res, next) => {
   })
 
   if(!isSelectedTheme.docs[0]){
-    const error = new ApiError(`store not found with id: ${req.shop_id}`, 404)
-    return next(error);
+    return next(
+      new ApiError(
+        `store not found with id: ${req.shop_id}`,
+         404
+      )
+    )
   }
 
   if(!isSelectedTheme.docs[0]?.themeId || isSelectedTheme.docs[0]?.themeId != req.params.themeId ){
-    const error = new ApiError("Params is not matched with store themeId", 400)
-    return next(error);
+    return next(
+      new ApiError(
+        "Params is not matched with store themeId",
+         400
+      )
+    )
   }
 
   const homeData = await Payload.find({
@@ -91,8 +115,12 @@ const getHomePageByWeb = asyncHandler(async (req, res, next) => {
   });
 
   if (homeData.docs.length === 0) {
-    const error = new ApiError("No Document Found", 400);
-    return next(error);
+    return next(
+      new ApiError(
+        "No Document Found",
+         400
+      )
+    )
   }
 
   // Update the homeData.docs[0].homeData array
@@ -119,8 +147,11 @@ const updateHomePage = asyncHandler(async (req, res, next) => {
   const { datas } = req.body;
 
   if (!req.params.themeId) {
-    const error = new ApiError("themeId is missing", 400)
-    return next(error);
+    return next(
+      new ApiError(
+        "ThemeId is missing"
+      )
+    )
   }
 
   const isSelectedTheme = await Payload.find({
@@ -132,13 +163,21 @@ const updateHomePage = asyncHandler(async (req, res, next) => {
   })
 
   if(!isSelectedTheme.docs[0]){
-    const error = new ApiError(`store not found with id: ${req.shop_id}`, 404)
-    return next(error);
+    return next(
+      new ApiError(
+        `store not found with id: ${req.shop_id}`,
+         404
+      )
+    )
   }
 
   if(!isSelectedTheme.docs[0]?.themeId || isSelectedTheme.docs[0]?.themeId != req.params.themeId ){
-    const error = new ApiError("Params is not matched with store themeId", 400)
-    return next(error);
+    return next(
+      new ApiError(
+        "Params is not matched with store themeId",
+        400
+      )
+    )
   }
 
   const isExistHomeData = await Payload.find({
@@ -150,8 +189,12 @@ const updateHomePage = asyncHandler(async (req, res, next) => {
   });
 
   if (isExistHomeData.docs.length === 0) {
-    const error = new ApiError("No Document Found", 400)
-    return next(error);
+    return next(
+      new ApiError(
+        "No Document Found",
+         400
+      )
+    )
   }
 
   try {
@@ -403,8 +446,12 @@ const updateHomePage = asyncHandler(async (req, res, next) => {
       }
     }
   } catch (err) {
-    const error =  new ApiError(err , 500)
-    return next(error)
+    return next(
+      new ApiError(
+        err,
+        500
+      )
+    )
   }
 
    await Payload.update({

@@ -26,8 +26,12 @@ const getServerKey = asyncHandler(async (req, res) => {
     })
   
     if(!store.docs[0] || !store.docs[0].serverKey){
-      const error = new ApiError(`Server key not found`, 404)
-      return next(error);
+      return next(
+        new ApiError(
+          `Server key not found`,
+           400
+        )
+      )
     }
 
     return res.status(200).json({
@@ -41,8 +45,12 @@ const updateServerKey = asyncHandler( async (req, res) => {
     const { serverKey } = req?.body
 
     if (!serverKey) {
-      const error = new ApiError("Server Key missing" , 400)
-      return next(error)
+      return next(
+        new ApiError(
+          "Server Key missing",
+          400
+        )
+      )
     }
 
     const store = await Payload.find({
@@ -54,8 +62,12 @@ const updateServerKey = asyncHandler( async (req, res) => {
     })
   
     if(!store.docs[0]){
-      const error = new ApiError(`store not found with id: ${req.shop_id}`, 404)
-      return next(error);
+      return next(
+        new ApiError(
+          `store not found with id: ${req.shop_id}`,
+           404
+        )
+      )
     }
 
     const storeData = await Payload.update({
@@ -69,8 +81,12 @@ const updateServerKey = asyncHandler( async (req, res) => {
     });
 
     if (!storeData) {
-      const error = new ApiError("Something went wrong while updating server key" , 500)
-      return next(error)
+      return next(
+        new ApiError(
+          "Something went wrong while updating server key",
+           500
+        )
+      )
     }
 
     return res.status(200).json({

@@ -21,8 +21,6 @@ const storeSession = async (session , shopId) => {
       },
       data: {
         token: cryption.encrypt(JSON.stringify(session)),
-        shop_domain: session.shop,
-        shopId: shopId,
         isOnline: session.isOnline
       },
     });
@@ -44,6 +42,7 @@ const storeSession = async (session , shopId) => {
 };
 
 const loadSession = async (id) => {
+  console.log(id)
   const sessionResult = await payload.find({
     collection: "Session", // required
     where: {

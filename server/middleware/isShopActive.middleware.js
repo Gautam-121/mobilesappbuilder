@@ -11,8 +11,6 @@ const isShopActive = async (req, res, next) => {
     return;
   }
 
-  console.log("Enter after line 14")
-
   const callbackResponse = await shopify.auth.callback({
     rawRequest: req,
     rawResponse: res,
@@ -29,8 +27,6 @@ const isShopActive = async (req, res, next) => {
       id: { equals: response?.data?.shop?.id },
     },
   });
-
-  console.log("rechesTo line" , 37)
 
   if (isShopAvaialble.docs?.length === 0 || !isShopAvaialble.docs[0].isActive) {
     if (isShopAvaialble.docs?.length === 0) {

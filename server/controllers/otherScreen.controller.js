@@ -8,13 +8,21 @@ const updateProductDetail = asyncHandler( async (req, res, next) => {
   const data = req.body?.data;
 
   if(!data){
-    const error = new ApiError("Privide all fields")
-    return next(error)
+    return next(
+      new ApiError(
+        "Privide all required fields",
+        400
+      )
+    )
   }
 
   if (!req.params.themeId) {
-    const error = new ApiError("themeId is missing", 400)
-    return next(error);
+    return next(
+      new ApiError(
+        "ThemeId is missing",
+         400
+      )
+    )
   }
 
   const isSelectedTheme = await Payload.find({
@@ -26,13 +34,21 @@ const updateProductDetail = asyncHandler( async (req, res, next) => {
   })
 
   if(!isSelectedTheme.docs[0]){
-    const error = new ApiError(`store not found with id: ${req.shop_id}`, 404)
-    return next(error);
+    return next(
+      new ApiError(
+        `store not found with id: ${req.shop_id}`,
+         404
+      )
+    )
   }
 
   if(!isSelectedTheme.docs[0]?.themeId || isSelectedTheme.docs[0]?.themeId != req.params.themeId ){
-    const error = new ApiError("Params is not matched with store themeId", 400)
-    return next(error);
+    return next(
+      new ApiError(
+        "Params is not matched with store themeId",
+        400
+      )
+    )
   }
 
   const isProductDetailForThemeExist = await Payload.find({
@@ -71,8 +87,12 @@ const updateProductDetail = asyncHandler( async (req, res, next) => {
     });
 
     if(!productDetail){
-      const error = new ApiError("Something went wrong while updating product detail", 500)
-      return next(error)
+      return next(
+        new ApiError(
+          "Something went wrong while updating product detail",
+           500
+        )
+      )
     }
 
     return res.status(200).json({
@@ -134,8 +154,12 @@ const createAccountDetailPage = asyncHandler( async (req, res, next) => {
 const getProductDetails = asyncHandler( async(req , res , next)=> {
 
   if (!req.params.shopId) {
-    const error = new ApiError("Shop_id is Missing", 400);
-    return next(error);
+    return next(
+      new ApiError(
+        "ShopId is Missing",
+         400
+      )
+    )
   }
 
   const store = await Payload.find({
@@ -147,8 +171,12 @@ const getProductDetails = asyncHandler( async(req , res , next)=> {
   })
 
   if(!store.docs[0]){
-    const error = new ApiError(`Shop not found with id: ${req.params.shopId}`, 404)
-    return next(error);
+    return next(
+      new ApiError(
+        `Shop not found with id: ${req.params.shopId}`,
+         404
+      )
+    )
   }
 
   const productDetail = await Payload.find({
@@ -173,8 +201,12 @@ const getProductDetails = asyncHandler( async(req , res , next)=> {
 const getOtherScreenPageDetailByWeb = asyncHandler( async (req, res, next) => {
   
   if (!req.params.themeId) {
-    const error = new ApiError("themeId is missing", 400);
-    return next(error);
+    return next(
+      new ApiError(
+        "ThemeId is missing",
+        400
+      )
+    )
   }
 
   const isSelectedTheme = await Payload.find({
@@ -186,13 +218,21 @@ const getOtherScreenPageDetailByWeb = asyncHandler( async (req, res, next) => {
   })
 
   if(!isSelectedTheme.docs[0]){
-    const error = new ApiError(`store not found with id: ${req.shop_id}`, 404)
-    return next(error);
+    return next(
+      new ApiError(
+        `store not found with id: ${req.shop_id}`,
+         404
+      )
+    )
   }
 
   if(!isSelectedTheme.docs[0]?.themeId || isSelectedTheme.docs[0]?.themeId != req.params.themeId ){
-    const error = new ApiError("Params is not matched with store themeId", 400)
-    return next(error);
+    return next(
+      new ApiError(
+        "Params is not matched with store themeId",
+        400
+      )
+    )
   }
 
   const productDetail = await Payload.find({

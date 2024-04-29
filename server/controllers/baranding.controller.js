@@ -5,8 +5,12 @@ const asyncHandler = require("../utils/asyncHandler.js");
 const getBrandingApp = asyncHandler(async (req, res, next) => {
 
   if (!req.params.shopId) {
-    const error = new ApiError("Shop_id is missing", 400);
-    return next(error);
+    return next(
+      new ApiError(
+        "ShopId is missing",
+         400
+      )
+    )
   }
 
   const store = await Payload.find({
@@ -18,8 +22,12 @@ const getBrandingApp = asyncHandler(async (req, res, next) => {
   })
 
   if(!store.docs[0]){
-    const error = new ApiError(`Shop not found with id: ${req.params.shopId}`, 404)
-    return next(error);
+    return next(
+      new ApiError(
+        `Shop not found with id: ${req.params.shopId}`,
+         404
+      )
+    )
   }
 
   const brandingData = await Payload.find({
@@ -32,6 +40,12 @@ const getBrandingApp = asyncHandler(async (req, res, next) => {
   });
 
   if (brandingData.docs.length === 0) {
+    return next(
+      new ApiError(
+        `No data found with shopId: ${req.params.shopId}`,
+         400
+      )
+    )
     const error = new ApiError(`No data found with shopId: ${req.params.shopId}`, 400);
     return next(error);
   }
@@ -56,6 +70,12 @@ const getBrandingApp = asyncHandler(async (req, res, next) => {
 const getBrandingAppWeb = asyncHandler(async (req, res, next) => {
 
     if (!req.params.themeId) {
+      return next(
+        new ApiError(
+          "ThemeId is missing",
+           400
+        )
+      )
       const error = new ApiError("themeId is missing", 400);
       return next(error);
     }
@@ -69,13 +89,21 @@ const getBrandingAppWeb = asyncHandler(async (req, res, next) => {
     })
   
     if(!isSelectedTheme.docs[0]){
-      const error = new ApiError(`store not found with id: ${req.shop_id}`, 404)
-      return next(error);
+      return next(
+        new ApiError(
+          `store not found with id: ${req.shop_id}`,
+           404
+        )
+      )
     }
 
    if(!isSelectedTheme.docs[0]?.themeId || isSelectedTheme.docs[0]?.themeId != req.params.themeId ){
-      const error = new ApiError("Params is not matched with store themeId", 400)
-      return next(error);
+      return next(
+        new ApiError(
+          "Params is not matched with store themeId",
+           400
+        )
+      )
    }
 
     const brandingData = await Payload.find({
@@ -88,8 +116,12 @@ const getBrandingAppWeb = asyncHandler(async (req, res, next) => {
     });
 
     if (brandingData.docs.length === 0) {
-      const error = new ApiError("No Document found", 400);
-      return next(error);
+      return next(
+        new ApiError(
+          "No Document found",
+           400
+        )
+      )
     }
 
     if (brandingData.docs[0].app_title === "appText") {
@@ -110,8 +142,12 @@ const getBrandingAppWeb = asyncHandler(async (req, res, next) => {
 const updateBrandingApp = asyncHandler(async (req, res, next) => {
 
   if (!req.params.themeId) {
-    const error = new ApiError("themeId is missing", 400);
-    return next(error);
+    return next(
+      new ApiError(
+        "ThemeId is missing",
+        400
+      )
+    )
   }
 
   const isSelectedTheme = await Payload.find({
@@ -123,13 +159,21 @@ const updateBrandingApp = asyncHandler(async (req, res, next) => {
   })
 
   if(!isSelectedTheme.docs[0]){
-    const error = new ApiError(`store not found with id: ${req.shop_id}`, 404)
-    return next(error);
+    return next(
+      new ApiError(
+        `store not found with id: ${req.shop_id}`,
+         404
+      )
+    )
   }
 
   if(!isSelectedTheme.docs[0]?.themeId || isSelectedTheme.docs[0]?.themeId != req.params.themeId ){
-    const error = new ApiError("Params is not matched with store themeId", 400)
-    return next(error);
+    return next(
+      new ApiError(
+        "Params is not matched with store themeId",
+         400
+      )
+    )
   }
 
   const isExistbrandingData = await Payload.find({
@@ -141,8 +185,12 @@ const updateBrandingApp = asyncHandler(async (req, res, next) => {
   });
 
   if (isExistbrandingData.docs.length === 0) {
-    const error = new ApiError("No document found", 400);
-    return next(error);
+    return next(
+      new ApiError(
+        "No document found",
+         400
+      )
+    )
   }
 
   const brandingData = await Payload.update({

@@ -8,19 +8,46 @@ const csp = require("./middleware/csp.middleware.js");
 const applyAuthMiddleware = require("./middleware/auth.middleware.js");
 const isShopActive = require("./middleware/isShopActive.middleware.js");
 const errorMiddleware = require("./middleware/error.middleware.js");
-const verifyRequest = require("./middleware/verifyRequest.middleware.js")
 
 const isDev = process.env.NODE_ENV === "dev";
 const root = process.cwd();
 const app = express();
 
-app.use(express.json());
+
 app.use(cors());
 app.disable("x-powered-by");
 applyAuthMiddleware(app);
 app.use(csp);
 app.use(isShopActive);
 
+// Incoming webhook requests
+app.post(
+  "/webhooks/:topic",
+  express.text({ type: "*/*" }),
+  async (req, res) => {
+    const { topic } = req.params || "";
+    const shop = req.headers["x-shopify-shop-domain"] || "";
+
+    try {
+      await shopify.webhooks.process({
+        rawBody: req.body,
+        rawRequest: req,
+        rawResponse: res,
+      });
+      console.log(`--> Processed ${topic} webhook for ${shop}`);
+    } catch (e) {
+      console.error(
+        `---> Error while registering ${topic} webhook for ${shop}`,
+        e
+      );
+      if (!res.headersSent) {
+        res.status(500).send(error.message);
+      }
+    }
+  }
+);
+
+app.use(express.json());
 
 //Import Routes
 const router = require("./routes/index.js");
@@ -43,10 +70,9 @@ if (!isDev) {
     app.use("/*", (req, res, next) => {
       res
         .status(200)
-        .set("Content-Type", "text/html")
+        .set("Content-Type", "application/javascript")
         .send(fs.readFileSync(`${root}/dist/client/index.html`));
     });
 }
   
-
 module.exports = app

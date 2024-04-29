@@ -8,7 +8,8 @@ const {
   graphqlQueryForProducts,
   graphqlQueryForCollections,
   graphqlQueryForProductsByCollectionId,
-  graphqlQueryForSegments
+  graphqlQueryForSegments,
+  shopPolicyUpdateMutation
 } = require("../constant.js");
 const asyncHandler = require("../utils/asyncHandler.js");
 const Payload = require("payload")
@@ -28,11 +29,15 @@ const getProduct = asyncHandler( async (req, res , next) => {
   })
 
   if(!store.docs[0]){
-    const error = new ApiError(`store not found with id: ${req.shop_id}`, 404)
-    return next(error);
+    return next(
+      new ApiError(
+        `store not found with id: ${req.shop_id}`,
+        404
+      )
+    )
   }
 
-  const per_page = req.query?.per_page ?  parseInt(req.query.per_page) : 8
+  const per_page = req.query?.per_page ?  parseInt(req.query.per_page) : 5
   const next_page = req.query.next_page || null
 
   const fetchProducts = await shopifyApiData(
@@ -43,8 +48,12 @@ const getProduct = asyncHandler( async (req, res , next) => {
   );
 
  if(fetchProducts?.data?.errors?.length > 0){
-  const error = new ApiError("Something went wrong while fetching graphql query" , 500)
-  return next(error)
+  return next(
+    new ApiError(
+      "Something went wrong while fetching graphql query",
+       500
+    )
+  )
  }
 
 const product = fetchProducts?.data?.data?.products;
@@ -58,10 +67,9 @@ return res.status(200).json({
   nextCursor,
   products:items,
 });
-
 })
 
-const getCollection = asyncHandler( async (req, res) => {
+const getCollection = asyncHandler( async (req, res, next) => {
 
   const store = await Payload.find({
     collection: 'Store',
@@ -72,8 +80,12 @@ const getCollection = asyncHandler( async (req, res) => {
   })
 
   if(!store.docs[0]){
-    const error = new ApiError(`store not found with id: ${req.shop_id}`, 404)
-    return next(error);
+    return next(
+      new ApiError(
+        `store not found with id: ${req.shop_id}`,
+        404
+      )
+    )
   }
 
   const per_page = req.query?.per_page ?  parseInt(req.query.per_page) : 8
@@ -86,11 +98,13 @@ const getCollection = asyncHandler( async (req, res) => {
     {first: per_page , after: next_page}
   );
 
-  console.log(fetchCollections?.data)
-
   if(fetchCollections?.data?.errors?.length > 0){
-    const error = new ApiError("Something went wrong while fetching graphql query" , 500)
-    return next(error)
+    return next(
+      new ApiError(
+        "Something went wrong while fetching graphql query",
+         500
+      )
+    )
    }
 
   const collection = fetchCollections?.data?.data?.collections;
@@ -110,8 +124,12 @@ const getCollection = asyncHandler( async (req, res) => {
 
 const getProductByCollectionId = asyncHandler( async (req, res, next) => {
   if (!req.query.collectionId) {
-    const error = new ApiError("Category id is Missing", 400)
-    return next(error);
+    return next(
+      new ApiError(
+        "Category id is Missing",
+         400
+      )
+    )
   }
 
   const store = await Payload.find({
@@ -123,8 +141,12 @@ const getProductByCollectionId = asyncHandler( async (req, res, next) => {
   })
 
   if(!store.docs[0]){
-    const error = new ApiError(`store not found with id: ${req.shop_id}`, 404)
-    return next(error);
+    return next(
+      new ApiError(
+        `store not found with id: ${req.shop_id}`,
+         404
+      )
+    )
   }
 
   const per_page = req.query?.per_page ?  parseInt(req.query.per_page) : 5
@@ -138,8 +160,12 @@ const getProductByCollectionId = asyncHandler( async (req, res, next) => {
   );
 console.log("data",fetchCollectionsProducts.data.data.collection)
   if(fetchCollectionsProducts?.data?.errors?.length > 0){
-    const error = new ApiError("Something went wrong while fetching graphql query" , 500)
-    return next(error)
+    return next(
+      new ApiError(
+        "Something went wrong while fetching graphql query",
+         500
+      )
+    )
    }
 
   const collectionProducts = fetchCollectionsProducts?.data?.data?.collection?.products;
@@ -237,8 +263,12 @@ const getAllSegment = asyncHandler( async (req, res , next) => {
   })
 
   if(!store.docs[0]){
-    const error = new ApiError(`store not found with id: ${req.shop_id}`, 404)
-    return next(error);
+    return next(
+      new ApiError(
+        `store not found with id: ${req.shop_id}`,
+         404
+      )
+    )
   }
 
   const per_page = req.query?.per_page ?  parseInt(req.query.per_page) : 8
@@ -252,8 +282,12 @@ const getAllSegment = asyncHandler( async (req, res , next) => {
   );
 
   if(fetchSegment?.data?.errors?.length > 0){
-    const error = new ApiError("Something went wrong while fetching graphql query" , 500)
-    return next(error)
+    return next(
+      new ApiError(
+        "Something went wrong while fetching graphql query",
+         500
+      )
+    )
   }
 
   const segments = fetchSegment?.data?.data?.segments;
@@ -280,8 +314,12 @@ const getShopPolicies = asyncHandler( async(req,res,next)=>{
   })
 
   if(!store.docs[0]){
-    const error = new ApiError(`store not found with id: ${req.shop_id}`, 404)
-    return next(error);
+    return next(
+      new ApiError(
+        `store not found with id: ${req.shop_id}`,
+         404
+      )
+    )
   }
 
   try {
@@ -297,11 +335,19 @@ const getShopPolicies = asyncHandler( async(req,res,next)=>{
 
     // Check if the response contains policies
     if (!response.data.policies || response.data.policies.length === 0) {
-      const error = new ApiError('No shop policies found', 404);
-      return next(error);
+      return next(
+        new ApiError(
+          'No shop policies found',
+           404
+        )
+      )
     }
 
-    res.status(200).json(response.data);
+    return res.status(200).json({
+      success: true,
+      message: "Data send successfully",
+      data: response.data
+    })
   } catch (error) {
     // Handle Shopify API errors
     if (error.response && error.response.data) {
@@ -322,7 +368,7 @@ const getShopPolicies = asyncHandler( async(req,res,next)=>{
   
 })
 
-const updateShopPolicies = async (req, res) => {
+const updateShopPolicies = asyncHandler(async (req, res , next) => {
 
   const shopPolicies = req.body.shopPolicies;
 
@@ -404,7 +450,7 @@ const updateShopPolicies = async (req, res) => {
       updates
     }
   )
-};
+})
 
 
 module.exports = { 
