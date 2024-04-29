@@ -18,7 +18,7 @@ app.use(cors());
 app.disable("x-powered-by");
 applyAuthMiddleware(app);
 app.use(csp);
-app.use(isShopActive);
+// app.use(isShopActive);
 
 // Incoming webhook requests
 app.post(
@@ -70,7 +70,7 @@ if (!isDev) {
     app.use("/*", (req, res, next) => {
       res
         .status(200)
-        .set("Content-Type", "application/javascript")
+        .set("Content-Type", "text/html")
         .send(fs.readFileSync(`${root}/dist/client/index.html`));
     });
 }
