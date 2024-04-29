@@ -68,7 +68,6 @@ if (!isDev) {
   
     const fs = require("fs");
     app.use("/*", (req, res, next) => {
-      console.log(root)
       res
         .status(200)
         .set("Content-Type", "text/html")
