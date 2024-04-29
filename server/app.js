@@ -70,7 +70,7 @@ if (!isDev) {
     app.use("/*", (req, res, next) => {
       res
         .status(200)
-        .set("Content-Type", "text/html")
+        .set("Content-Type", "application/javascript")
         .send(fs.readFileSync(`${root}/dist/client/index.html`));
     });
 }
