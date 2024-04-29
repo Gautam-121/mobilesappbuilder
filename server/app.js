@@ -67,19 +67,13 @@ if (!isDev) {
     });
   
     const fs = require("fs");
-    app.get("/", (req, res, next) => {
-      res.status(200)
-          .set("Content-Type", "text/html")
-          .send(fs.readFileSync(`${root}/dist/client/index.html`));
-  });
-
-  // Serve JavaScript files for other routes
-  app.get("/*.js", (req, res, next) => {
-    console.log(req.path)
-      res.status(200)
-          .set("Content-Type", "application/javascript")
-          .send(fs.readFileSync(`${root}/dist/client/${req.path}`));
-  });
+    app.use("/*", (req, res, next) => {
+      console.log(root)
+      res
+        .status(200)
+        .set("Content-Type", "text/html")
+        .send(fs.readFileSync(`${root}/dist/client/index.html`));
+    });
 }
   
 module.exports = app
