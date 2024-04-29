@@ -5,6 +5,7 @@ import fullScreenSlice from './fullScreenSlice';
 import appDesignPageRefreshedSlice from './appDesignPageRefreshedSlice';
 import draggedElementsSlice from './draggedElementsSlice';
 import editStatusSlice from './editStatusSlice';
+import userReducer from "./ChatCardSlice";
 
 //draggedElementsSlice
 
@@ -15,6 +16,8 @@ const store = configureStore({
         appDesignPageRefreshedSlice: appDesignPageRefreshedSlice,
         draggedElementsSlice: draggedElementsSlice,
         editStatus: editStatusSlice,
+        user: userReducer,
+
         
     }
 });
