@@ -18,7 +18,7 @@ app.use(cors());
 app.disable("x-powered-by");
 applyAuthMiddleware(app);
 app.use(csp);
-app.use(isShopActive);
+// app.use(isShopActive);
 
 // Incoming webhook requests
 app.post(
