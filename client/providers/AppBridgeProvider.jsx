@@ -1,7 +1,7 @@
 const AppBridgeProvider = ({ children }) => {
   if (typeof window !== "undefined") {
     const shop = window?.shopify?.config?.shop;
-    console.log("type of",window?.shopify);
+    // console.log("type of", shopify);
     console.log("shopByProvider" , shop)
     
     
