@@ -11,6 +11,7 @@ import {
 const ExitFrame = () => {
   useEffect(() => {
     if (typeof window !== "undefined") {
+      console.log("exitframe window",window);
       const shop = window?.shopify?.config?.shop;
       open(`https://${appOrigin}/api/auth?shop=${shop}`, "_top");
     }
