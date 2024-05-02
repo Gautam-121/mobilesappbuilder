@@ -271,6 +271,7 @@ const sendNotification = async (req, res) => {
         subscribeTopicApiEndpoint,
         {
           to: `/topics/${topicName}`,
+          
           registration_tokens: firebaseTokens,
         },
         axiosFirebaseConfig
