@@ -48,7 +48,8 @@ const {
 const {
   getServerKey,
   updateServerKey,
-  sendNotification
+  sendNotification,
+  createCustomer
 } = require("../controllers/firebase.controller.js")
 
 const router = Router();
@@ -88,6 +89,8 @@ router.put("/api/shopify/update-shop-policies", verifyRequest ,  updateShopPolic
 
 
 /*----------------------------FirebaseRouting-------------------------------------------------*/
+router.post("/api/firebase/customerDetail", verifyRequest , createCustomer)
+// router.post("//api/firebase/segmentDetail" , verifyRequest , create)
 
 router.get("/api/firebase/server-key", verifyRequest , getServerKey)
 
