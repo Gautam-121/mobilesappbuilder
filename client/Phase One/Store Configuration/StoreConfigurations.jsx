@@ -14,13 +14,69 @@ import axios from "axios";
 import useFetch from '../../hooks/useFetch';
 
 const StoreConfigurations = () => {
-    const [socialMedia, setSocialMedia] = useState([
-        { platform: 'Instagram', profileUrl: '' },
-        { platform: 'Facebook', profileUrl: '' },
-        { platform: 'Twitter', profileUrl: '' },
-        { platform: 'YouTube', profileUrl: '' }
+
+
+      const useDataFetcher = (initialState, url, options) => {
+       
+        const [data, setData] = useState(initialState);
+
+        const fetch = useFetch();
+    
+        const fetchData = async () => {
+
+          setData("");
+        
+          try {
+            const result = await (await fetch(url, options)).json();
+            console.log("result after updating the social media: ", result);
+            if(!result.success)
+                window.alert(result.message);
+
+            setData(result);
+
+
+      
+          } catch (error) {
+            console.error("Error while updating data: ", error.message);
+            // Handle error here, such as setting an error state or displaying a message to the user
+          }
+        };
+        
+        return [data, fetchData];
+      };
+    
+
+
+      const [socialMedia, setSocialMedia] = useState([
+        { platform: 'instagram', profileUrl: '' },
+        { platform: 'facebook', profileUrl: '' },
+        { platform: 'twitter', profileUrl: '' },
+        { platform: 'youTube', profileUrl: '' },
+        
     ]);
 
+
+
+      const postOptions = {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        method: "PUT",
+        body: socialMedia && JSON.stringify({socialMedia}),
+      };
+
+
+      const [responseFromServer, publishChanges] = useDataFetcher(
+        "",
+        "apps/api/store/social-media",
+        postOptions
+      );
+
+      
+
+
+    
     const [errorMessages, setErrorMessages] = useState(Array(socialMedia.length).fill(''));
 
 
@@ -63,7 +119,13 @@ const StoreConfigurations = () => {
         });
     }, [validateHandle]);
 
+    const [isLoading, setIsLoading] = useState(false);
+
+    
     const handleSaveButtonClick = async () => {
+
+        setIsLoading(true);
+
         // Check if there are any validation errors before sending the request
         if (errorMessages.some(msg => msg)) {
             console.log('Validation errors:', errorMessages);
@@ -71,11 +133,12 @@ const StoreConfigurations = () => {
         }
 
         try {
-            const response = await axios.put('apps/api/store/social-media', { socialMedia });
-            console.log('Social media updated successfully:', response.data);
+            // const response = await axios.put('apps/api/store/social-media', { socialMedia });
+            publishChanges();
+
+            console.log('Social media updated successfully:', responseFromServer);
         } catch (error) {
             console.error('Error updating social media:', error);
-            window.alert("Error updating social media");
             // Handle errors
         }
     };
@@ -87,186 +150,79 @@ const StoreConfigurations = () => {
     //store policy section
 
 
-    //PrivacyPolicy
-    const [PrivacyPolicy, setPrivacyPolicyHandle] = useState('');
-    const [errorPrivacyPolicyMessage, setErrorPrivacyPolicyMessage] = useState('');
+    const [policies, setPolicies] = useState({shopPolicies: [
+        { type: 'PRIVACY_POLICY', body: '' },
+        { type: 'REFUND_POLICY', body: '' },
+        { type: 'TERMS_OF_SERVICE', body: '' },
+        { type: 'SHIPPING_POLICY', body: '' },
+        { type: 'CONTACT_INFORMATION', body: '' },
+    ]});
 
-    const handlePrivacyPolicyTextFieldChange = useCallback(
-        (value) => {
-            setPrivacyPolicyHandle(value);
-            if (!isValidPrivacyPolicyHandle(value)) {
-                setErrorPrivacyPolicyMessage("Invalid text input");
-            } else {
-                setErrorPrivacyPolicyMessage("");
-            }
-        },
-        [],
-    );
+    //PRIVACY_POLICY , CONTACT_INFORMATION ,REFUND_POLICY ,TERMS_OF_SERVICE ,SHIPPING_POLICY
 
+    const [errors, setErrors] = useState(Array(policies.shopPolicies.length).fill(''));
 
-    const handlePrivacyPolicyClearButtonClick = useCallback(() => setPrivacyPolicyHandle(''), []);
+    const handleTextFieldChange = useCallback((index, value) => {
+        setPolicies(prevPolicies => {
+            const updatedPolicies = {...prevPolicies};
+            updatedPolicies.shopPolicies[index].body = value;
+            return updatedPolicies;
+        });
+        setErrors(prevErrors => {
+            const updatedErrors = [...prevErrors];
+            updatedErrors[index] = validatePolicy(value) ? '' : 'Invalid text input';
+            return updatedErrors;
+        });
+    }, []);
 
+   
 
-    function isValidPrivacyPolicyHandle(input) {
+    const validatePolicy = (input) => {
         if (!input) {
             return false;
         }
-
-        if (!/\D/.test(input)) {
-            return false;
-        }
-
-        const regex = /^[a-zA-Z0-9 !@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]*$/;
-        if (!regex.test(input)) {
-            return false;
-        }
-
-        const words = input.trim().split(/\s+/);
-        if (words.length > 500) {
-            return false;
-        }
-
+        // Your validation logic here
         return true;
-    }
+    };
 
 
-
-
-    //TermsConditions
-    const [TermsConditions, setTermsConditionsHandle] = useState('');
-    const [errorTermsConditionsMessage, setErrorTermsConditionsMessage] = useState('');
-
-    const handleTermsConditionsTextFieldChange = useCallback(
-        (value) => {
-            setTermsConditionsHandle(value);
-            if (!isValidTermsConditionsHandle(value)) {
-                setErrorTermsConditionsMessage("Invalid text input");
-            } else {
-                setErrorTermsConditionsMessage("");
-            }
+    const policyUpdateOptions = {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
         },
-        [],
-    );
+        method: "PUT",
+        body: socialMedia && JSON.stringify({policies}),
+      };
 
 
-    const handleTermsConditionsClearButtonClick = useCallback(() => setTermsConditionsHandle(''), []);
+      const [policyResponseFromServer, publishPolicyChanges] = useDataFetcher(
+        "",
+        "apps/api/shopify/update-shop-policies",
+        policyUpdateOptions
+      );
 
 
-    function isValidTermsConditionsHandle(input) {
-        if (!input) {
-            return false;
+
+      const handlePolicySaveButtonClick = async () => {
+        const isValid = policies?.shopPolicies.every(policy => validatePolicy(policy.body));
+        if (!isValid) {
+            console.log('Validation errors:', errors);
+            return;
         }
 
-        if (!/\D/.test(input)) {
-            return false;
+        try {
+            // Perform PUT request with policies
+            publishPolicyChanges();
+
+            console.log('Policies:', policyResponseFromServer);
+        } catch (error) {
+            console.error('Error updating policies:', error);
+            window.alert("Error updating policies");
+            // Handle errors
         }
+    };
 
-        const regex = /^[a-zA-Z0-9 !@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]*$/;
-        if (!regex.test(input)) {
-            return false;
-        }
-
-        const words = input.trim().split(/\s+/);
-        if (words.length > 500) {
-            return false;
-        }
-
-        return true;
-    }
-
-
-
-    //ReturnPolicy
-    const [ReturnPolicy, setReturnPolicyHandle] = useState('');
-    const [errorReturnPolicyMessage, setErrorReturnPolicyMessage] = useState('');
-
-    const handleReturnPolicyTextFieldChange = useCallback(
-        (value) => {
-            setReturnPolicyHandle(value);
-            if (!isValidReturnPolicyHandle(value)) {
-                setErrorReturnPolicyMessage("Invalid text input");
-            } else {
-                setErrorReturnPolicyMessage("");
-            }
-        },
-        [],
-    );
-
-
-    const handleReturnPolicyClearButtonClick = useCallback(() => setReturnPolicyHandle(''), []);
-
-
-    function isValidReturnPolicyHandle(input) {
-        if (!input) {
-            return false;
-        }
-
-        if (!/\D/.test(input)) {
-            return false;
-        }
-
-        const regex = /^[a-zA-Z0-9 !@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]*$/;
-        if (!regex.test(input)) {
-            return false;
-        }
-
-        const words = input.trim().split(/\s+/);
-        if (words.length > 500) {
-            return false;
-        }
-
-        return true;
-    }
-
-
-
-
-
-    //Shipping Policy
-    const [ShippingPolicy, setShippingPolicyHandle] = useState('');
-    const [errorShippingPolicyMessage, setErrorShippingPolicyMessage] = useState('');
-
-    const handleShippingPolicyTextFieldChange = useCallback(
-        (value) => {
-            setShippingPolicyHandle(value);
-            if (!isValidShippingPolicyHandle(value)) {
-                setErrorShippingPolicyMessage("Invalid text input");
-            } else {
-                setErrorShippingPolicyMessage("");
-            }
-        },
-        [],
-    );
-
-
-    const handleShippingPolicyClearButtonClick = useCallback(() => setShippingPolicyHandle(''), []);
-
-
-    function isValidShippingPolicyHandle(input) {
-        // Check if input is null or empty
-        if (!input) {
-            return false;
-        }
-
-        // Check if input contains at least one non-numeric character
-        if (!/\D/.test(input)) {
-            return false;
-        }
-
-        // Check if input contains only alphanumeric characters and symbols
-        const regex = /^[a-zA-Z0-9 !@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]*$/;
-        if (!regex.test(input)) {
-            return false;
-        }
-
-        // Split the input into words and count the number of words
-        const words = input.trim().split(/\s+/);
-        if (words.length > 500) {
-            return false;
-        }
-
-        return true;
-    }
 
 
 
@@ -276,6 +232,11 @@ const StoreConfigurations = () => {
     const handleTabClick = (tab) => {
         setSelectedTab(tab);
     };
+
+    function capitalizeFirstLetter(word) {
+        console.log(word.charAt(0).toUpperCase() + word.slice(1));
+        return word.charAt(0).toUpperCase() + word.slice(1);
+    }
 
 
 
@@ -298,12 +259,12 @@ const StoreConfigurations = () => {
                             {socialMedia.map((media, index) => (
                                 <div className='storeconfig-social-media-main-div' key={index}>
                                     <div className='storeconfig-social-icons'>
-                                        {media.platform === 'Instagram' && <Icon source={LogoInstagramIcon} tone="critical" />}
-                                        {media.platform === 'Facebook' && <Icon source={LogoFacebookIcon} tone="info" />}
-                                        {media.platform === 'Twitter' && <Icon source={LogoXIcon} tone="primary" />}
-                                        {media.platform === 'YouTube' && <Icon source={LogoYoutubeIcon} tone="critical" />}
+                                        {media.platform === 'instagram' && <Icon source={LogoInstagramIcon} tone="critical" />}
+                                        {media.platform === 'facebook' && <Icon source={LogoFacebookIcon} tone="info" />}
+                                        {media.platform === 'twitter' && <Icon source={LogoXIcon} tone="primary" />}
+                                        {media.platform === 'youTube' && <Icon source={LogoYoutubeIcon} tone="critical" />}
                                     </div>
-                                    <div>{media.platform}</div>
+                                    <div>{capitalizeFirstLetter(media.platform)}</div>
                                     <div className='text-inputs'>
                                         <TextField
                                             className="social-textfields"
@@ -321,7 +282,7 @@ const StoreConfigurations = () => {
                                 </div>
                             ))}
                             <div className='save-btn-div'>
-                                <Button className='save-btn' size='large' onClick={handleSaveButtonClick}>Save</Button>
+                                <Button className='save-btn' size='large' onClick={handleSaveButtonClick}>{isLoading ? 'Saving...' : 'Save'}</Button>
                             </div>
                         </div>
                     </div>
@@ -329,118 +290,27 @@ const StoreConfigurations = () => {
                     :
 
                     (<div className='store-policies-main-div'>
-                        <div className='policy-main-div'>
-
-
-                            <h2>Privacy Policy</h2>
+                {policies.shopPolicies.map((policy, index) => (
+                        <div className='policy-main-div' key={index}>
+                            <h2>{policy.type.split("_").join(" ")}</h2>
                             <div className='text-inputs'>
-
                                 <TextField
                                     multiline={4}
-                                    loading
                                     clearButton
                                     autoSize
-                                    value={PrivacyPolicy}
-                                    onChange={handlePrivacyPolicyTextFieldChange}
-                                    onClearButtonClick={handlePrivacyPolicyClearButtonClick}
-
-                                    error={errorPrivacyPolicyMessage} autoComplete="off"
-                                    placeholder='Add your privacy policy here'
+                                    value={policy.body}
+                                    onChange={(newValue) => handleTextFieldChange(index, newValue)}
+                                    error={errors[index]}
+                                    autoComplete="off"
+                                    placeholder={`Add your ${policy.type.split("_").join(" ").toLowerCase()} here`}
                                 />
-
-
-                            </div>
-                            <div className='policy-save-btn-div'>
-                                <button className='policy-save-btn' size='small'>save</button>
                             </div>
                         </div>
-
-
-
-                        <div className='policy-main-div'>
-
-
-                            <h2>Terms and Conditions</h2>
-                            <div className='text-inputs'>
-
-                                <TextField
-                                    multiline={4}
-                                    loading
-                                    clearButton
-                                    autoSize
-                                    value={TermsConditions}
-                                    onChange={handleTermsConditionsTextFieldChange}
-                                    onClearButtonClick={handleTermsConditionsClearButtonClick}
-
-                                    error={errorTermsConditionsMessage} autoComplete="off"
-                                    placeholder='Add your Terms and Conditions here'
-                                />
-
-
-                            </div>
-                            <div className='policy-save-btn-div'>
-                                <button className='policy-save-btn' size='small'>save</button>
-                            </div>
-                        </div>
-
-
-
-                        <div className='policy-main-div'>
-
-
-                            <h2>Return Policy</h2>
-                            <div className='text-inputs'>
-
-                                <TextField
-                                    multiline={4}
-                                    loading
-                                    clearButton
-                                    autoSize
-                                    value={ReturnPolicy}
-                                    onChange={handleReturnPolicyTextFieldChange}
-                                    onClearButtonClick={handleReturnPolicyClearButtonClick}
-
-                                    error={errorReturnPolicyMessage} autoComplete="off"
-                                    placeholder='Add your return policy here'
-                                />
-
-
-                            </div>
-                            <div className='policy-save-btn-div'>
-                                <button className='policy-save-btn' size='small'>save</button>
-                            </div>
-                        </div>
-
-
-
-                        <div className='policy-main-div'>
-
-
-                            <h2>Shipping Policy</h2>
-                            <div className='text-inputs'>
-
-                                <TextField
-                                    multiline={4}
-                                    loading
-                                    clearButton
-                                    autoSize
-                                    value={ShippingPolicy}
-                                    onChange={handleShippingPolicyTextFieldChange}
-                                    onClearButtonClick={handleShippingPolicyClearButtonClick}
-
-                                    error={errorShippingPolicyMessage} autoComplete="off"
-                                    placeholder='Add your shipping policy here'
-                                />
-
-
-                            </div>
-                            <div className='policy-save-btn-div'>
-                                <button className='policy-save-btn' size='small'>save</button>
-                            </div>
-                        </div>
-
-
-                    </div>)
+                    ))}
+                    <div className='policy-save-btn-div'>
+                        <button className='policy-save-btn' size='small' onClick={handlePolicySaveButtonClick}>Save</button>
+                    </div>
+                </div>)
 
             }
         </div>

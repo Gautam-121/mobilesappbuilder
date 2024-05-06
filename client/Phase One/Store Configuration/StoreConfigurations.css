@@ -69,6 +69,23 @@
     background-color: white;
 }
 
+@media screen and (max-width: 1920px) {
+    .storeconfig-social-media-section-main-div{
+        
+        width: 50%;
+    }
+    
+}
+
+
+@media screen and (max-width: 1024px) {
+    .storeconfig-social-media-section-main-div{
+        
+        width: 100%;
+    }
+    
+}
+
 .storeconfig-instagram-main-div{
     display: flex;
     justify-content: flex-start;
@@ -130,6 +147,24 @@
 }
 
 
+@media screen and (max-width: 1920px) {
+    .policy-main-div, .policy-save-btn-div{
+        
+        width: 50%;
+    }
+    
+}
+
+
+@media screen and (max-width: 1024px) {
+    .policy-main-div, .policy-save-btn-div{
+        
+        width: 100%;
+    }
+    
+}
+
+
 
 .policy-main-div{
     display: flex;
@@ -168,6 +203,13 @@
 .text-inputs {
     width: 100%; /* Full width */
 }
+
+
+/* @media screen and (max-width: 720px) {
+    .text-inputs {
+        width: 50%;
+    }
+} */
 
 /* Save button positioning */
 .save-btn-div {
