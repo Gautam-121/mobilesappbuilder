@@ -1,3 +1,4 @@
+
 const { buildConfig } = require("payload/config");
 const path = require("path");
 const dotenv = require("dotenv");
@@ -7,6 +8,7 @@ const { webpackBundler } = require("@payloadcms/bundler-webpack");
 const { slateEditor } = require("@payloadcms/richtext-slate");
 
 // Importing the actual modules for runtime
+const Segment = require ("./server/models/segmentModel");
 const ProductGroup = require("./server/models/productGroup.models.js");
 const User = require("./server/models/user.models.js");
 const Banner = require("./server/models/banner.models.js");
@@ -26,6 +28,7 @@ const EmptyCartPage = require("./server/models/cartDetail.models.js");
 const AccountPage = require("./server/models/accountDetail.models.js");
 const Theme = require("./server/models/theme.models.js");
 const Media = require("./server/models/media.models.js");
+const Customer =require( "./server/models/customerDetail");
 
 module.exports = buildConfig({
   serverURL: process.env.PAYLOAD_PUBLIC_EXTERNAL_SERVER_URL,
@@ -43,6 +46,8 @@ module.exports = buildConfig({
   collections: [
     Media,
     Theme,
+    Customer,
+    Segment,
     AccountPage,
     EmptyCartPage,
     ProductPage,
