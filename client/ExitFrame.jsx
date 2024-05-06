@@ -10,10 +10,16 @@ import {
 
 const ExitFrame = () => {
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const shop = window?.shopify?.config?.shop;
-      open(`https://${appOrigin}/api/auth?shop=${shop}`, "_top");
-    }
+   
+      const shop = shopify?.config?.shop;
+      if(shop !== undefined){
+        
+        open(`https://${appOrigin}/api/auth?shop=${shop}`, "_top");
+
+      }
+
+
+  
   }, []);
 
   return (
