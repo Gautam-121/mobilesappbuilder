@@ -42,26 +42,26 @@ export const data = [
     },
   
 },
-{
-  id:3,
-  isVisible: true,
-  featureType: "categories",
-  layoutType: "vertical_grid",
-  data:{
-    data: [
-      {
-        title: "Title 1",
-        imageUrl: null,
-        collection_id: "1",
-      },
-      {
-        title: "Title 2",
-        imageUrl: null,
-        collection_id: "2",
-      },
-    ],
-  }
-},
+// {
+//   id:3,
+//   isVisible: true,
+//   featureType: "categories",
+//   layoutType: "vertical_grid",
+//   data:{
+//     data: [
+//       {
+//         title: "Title 1",
+//         imageUrl: null,
+//         collection_id: "1",
+//       },
+//       {
+//         title: "Title 2",
+//         imageUrl: null,
+//         collection_id: "2",
+//       },
+//     ],
+//   }
+// },
 {
   id:4,
   isVisible: true,

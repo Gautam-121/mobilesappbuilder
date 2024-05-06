@@ -14,7 +14,7 @@ import ChatSupport from "./Phase One/ChatSupport/ChatSupport";
 
 const routes = {
   "/app-design": () => <GetData />,
-  "/push-notification":()=><Landing/>,
+  "/push-notifications":()=><Landing/>,
   "/push-notification/template":()=><Templates/>,
   "/push-notification/createNotification":()=><CreateNotification/>,
   "/push-notification/settings":()=><SettingsPage/>,
