@@ -22,7 +22,6 @@ export default function App() {
             <a href="/banners">Banners</a>
             <a href="/store-configuration">Store Configuration</a>
             <a href="/support">Support Queries</a>
-
             <a href="/app-design">App Design</a>
           </ui-nav-menu>
           {RouteComponents}

@@ -1,6 +1,6 @@
-import React, { useCallback, useState } from 'react';
+import React, { Suspense, useCallback, useState } from 'react';
 import "./ChatSupport.css";
-import { Icon, TextField } from '@shopify/polaris';
+import { Icon, Spinner, TextField } from '@shopify/polaris';
 import {
     SendIcon
 } from '@shopify/polaris-icons';
@@ -94,131 +94,140 @@ const ChatSupport = () => {
 
 
     return (
-        <div className="chat-main-div">
-            <div className="columns-padding">
-                <h1 className="card-title">Chats</h1>
-                <div className='user-cards-container'>
-                    {users.map((user, index) => {
-                        const cardStyle = {
-                            backgroundColor: clickedIndex === index ? '#f1f1f1' : 'white',
-                            color: getTextColor(clickedIndex === index ? colors[index % colors.length] : 'white'),
-                        };
+        <Suspense fallback={<div style={{ textAlign: 'center' }}><Spinner size="large" color="teal" /></div>}>
 
-                        const usernameStyle = {
-                            color: 'black',
+            <div className="chat-main-div">
+                <div className="columns-padding">
+                    <h1 className="card-title">Chats</h1>
+                    <div className='user-cards-container'>
+                        {users.map((user, index) => {
+                            const cardStyle = {
+                                backgroundColor: clickedIndex === index ? '#f1f1f1' : 'white',
+                                color: getTextColor(clickedIndex === index ? colors[index % colors.length] : 'white'),
+                            };
 
-                        };
+                            const usernameStyle = {
+                                color: 'black',
 
-                        const messageStyle = {
-                            color: 'black',
-                        };
+                            };
+
+                            const messageStyle = {
+                                color: 'grey',
+                            };
 
 
-                        const UsernameLetterStyle = {
-                            color: 'black',
-                            border: clickedIndex === index ? `1px solid ${colors[index % colors.length]}` : '1px solid black',
-                            backgroundColor: clickedIndex === index ? colors[index % colors.length] : 'white',
-                        };
+                            const UsernameLetterStyle = {
+                                color: 'black',
+                                border: clickedIndex === index ? `1px solid ${colors[index % colors.length]}` : '1px solid grey',
+                                backgroundColor: clickedIndex === index ? colors[index % colors.length] : 'white',
+                            };
 
-                        return (
-                            <div
-                                key={index}
-                                className={`user-card ${clickedIndex === index ? 'active' : ''}`}
-                                onClick={() => handleCardClick(index, user, colors[index % colors.length])}
-                                style={cardStyle}
-                            >
+                            return (
                                 <div
-                                    className="user-letter-text"
-                                    style={UsernameLetterStyle}
-
+                                    key={index}
+                                    className={`user-card ${clickedIndex === index ? 'active' : ''}`}
+                                    onClick={() => handleCardClick(index, user, colors[index % colors.length])}
+                                    style={cardStyle}
                                 >
-                                    <p>{user.username[0].toUpperCase()}</p>
+                                    <div
+                                        className="user-letter-text"
+                                        style={UsernameLetterStyle}
+
+                                    >
+                                        <p>{user.username[0].toUpperCase()}</p>
+                                    </div>
+                                    <div className='user-name-user-message' >
+                                        <div className='user-name' style={usernameStyle}>{user.username}</div>
+                                        <div className='user-message' style={messageStyle}>{user.message}</div>
+                                    </div>
                                 </div>
-                                <div className='user-name-user-message' >
-                                    <div className='user-name' style={usernameStyle}>{user.username}</div>
-                                    <div className='user-message' style={messageStyle}>{user.message}</div>
-                                </div>
-                            </div>
-                        );
-                    })}
-                </div>
-            </div>
-
-
-
-
-            <div className="vertical-line"></div>
-
-
-            {
-                clickedCard ?
-
-                    <div className='message-body-main-div'>
-
-                        <div className='user-selected-card-main-div'>
-                            <div className="user-letter-text" style={{ color: 'black', backgroundColor: selectedCardColor }}>
-                                <p>{clickedCard && clickedCard?.username[0].toUpperCase()}</p>
-                            </div>
-
-                            <div className='user-name' >{clickedCard?.username}</div>
-
-                        </div>
-
-
-                        <div className="horizontal-line"></div>
-
-
-
-                        <div className='clicked-user-message'>
-                            <p>{clickedCard?.message}</p>
-                            <p style={{ textAlign: 'right' }}>{clickedCard?.timeStamp}</p>
-
-                        </div>
-
-
-                        <div>
-                            <div className='admin-messages'>
-                                <p>{clickedCard?.message}</p>
-                                <p style={{ textAlign: 'right' }}>{clickedCard?.timeStamp}</p>
-
-
-                            </div>
-
-                        </div>
-
-                        <div className='message-box-container'>
-
-                            <div className='message-box'>
-
-                                <textarea
-                                    rows={1}
-                                    cols={50}
-                                    value={AdminMessage}
-                                    onChange={(e)=> handleAdminMessageTextFieldChange(e.target.value)}
-                                    placeholder='Reply to the customer here...'
-                                />
-
-                                <div className='send-btn'>
-                                    <Icon
-                                        source={SendIcon}
-                                        tone="info"
-                                    />
-                                </div>
-
-                            </div>
-                        </div>
-
-
-
-
+                            );
+                        })}
                     </div>
+                </div>
 
-                    :
 
-                    <h4 style={{ textAlign: 'center' }}>Select a user query to respond</h4>
-            }
 
-        </div>
+
+                <div className="vertical-line"></div>
+
+
+                {
+                    clickedCard ?
+
+                        <div className='message-body-main-div'>
+
+                            <div className='user-selected-card-main-div'>
+
+                                <div className="user-letter-text" style={{ color: 'black', backgroundColor: selectedCardColor }}>
+                                    <p>{clickedCard && clickedCard?.username[0].toUpperCase()}</p>
+                                </div>
+
+                                <div className='user-name' >{clickedCard?.username}</div>
+
+                            </div>
+
+
+                            <div className="horizontal-line"></div>
+
+
+                            <div>
+                                <label style={{marginLeft:'10px'}}>{clickedCard?.username}</label>
+                                <div className='clicked-user-message'>
+
+                                    <p>{clickedCard?.message}</p>
+                                    <p style={{ textAlign: 'right' }}>{clickedCard?.timeStamp}</p>
+
+                                </div>
+
+                            </div>
+
+
+                            <div className='admin-message-container-div'>
+                                <div className='support-executive-label'><label >Support executive</label></div>
+                                <div className='admin-messages'>
+                                    <p>{clickedCard?.message}</p>
+                                    <p style={{ textAlign: 'right' }}>{clickedCard?.timeStamp}</p>
+
+
+                                </div>
+
+                            </div>
+
+                            <div className='message-box-container'>
+
+                                <div className='message-box'>
+
+                                    <textarea
+                                        rows={1}
+                                        cols={50}
+                                        value={AdminMessage}
+                                        onChange={(e) => handleAdminMessageTextFieldChange(e.target.value)}
+                                        placeholder='Reply to the customer here...'
+                                    />
+
+                                    <div className='send-btn'>
+                                        <Icon
+                                            source={SendIcon}
+                                            tone="info"
+                                        />
+                                    </div>
+
+                                </div>
+                            </div>
+
+
+
+
+                        </div>
+
+                        :
+
+                        <div style={{ textAlign: 'center' }}><label>Select a user query to respond</label></div>
+                }
+
+            </div>
+        </Suspense>
     );
 };
 
