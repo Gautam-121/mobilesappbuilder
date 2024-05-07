@@ -29,6 +29,7 @@ const AccountPage = require("./server/models/accountDetail.models.js");
 const Theme = require("./server/models/theme.models.js");
 const Media = require("./server/models/media.models.js");
 const Customer =require( "./server/models/customerDetail");
+const FirebaseServiceAccount =require("./server/models/firebaseServiceAccount.model");
 
 module.exports = buildConfig({
   serverURL: process.env.PAYLOAD_PUBLIC_EXTERNAL_SERVER_URL,
@@ -48,6 +49,7 @@ module.exports = buildConfig({
     Theme,
     Customer,
     Segment,
+    FirebaseServiceAccount,
     AccountPage,
     EmptyCartPage,
     ProductPage,

@@ -150,7 +150,7 @@ const operationQuery = (operationId)=>`{
 `;
 const subscribeTopicApiEndpoint = "https://iid.googleapis.com/iid/v1:batchAdd"
 
-const sendNotificationApiEndpoint = "https://fcm.googleapis.com/fcm/send"
+const sendNotificationApiEndpoint = "https://fcm.googleapis.com/v1/projects/appstorefrontx/messages:send"
 
 const unsuscribeTopicApiEndpoint = "https://iid.googleapis.com/iid/v1:batchRemove"
 
@@ -281,6 +281,8 @@ const otherScreen = {
   }
 }
 
+const scopes = ['https://www.googleapis.com/auth/firebase.messaging'];
+
 module.exports = {
     graphqlQueryForProducts,
     graphqlQueryForCollections,
@@ -295,5 +297,6 @@ module.exports = {
     subscribeTopicApiEndpoint,
     sendNotificationApiEndpoint,
     unsuscribeTopicApiEndpoint,
-    shopPolicyUpdateMutation
+    shopPolicyUpdateMutation,
+    scopes
 }
