@@ -19,6 +19,7 @@ const dowloadJsonFile = require("../utils/downloadJsonFile.js")
 const readJsonFile = require("../utils/readJsonFile.js")
 
 const createCustomer = asyncHandler(async (req, res, next) => {
+
   const customerData = req.body;
 
   // Check if all required fields are provided
@@ -161,6 +162,45 @@ const createCustomer = asyncHandler(async (req, res, next) => {
     });
   }
 });
+
+const getAllcustomer = asyncHandler( async (req , res , next) => {
+
+  const store = await Payload.find({
+    collection: 'Store',
+    where: {
+      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
+      isActive: { equals: true }
+    },
+  })
+
+  if (!store.docs[0]) {
+    return next(
+      new ApiError(
+        `store not found with id: ${req.shop_id}`,
+         404
+      )
+    )
+  }
+
+  const customerUnderStore = await Payload.find({
+    collection: "customers",
+    where:{
+      shopId: { equals: store.docs[0].id || req?.shop_id}
+    },
+    depth: req.query?.depth || 0,
+    page: req.query?.page || 1,
+    limit: req.query?.limit || 6,
+    pagination: true,
+  })
+
+  return res.status(200).json({
+    success: true,
+    data: customerUnderStore,
+    message: "Data send successfully"
+  })
+
+})
+
 const createSegment = asyncHandler(async (req, res , next) => {
 
   const { segmentName } = req.body
@@ -210,7 +250,7 @@ const createSegment = asyncHandler(async (req, res , next) => {
   }
 
   try {
-    
+  
     const segment = await Payload.create({
       collection: "segments",
       data:{
@@ -265,6 +305,7 @@ const getSegment = asyncHandler(async(req,res,next)=>{
     )
   }
 
+
   const segment = await Payload.find({
     collection: "segments",
     where:{
@@ -281,6 +322,61 @@ const getSegment = asyncHandler(async(req,res,next)=>{
     message: "Data send successfully",
     data: segment
   })
+})
+
+const getSegmentById = asyncHandler(async(req, res, next)=>{
+
+  const store = await Payload.find({
+    collection: 'Store',
+    where: {
+      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
+      isActive: { equals: true }
+    },
+  })
+
+  if (!store.docs[0]) {
+    return next(
+      new ApiError(
+        `store not found with id: ${req.shop_id}`,
+         404
+      )
+    )
+  }
+
+  if(!req.params?.segmentId){
+    return next(
+      new ApiError(
+        "segment id is missing",
+        400
+      )
+    )
+  }
+
+  const segmentExist = await Payload.find({
+    collection: "segments",
+    where:{
+      id: { equals: req.params?.segmentId},
+      shopId: { equals: store.docs[0].id || req.shop_id}
+    },
+    depth: req.query?.depth || 0
+  })
+
+  if(!segmentExist.docs[0]){
+    return next(
+      new ApiError(
+        "Segment not found",
+        404
+      )
+    )
+  }
+
+  return res.status(200).json({
+    success: true,
+    data: segmentExist.docs[0],
+    message: "Data send successfully",
+  })
+
+  
 })
 
 const updateSegment = asyncHandler(async(req,res,next)=>{
@@ -574,6 +670,7 @@ const createFirebaseToken = async (req, res, next) => {
     res.status(500).json({ error: 'Failed to create access token' });
   }
 }
+
 const getServerKey = asyncHandler(async (req, res) => {
 
   const store = await Payload.find({
@@ -656,6 +753,7 @@ const updateServerKey = asyncHandler(async (req, res) => {
 })
 
 const sendNotification = asyncHandler(async (req, res, next) => {
+
   const { title, body, segments: { name, id }, click_action } = req.body;
 
   const store = await Payload.find({
@@ -778,5 +876,7 @@ module.exports = {
   getServerKey,
   updateServerKey,
   sendNotification,
-  createFirebaseToken
+  createFirebaseToken,
+  getSegmentById,
+  getAllcustomer
 }
