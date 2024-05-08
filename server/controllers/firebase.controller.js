@@ -1,7 +1,7 @@
 const ApiError = require("../utils/ApiError")
 const getAccessToken = require("../utils/firebaseJwtToken.js")
 const Payload = require("payload");
-const axios =require ('axios')
+const axios = require('axios')
 const asyncHandler = require("../utils/asyncHandler")
 const {
   customerSegmentBulkQuery,
@@ -22,9 +22,9 @@ const createCustomer = asyncHandler(async (req, res, next) => {
   const customerData = req.body;
 
   // Check if all required fields are provided
-  const { id, deviceId, deviceType, firebaseToken } = customerData;
+  const { id, customerName, deviceId, deviceType, firebaseToken } = customerData;
 
-  if (![id, deviceId, deviceType, firebaseToken,].every(field => field && String(field).trim() !== "")) {
+  if (![id, customerName, deviceId, deviceType, firebaseToken,].every(field => field && String(field).trim() !== "")) {
     return res.status(400).json({
       success: false,
       message: "All fields are required"
@@ -139,6 +139,7 @@ const createCustomer = asyncHandler(async (req, res, next) => {
         collection: "customers",
         data: {
           id: id,
+          customerName:customerName,
           deviceIds: [{ deviceId: deviceId }], // Ensure to match the schema structure
           deviceTypes: [{ deviceType: deviceType }], // Ensure to match the schema structure
           firebaseTokens: [{ firebaseToken: firebaseToken }], // Ensure to match the schema structure
@@ -161,7 +162,7 @@ const createCustomer = asyncHandler(async (req, res, next) => {
     });
   }
 });
-const createSegment = asyncHandler(async (req, res , next) => {
+const createSegment = asyncHandler(async (req, res, next) => {
 
   const { segmentName } = req.body
 
@@ -177,12 +178,12 @@ const createSegment = asyncHandler(async (req, res , next) => {
     return next(
       new ApiError(
         `store not found with id: ${req.shop_id}`,
-         404
+        404
       )
     )
   }
 
-  if(!segmentName){
+  if (!segmentName) {
     return next(
       new ApiError(
         "Segment Name is required",
@@ -203,17 +204,17 @@ const createSegment = asyncHandler(async (req, res , next) => {
   if (existingSegment.docs.length > 0) {
     return next(
       new ApiError(
-        "Segment with the same name already exists", 
+        "Segment with the same name already exists",
         409
       )
     );
   }
 
   try {
-    
+
     const segment = await Payload.create({
       collection: "segments",
-      data:{
+      data: {
         segmentName: segmentName,
         shopId: store.docs[0].id || req.shop_id,
         customer: req.body?.customer || [],
@@ -221,7 +222,7 @@ const createSegment = asyncHandler(async (req, res , next) => {
       depth: 0
     })
 
-    if(!segment){
+    if (!segment) {
       return next(
         new ApiError(
           "Something went wrong while creating the segment",
@@ -235,7 +236,7 @@ const createSegment = asyncHandler(async (req, res , next) => {
       message: "Segment created successfully",
       data: segment
     })
-    
+
   } catch (error) {
     // Handle any other unexpected errors
     return next(
@@ -246,7 +247,7 @@ const createSegment = asyncHandler(async (req, res , next) => {
   }
 });
 
-const getSegment = asyncHandler(async(req,res,next)=>{
+const getSegment = asyncHandler(async (req, res, next) => {
 
   const store = await Payload.find({
     collection: 'Store',
@@ -260,15 +261,15 @@ const getSegment = asyncHandler(async(req,res,next)=>{
     return next(
       new ApiError(
         `store not found with id: ${req.shop_id}`,
-         404
+        404
       )
     )
   }
 
   const segment = await Payload.find({
     collection: "segments",
-    where:{
-      shopId : { equals : store.docs[0].id || req.shop_id}
+    where: {
+      shopId: { equals: store.docs[0].id || req.shop_id }
     },
     depth: req.query?.depth || 0,
     page: req.query?.page || 1,
@@ -283,7 +284,7 @@ const getSegment = asyncHandler(async(req,res,next)=>{
   })
 })
 
-const updateSegment = asyncHandler(async(req,res,next)=>{
+const updateSegment = asyncHandler(async (req, res, next) => {
 
   const store = await Payload.find({
     collection: 'Store',
@@ -297,12 +298,12 @@ const updateSegment = asyncHandler(async(req,res,next)=>{
     return next(
       new ApiError(
         `store not found with id: ${req.shop_id}`,
-         404
+        404
       )
     )
   }
 
-  if(Object.keys(req.body).length == 0){
+  if (Object.keys(req.body).length == 0) {
     return next(
       new ApiError(
         "Provide fields for update",
@@ -311,7 +312,7 @@ const updateSegment = asyncHandler(async(req,res,next)=>{
     )
   }
 
-  if(!req.params?.segmentId){
+  if (!req.params?.segmentId) {
     return next(
       new ApiError(
         "segment id is missing",
@@ -322,13 +323,13 @@ const updateSegment = asyncHandler(async(req,res,next)=>{
 
   const segmentExist = await Payload.find({
     collection: "segments",
-    where:{
-      id: { equals: req.params?.segmentId},
-      shopId: { equals: store.docs[0].id || req.shop_id}
+    where: {
+      id: { equals: req.params?.segmentId },
+      shopId: { equals: store.docs[0].id || req.shop_id }
     }
   })
 
-  if(!segmentExist.docs[0]){
+  if (!segmentExist.docs[0]) {
     return next(
       new ApiError(
         "Segment not found",
@@ -338,18 +339,18 @@ const updateSegment = asyncHandler(async(req,res,next)=>{
   }
 
   try {
-    
-    const segment  = await Payload.update({
+
+    const segment = await Payload.update({
       collection: "segments",
-      where:{
+      where: {
         id: { equals: req.params?.segmentId },
-        shopId: { equals: store.docs[0].id || req.shop_id}
+        shopId: { equals: store.docs[0].id || req.shop_id }
       },
       data: req.body,
       depth: 0
     })
 
-    if(!segment.docs[0]){
+    if (!segment.docs[0]) {
       return next(
         new ApiError(
           "Something went wrong while updating the data",
@@ -369,7 +370,7 @@ const updateSegment = asyncHandler(async(req,res,next)=>{
   }
 })
 
-const deleteSegment = asyncHandler( async(req,res,next)=>{
+const deleteSegment = asyncHandler(async (req, res, next) => {
 
   const store = await Payload.find({
     collection: 'Store',
@@ -383,12 +384,12 @@ const deleteSegment = asyncHandler( async(req,res,next)=>{
     return next(
       new ApiError(
         `store not found with id: ${req.shop_id}`,
-         404
+        404
       )
     )
   }
 
-  if(!req.params?.segmentId){
+  if (!req.params?.segmentId) {
     return next(
       new ApiError(
         "segment id is missing",
@@ -399,13 +400,13 @@ const deleteSegment = asyncHandler( async(req,res,next)=>{
 
   const segmentExist = await Payload.find({
     collection: "segments",
-    where:{
-      id: { equals: req.params?.segmentId},
-      shopId: { equals: store.docs[0].id || req.shop_id}
+    where: {
+      id: { equals: req.params?.segmentId },
+      shopId: { equals: store.docs[0].id || req.shop_id }
     }
   })
 
-  if(!segmentExist.docs[0]){
+  if (!segmentExist.docs[0]) {
     return next(
       new ApiError(
         "Segment not found",
@@ -424,7 +425,7 @@ const deleteSegment = asyncHandler( async(req,res,next)=>{
       },
     });
 
-    if(data.docs.length == 0){
+    if (data.docs.length == 0) {
       return next(
         new ApiError(
           "Something went wrong while deleting the segment",
@@ -439,7 +440,7 @@ const deleteSegment = asyncHandler( async(req,res,next)=>{
     })
 
   } catch (error) {
-     // Handle any other unexpected errors
+    // Handle any other unexpected errors
     return next(new ApiError(error.message, 500));
   }
 
@@ -464,6 +465,21 @@ const createFirebaseToken = async (req, res, next) => {
           404
         )
       );
+    }
+    const existFirebaseToken = await Payload.find({
+      collection: 'firebaseServiceAccount',
+      where: {
+        shopId: { equals: store.docs[0].id },
+      },
+    });
+    //  return res.status(200).send({"data":existFirebaseToken})
+    if (existFirebaseToken.docs[0].firbaseAccessToken) {
+      return next(
+        new ApiError(
+          "firebase access token already exists",
+          409
+        )
+      )
     }
 
     // Check for required properties
@@ -520,49 +536,53 @@ const createFirebaseToken = async (req, res, next) => {
         );
       }
 
-      const accessTokenDuration = 3600000; // 1 hour in milliseconds
-      const expiryTimestamp = tokenExpiry;
-      const refreshInterval = setInterval(async () => {
-        const currentTimestamp = Date.now();
-        if (currentTimestamp >= expiryTimestamp - accessTokenDuration) {
-          // Access token is about to expire within the next hour
-          // Refresh the token
-          try {
-            const newTokens = await getAccessToken(serviceAccount);
-            const newAccessToken = newTokens.access_token;
-            const newTokenExpiry = newTokens.expiry_date;
+      // const accessTokenDuration = 3600000; // 1 hour in milliseconds
+      // const expiryTimestamp = tokenExpiry;
+      // const refreshInterval = setInterval(async () => {
+      //   const currentTimestamp = Date.now();
+      //   if (currentTimestamp >= expiryTimestamp - accessTokenDuration) {
+      //     // Access token is about to expire within the next hour
+      //     // Refresh the token
+      //     try {
+      //       const newTokens = await getAccessToken(serviceAccount);
+      //       const newAccessToken = newTokens.access_token;
+      //       const newTokenExpiry = newTokens.expiry_date;
 
-            // Update the access token and expiry in the database
-            const updatedFirebaseTokens = await Payload.update({
-              collection: "firebaseServiceAccount",
-              where: {
-                shopId: { equals: `gid://shopify/Shop/${req.params.shopId}` },
-                id: { equals: firebaseConfig.id }
-              },
-              data: {
-                firbaseAccessToken: newAccessToken,
-                tokenExpiry: newTokenExpiry,
-              },
-              depth: req.query?.depth || 0
-            });
+      //       // Update the access token and expiry in the database
+      //       const updatedFirebaseTokens = await Payload.update({
+      //         collection: "firebaseServiceAccount",
+      //         where: {
+      //           shopId: { equals: `gid://shopify/Shop/${req.params.shopId}` },
+      //           id: { equals: firebaseConfig.id }
+      //         },
+      //         data: {
+      //           firbaseAccessToken: newAccessToken,
+      //           tokenExpiry: newTokenExpiry,
+      //         },
+      //         depth: req.query?.depth || 0
+      //       });
 
-            console.log('New access token:', newAccessToken);
-            if (!updatedFirebaseTokens) {
-              return next(
-                new ApiError(
-                  "Something went wrong while storing data in database",
-                  500
-                )
-              );
-            }
-          } catch (error) {
-            console.error('Failed to refresh access token:', error);
-          }
-        }
-      }, accessTokenDuration / 2); // Check every 30 minutes
+      //       console.log('New access token:', newAccessToken);
 
-    
-
+      //       if (!updatedFirebaseTokens) {
+      //         return next(
+      //           new ApiError(
+      //             "Something went wrong while storing data in database",
+      //             500
+      //           )
+      //         );
+      //       }
+      //     } catch (error) {
+      //       console.error('Failed to refresh access token:', error);
+      //       return next(
+      //         new ApiError(
+      //           "Failed to refresh access token",
+      //           500
+      //         )
+      //       );
+      //     }
+      //   }
+      // }, accessTokenDuration / 2); // Check every 30 minutes
 
       return res.status(200).json({ success: true });
     } catch (err) {
@@ -574,6 +594,7 @@ const createFirebaseToken = async (req, res, next) => {
     res.status(500).json({ error: 'Failed to create access token' });
   }
 }
+
 const getServerKey = asyncHandler(async (req, res) => {
 
   const store = await Payload.find({
@@ -695,9 +716,11 @@ const sendNotification = asyncHandler(async (req, res, next) => {
   }
 
   const firebaseTokens = customerUnderSegment.docs[0]?.customer.flatMap(customer => customer.firebaseTokens.map(token => token.firebaseToken)) || [];
-console.log(firebaseTokens);
+  console.log(firebaseTokens);
+
   const topicName = name.replace(/\W+/g, '_'); // Replace non-alphanumeric characters with underscores
- console.log(topicName);
+  console.log(topicName);
+
   const storeFirebaseAccessToken = await Payload.find({
     collection: 'firebaseServiceAccount',
     where: {
@@ -710,14 +733,45 @@ console.log(firebaseTokens);
     return next(error);
   }
 
-  const accessToken = storeFirebaseAccessToken.docs[0].firbaseAccessToken;
+  const accessTokenDuration = 3600000; // 1 hour in milliseconds
+  const expiryTimestamp = storeFirebaseAccessToken.docs[0].tokenExpiry;
+  const currentTimestamp = Date.now();
+
+  let accessToken; // Define accessToken variable in a wider scope
+
+  if (currentTimestamp >= expiryTimestamp - accessTokenDuration) {
+    // Refresh the token
+    const newTokens = await getAccessToken(storeFirebaseAccessToken.docs[0].serviceAccount);
+    accessToken = newTokens.access_token;
+    const newTokenExpiry = newTokens.expiry_date;
+  
+    // Update the access token and expiry in the database
+    await Payload.update({
+      collection: "firebaseServiceAccount",
+      where: {
+        shopId: { equals: store.docs[0].id || req.shop_id || "gid://shopify/Shop/81447387454" },
+        id: { equals: storeFirebaseAccessToken.docs[0].id }
+      },
+      data: {
+        firbaseAccessToken: accessToken,
+        tokenExpiry: newTokenExpiry,
+      },
+      depth: req.query?.depth || 0
+    });
+  
+  } else {
+    accessToken = storeFirebaseAccessToken.docs[0].firbaseAccessToken;
+  }
+  
+  // Now, accessToken is accessible here
+  
+  // Configure Axios request for Firebase Cloud Messaging
   const axiosFirebaseConfig = {
     headers: {
       'Authorization': 'Bearer ' + accessToken,
       access_token_auth: true
     }
   };
-
   try {
     const subscribeTopic = await axios.post(
       subscribeTopicApiEndpoint,
@@ -727,7 +781,7 @@ console.log(firebaseTokens);
       },
       axiosFirebaseConfig
     );
-    console.log( "hii line 478",subscribeTopic?.data);
+    console.log("hii line 478", subscribeTopic?.data);
 
     if (subscribeTopic?.data?.results[0]?.error) {
       const error = new ApiError(`${subscribeTopic?.data?.results[0]?.error} firebaseTokens are not linked to your serverKey`, 401);
@@ -735,8 +789,8 @@ console.log(firebaseTokens);
     }
 
     const sendMessage = {
-     message: {
-      // token:['dd32AcnHeE7jjDVDy1dkpM:APA91bHbYHNPuWvduI55fNx9TJNTf_0XtZpAXvvLrCmit8eHa4_MRdjyzp_Vo3YoOS_ui7yR3VbsjrmpSICCk43fhNXr9fb6tXYuc56BoavUhaZwC2iWML8ppo35gEjSW015Rsqi7BMW'],
+      message: {
+        // token:['dd32AcnHeE7jjDVDy1dkpM:APA91bHbYHNPuWvduI55fNx9TJNTf_0XtZpAXvvLrCmit8eHa4_MRdjyzp_Vo3YoOS_ui7yR3VbsjrmpSICCk43fhNXr9fb6tXYuc56BoavUhaZwC2iWML8ppo35gEjSW015Rsqi7BMW'],
         topic: topicName,
         notification: {
           title: title,
@@ -745,16 +799,17 @@ console.log(firebaseTokens);
       }
     };
 
-    // if (click_action) {
-    //   sendMessage.notification["click_action"] = click_action;
-    // }
-console.log("hii line 498");
+    if (click_action) {
+      sendMessage.notification["click_action"] = click_action;
+    }
+
+    console.log("hii line 498");
     const sendNotification = await axios.post(
       sendNotificationApiEndpoint,
       sendMessage,
       axiosFirebaseConfig
     );
-console.log("hii line 504",sendNotification);
+    console.log("hii line 504", sendNotification);
     if (sendNotification?.data?.failure === 1) {
       const error = new ApiError("Notification Not Send", 400);
       return next(error);
@@ -763,7 +818,7 @@ console.log("hii line 504",sendNotification);
     return res.status(200).json({ success: true, message: "Notification Send Successfully" });
   } catch (error) {
     console.error("Error sending notification:", error.response.data);
-    const apiError = new ApiError("Failed to send notification", 500);
+    const apiError = new ApiError("Failed to send notification", error.response.data, 500);
     return next(apiError);
   }
 });
