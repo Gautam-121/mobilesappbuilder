@@ -175,6 +175,24 @@ export default function SettingsPage() {
             </div>
           </div>
           {toastMarkup}
+
+          <div style={{marginTop:'10px'}} className={styles.container}>
+          <div className={styles.heading}>
+          <Text as="h1" variant="headingXl">
+                 Segments
+              </Text>
+              <Text variant="headingMd" as="h6">
+                Create your own customised segments
+              </Text>
+              </div>
+            <div className={styles.body}> 
+            <Button
+                  id={styles.saveBtn}
+                  variant="contained"
+                  onClick={()=>navigate("/push-notification/segments")}
+                > Create </Button>
+            </div>
+          </div>
         </Frame>
       </Page>
     </div>
