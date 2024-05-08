@@ -1,7 +1,7 @@
 const Customer = {
     slug: 'customers',
     admin: {
-        useAsTitle: 'deviceId',
+        useAsTitle: 'customerName',
     },
     fields: [
         {
@@ -9,6 +9,11 @@ const Customer = {
             type: "text",
             unique: true,
             required: true
+        },
+        {
+          name:"customerName",
+          type:"text",
+          required:"true"
         },
         {
             name: "deviceIds",
