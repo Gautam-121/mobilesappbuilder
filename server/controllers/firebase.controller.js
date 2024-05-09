@@ -964,7 +964,7 @@ const sendNotification = asyncHandler(async (req, res, next) => {
   }
 
   if (!title || !body) {
-    const error = new ApiError("Please Provide title message and selected Segment", 400);
+    const error = new ApiError(" title and body is required", 400);
     return next(error);
   }
 
