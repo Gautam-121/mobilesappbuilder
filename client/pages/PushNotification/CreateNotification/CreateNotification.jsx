@@ -78,7 +78,7 @@ export default function CreateNotification() {
       const result = await (await fetch(url, options)).json();
       if ("message" in result) {
         setData(result.message);
-        console.log(result.message);
+        console.log(result);
         setLoading(false);
       }
     };
@@ -91,7 +91,7 @@ export default function CreateNotification() {
       "Content-Type": "application/json",
     },
     method: "POST",
-    body: JSON.stringify({ notificationMessage: notificationMessage }),
+    body: JSON.stringify({ notificationMessage }),
   };
   // //response received from the useDataFetcher hook when sendNotification API is called
   const [notificationMessagePost, postNotification] = useDataFetcher(
