@@ -495,8 +495,6 @@ const updateSocialMediaOfStore = asyncHandler( async(req,res,next)=>{
     success: true,
     message:"Data Updated Successfully"
   })
-
-
 })
 
 

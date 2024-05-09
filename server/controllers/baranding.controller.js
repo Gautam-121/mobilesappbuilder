@@ -46,8 +46,6 @@ const getBrandingApp = asyncHandler(async (req, res, next) => {
          400
       )
     )
-    const error = new ApiError(`No data found with shopId: ${req.params.shopId}`, 400);
-    return next(error);
   }
 
   brandingData.docs[0].themeId = brandingData.docs[0].themeId.id;
@@ -76,8 +74,6 @@ const getBrandingAppWeb = asyncHandler(async (req, res, next) => {
            400
         )
       )
-      const error = new ApiError("themeId is missing", 400);
-      return next(error);
     }
     
     const isSelectedTheme = await Payload.find({
