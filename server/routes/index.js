@@ -46,8 +46,8 @@ const {
   getThemeById,
 } = require("../controllers/theme.Controller.js");
 const {
-  getServerKey,
-  updateServerKey,
+  getFirebaseAccessToken,
+  // updateServerKey,
   sendNotification,
   createCustomer,
   createSegment,
@@ -113,9 +113,9 @@ router.put("/api/firebase/segment/:segmentId" , updateSegment)
 
 router.delete("/api/firebase/segment/:segmentId" , deleteSegment)
 
-router.get("/api/firebase/server-key", verifyRequest , getServerKey)
+router.get("/api/firebase/firebase-access-token", getFirebaseAccessToken)
 
-router.put("/api/firebase/server-key", verifyRequest , updateServerKey)
+// router.put("/api/firebase/server-key", verifyRequest , updateServerKey)
 
 router.post("/api/firebase/send-notification" , sendNotification)
 
