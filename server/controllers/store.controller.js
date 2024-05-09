@@ -297,70 +297,72 @@ const getStoreDetail = asyncHandler( async(req,res,next)=> {
     )
   }
 
-  const offlineAccessToken =  await Payload.find({
-    collection: 'Session',
-    where: { 
-      shopId: { equals: req.params?.id || "gid://shopify/Shop/81447387454" },
-      isOnline: false
-    },
+  return res.status(200).json({
+    success: true,
+    message: "shop Details send successfully",
+    data: store.docs[0]
   })
 
-  if(!offlineAccessToken?.docs[0]){
-    return next(
-      new ApiError(
-        `store not found with id: ${req.params?.shopId}`,
-        404
-      )
-    )
-  }
+  // const offlineAccessToken =  await Payload.find({
+  //   collection: 'Session',
+  //   where: { 
+  //     shopId: { equals: req.params?.id || "gid://shopify/Shop/81447387454" },
+  //     isOnline: false
+  //   },
+  // })
 
-  // fetch metafield of product from shopify
-  const shopName = store.docs[0].shopify_domain;
-  const offlineSession =  JSON.parse(
-    cryption.decrypt(offlineAccessToken.docs[0].token)
-  );
+  // if(!offlineAccessToken?.docs[0]){
+  //   return next(
+  //     new ApiError(
+  //       `store not found with id: ${req.params?.shopId}`,
+  //       404
+  //     )
+  //   )
+  // }
 
-  try {
+  // // fetch metafield of product from shopify
+  // const shopName = store.docs[0].shopify_domain;
+  // const offlineSession =  JSON.parse(
+  //   cryption.decrypt(offlineAccessToken.docs[0].token)
+  // );
 
-    const response = await axios.get(
-      `https://${shopName}/admin/api/${process.env.SHOPIFY_API_VERSION}/policies.json`,
-      {
-        headers: {
-          'X-Shopify-Access-Token':  offlineSession?.accessToken,
-          'Content-Type': 'application/json',
-        },
-      }
-    );
+  // try {
 
-    const policies = response?.data?.policies || []
-    store.docs[0].policies = policies
+  //   const response = await axios.get(
+  //     `https://${shopName}/admin/api/${process.env.SHOPIFY_API_VERSION}/policies.json`,
+  //     {
+  //       headers: {
+  //         'X-Shopify-Access-Token':  offlineSession?.accessToken,
+  //         'Content-Type': 'application/json',
+  //       },
+  //     }
+  //   );
+
+  //   const policies = response?.data?.policies || []
+  //   store.docs[0].policies = policies
     
-    return res.status(200).json({
-      success: true,
-      message: "shop Details send successfully",
-      data: store.docs[0]
-    })
+    
 
-  } catch (error) {
-    if (error.response) {
-      // The error is from the server's response
-      return next(
-        new ApiError(
-          error.message,
-          error.response?.status || 500
-        )
-      )
+  // } catch (error) {
+  //   if (error.response) {
+  //     // The error is from the server's response
+  //     return next(
+  //       new ApiError(
+  //         error.message,
+  //         error.response?.status || 500
+  //       )
+  //     )
 
-    } else {
-      // The error is not from the server's response
-      return next(
-        new ApiError(
-          error.message,
-          500
-        )
-      )
-    }
-  }
+  //   } else {
+  //     // The error is not from the server's response
+  //     return next(
+  //       new ApiError(
+  //         error.message,
+  //         500
+  //       )
+  //     )
+  //   }
+  // }
 })
 
 const getStoreDetailByWeb = asyncHandler( async(req,res,next)=>{
@@ -496,8 +498,6 @@ const updateSocialMediaOfStore = asyncHandler( async(req,res,next)=>{
     message:"Data Updated Successfully"
   })
 })
-
-
 
 module.exports = {
   updateStoreAppDesignDetail, 
