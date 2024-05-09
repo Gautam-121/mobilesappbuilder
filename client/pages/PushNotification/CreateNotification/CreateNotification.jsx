@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
 import "./CreateNotification.css";
 import { Button } from "@mui/material";
-import { Frame, Page, Text, Toast } from "@shopify/polaris";
+import { Frame, Icon, Page, Text, Toast, Tooltip } from "@shopify/polaris";
 import notificationImg from "../../../public/notify.png";
 // import useFetch from "../hooks/useFetch";
 import SettingsIcon from "@mui/icons-material/Settings";
@@ -22,9 +22,12 @@ import {
   templateAtom,
 } from "../../UpdatedCode/recoil/store";
 import AlertBanner from "../Components/alert/Alert";
+import ErrorBanner from "../Components/alert/ErrorBanner";
 import ProductSelector from "../Components/ProductSelector/ProductSelection";
 import SegementSelector from "../Components/segmentSelector/SegmentSelector";
 import SegmentSelector from "../Components/segmentSelector/SegmentSelector";
+import useFetch from "../../../hooks/useFetch";
+import { InfoIcon } from "@shopify/polaris-icons";
 
 export default function CreateNotification() {
   const [isAuthErrorVisible, setIsAuthErrorVisible] = useRecoilState(
@@ -55,7 +58,7 @@ export default function CreateNotification() {
     segments: [],
   });
   const [loading, setLoading] = useState(false);
-  let click_action = "";
+  const [click_action, setClick_action] = useState("")
 
   useEffect(() => {
     if (template == "") navigate("/push-notification/template");
@@ -67,118 +70,117 @@ export default function CreateNotification() {
     <Toast content="Notification Sent!" onDismiss={toggleActive} />
   ) : null;
 
-  //useDataFetcher hook to make API calls
-  // const useDataFetcher = (initialState, url, options) => {
-  //   const [data, setData] = useState(initialState);
-  //   const fetch = useFetch();
-  //   const fetchData = async () => {
-  //     setData(["Loading..."]);
-  //     const result = await (await fetch(url, options)).json();
-  //     if ("message" in result) {
-  //       setData(result.message);
-  //       console.log(result.message)
-  //       setLoading(false);
-  //     }
-  //   };
-  //   return [data, fetchData];
-  // };
+  const useDataFetcher = (initialState, url, options) => {
+    const [data, setData] = useState(initialState);
+    const fetch = useFetch();
+    const fetchData = async () => {
+      setData(["Loading..."]);
+      const result = await (await fetch(url, options)).json();
+      if ("message" in result) {
+        setData(result.message);
+        console.log(result.message);
+        setLoading(false);
+      }
+    };
+    return [data, fetchData];
+  };
 
-  //Code for postNotificationMessage API call
-  // const postOptions = {
-  //   headers: {
-  //     Accept: "application/json",
-  //     "Content-Type": "application/json",
-  //   },
-  //   method: "POST",
-  //   body: JSON.stringify({ notificationMessage: notificationMessage }),
-  // };
+  const postOptions = {
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    method: "POST",
+    body: JSON.stringify({ notificationMessage: notificationMessage }),
+  };
   // //response received from the useDataFetcher hook when sendNotification API is called
-  // const [notificationMessagePost, fetchNotificactionMessagePost] =
-  //   useDataFetcher("", "/api/sendNotificatication", postOptions);
+  const [notificationMessagePost, postNotification] = useDataFetcher(
+    "",
+    "/apps/api/firebase/send-notification",
+    postOptions
+  );
 
   const handleFilteredDataChange = (filteredData) => {
     // Process the filteredData in the parent component
     console.log("Filtered Data in Parent Component:", filteredData);
   };
-  // useEffect(() => {
-  //   //useEffect to check the response of the post request and display success toast, empty the input fields
-  //   if (notificationMessagePost === "Notification Send Successfylly") {
-  //     toggleActive();
-  //     setTitle("");
-  //     setMessage("");
-  //     setSelectedSegments("");
-  //     setSelectedProductId("");
-  //     setSelectedProduct("")
-  //   } else if (
-  //     notificationMessagePost === "Request failed with status code 401"
-  //   )
-  //     setIsAuthErrorVisible(true);
-  //   window.scroll(0, 0);
-  // }, [notificationMessagePost]);
+  useEffect(() => {
+    //useEffect to check the response of the post request and display success toast, empty the input fields
+    if (notificationMessagePost === "Notification Send Successfylly") {
+      toggleActive();
+      setTitle("");
+      setMessage("");
+      setSelectedSegments("");
+      setSelectedProductId("");
+      setSelectedProduct("");
+    } else if (
+      notificationMessagePost === "Request failed with status code 401"
+    )
+      setIsAuthErrorVisible(true);
+    window.scroll(0, 0);
+  }, [notificationMessagePost]);
 
   let result = {};
 
-  // const handleSend = () => {
-  //   //form validations to make sure that all the details have been entered
-  //   if(template === "product notification"){
-  //     console.log(template, selectedProductId)
-  //     if (!selectedProductId) {
-  //       setAlertMessage("Please select atleast one product");
-  //       setIsAlertVisible(true);
-  //       setProductStyle({ border: "1px solid red", borderRadius: "5px" });
-  //       return
-  //     }
-  //   }
-  //   if (!selectedSegments) {
-  //     setAlertMessage("Please select atleast one segment");
-  //     setIsAlertVisible(true);
-  //     setSegStyle({ border: "1px solid red", borderRadius: "5px" });
-  //   } else if (title.length < 1) {
-  //     setAlertMessage("Please enter a proper title for the notification");
-  //     setIsAlertVisible(true);
-  //     setTitleStyle({ border: "1px solid red" });
-  //   } else if (message.length < 1) {
-  //     setAlertMessage("Please enter a proper message for the notification");
-  //     setIsAlertVisible(true);
-  //     setMessageStyle({ border: "1px solid red" });
-  //   } else {
-  //     //Code that would be executed if there are no errors in the input
-  //     for (let i = 0; i < segmentsData.length; i++) {
-  //       if (segmentsData[i].name == selectedSegments) {
-  //         result = { name: segmentsData[i].name, id: segmentsData[i].id };
-  //       }
-  //     }
-  //     click_action = `https://productID?productID=${selectedProductId}`;
-  //     console.log(result);
-  //     setNotificationMessage({
-  //       title: title,
-  //       body: message,
-  //       segments: result,
-  //       click_action: click_action,
-  //     });
-  //   }
-  // };
-  // useEffect(() => {
-  //   setMessageStyle({});
-  //   setIsAlertVisible(false);
-  // }, [message]);
-  // useEffect(() => {
-  //   setTitleStyle({});
-  //   setIsAlertVisible(false);
-  // }, [title]);
-  // useEffect(() => {
-  //   //useEffect to make POST request only when all the fields are available
-  //   if (
-  //     notificationMessage.title &&
-  //     notificationMessage.body &&
-  //     notificationMessage.segments
-  //   ) {
-  //     fetchNotificactionMessagePost();
-  //     setLoading(true);
-  //     console.log(notificationMessage);
-  //     setIsAlertVisible(false);
-  //   }
-  // }, [notificationMessage]);
+  const handleSend = () => {
+    //form validations to make sure that all the details have been entered
+    // if(template === "product notification"){
+    //   console.log(template, selectedProductId)
+    //   if (!selectedProductId) {
+    //     setAlertMessage("Please select atleast one product");
+    //     setIsAlertVisible(true);
+    //     setProductStyle({ border: "1px solid red", borderRadius: "5px" });
+    //     return
+    //   }
+    // }
+    // if (!selectedSegments) {
+    //   setAlertMessage("Please select atleast one segment");
+    //   setIsAlertVisible(true);
+    //   setSegStyle({ border: "1px solid red", borderRadius: "5px" });
+    // } else
+
+    if (title.length < 1) {
+      setAlertMessage("Please enter a proper title for the notification");
+      setIsAlertVisible(true);
+      setTitleStyle({ border: "1px solid red" });
+    } else if (message.length < 1) {
+      setAlertMessage("Please enter a proper message for the notification");
+      setIsAlertVisible(true);
+      setMessageStyle({ border: "1px solid red" });
+    } else {
+      //Code that would be executed if there are no errors in the input
+      // for (let i = 0; i < segmentsData.length; i++) {
+      //   if (segmentsData[i].name == selectedSegments) {
+      //     result = { name: segmentsData[i].name, id: segmentsData[i].id };
+      //   }
+      // }
+      // click_action = `https://productID?productID=${selectedProductId}`;
+      // console.log(result);
+      setNotificationMessage({
+        title: title,
+        body: message,
+        // segments: result,
+         click_action: click_action,
+      });
+    }
+  };
+  useEffect(() => {
+    setMessageStyle({});
+    setIsAlertVisible(false);
+  }, [message]);
+  useEffect(() => {
+    setTitleStyle({});
+    setIsAlertVisible(false);
+  }, [title]);
+  useEffect(() => {
+    //useEffect to make POST request only when all the fields are available
+    if (notificationMessage.title && notificationMessage.body) {
+      postNotification();
+      setLoading(true);
+      console.log(notificationMessage);
+      setIsAlertVisible(false);
+    }
+  }, [notificationMessage]);
   return (
     <Page>
       <Frame>
@@ -209,7 +211,23 @@ export default function CreateNotification() {
           <div className="body">
             {isAlertVisible && <ErrorBanner alertMessage={alertMessage} />}
             {template === "product notification" && <ProductSelector />}
-            <SegmentSelector onFilteredDataChange={handleFilteredDataChange} />
+            {/* <SegmentSelector onFilteredDataChange={handleFilteredDataChange} /> */}
+            <div className="titleSection" style={titleStyle}>
+              <label htmlFor="">Action URL</label>
+              <div className="inputWrapper">
+                <input
+                  value={click_action}
+                  onChange={(e) => setClick_action(e.target.value)}
+                  type="text"
+                  placeholder="Please enter a valid URL"
+                />
+                <Tooltip  content="The users will be redirected to this URL on clicking the notification. If empty they will be redirected to the App homepage.">
+                  <Text fontWeight="bold" as="span">
+                    <Icon source={InfoIcon} />{" "}
+                  </Text>
+                </Tooltip>
+              </div>
+            </div>
             <div className="titleSection" style={titleStyle}>
               <label htmlFor="">Title*</label>
               <input
@@ -230,7 +248,7 @@ export default function CreateNotification() {
               />
             </div>
             <div className="bottomSection">
-              <Button id="sendBtn" variant="contained">
+              <Button id="sendBtn" variant="contained" onClick={handleSend}>
                 {loading ? (
                   <CircularProgress size={20} color="inherit" />
                 ) : (

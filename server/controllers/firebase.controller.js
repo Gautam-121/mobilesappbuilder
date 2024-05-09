@@ -568,8 +568,9 @@ const createFirebaseToken = async (req, res, next) => {
         shopId: { equals: store.docs[0].id },
       },
     });
+    console.log("Enter firebaseController", existFirebaseToken)
     //  return res.status(200).send({"data":existFirebaseToken})
-    if (existFirebaseToken.docs[0].firbaseAccessToken) {
+    if (existFirebaseToken.docs[0]?.firbaseAccessToken) {
       return next(
         new ApiError(
           "firebase access token already exists",
@@ -606,6 +607,7 @@ const createFirebaseToken = async (req, res, next) => {
     // Attempt to create a JWT client instance
     try {
       // Generate the access token
+      console.log("ENter");
       const tokens = await getAccessToken(serviceAccount);
       console.log("Tokens", tokens);
       const accessToken = tokens.access_token;

@@ -1,71 +1,76 @@
 // import { Button } from "@mui/material";
-import { Page, Text } from "@shopify/polaris";
-import React, { useEffect, useState } from "react";
+import { DropZone, LegacyStack, Page, Text, Thumbnail } from "@shopify/polaris";
+import React, { useEffect, useState, useCallback } from "react";
 import styles from "./LandingPage.module.css";
 import { useNavigate } from "raviger";
 import userImg from "../../../public/userImg.png";
 import { useRecoilState } from "recoil";
+import useFetch from "../../../hooks/useFetch";
+import { NoteIcon } from "@shopify/polaris-icons";
 // import { serverKeyAtom } from "../recoilStore/store";
 // import useFetch from "../hooks/useFetch";
 
 export default function Landing() {
   const navigate = useNavigate();
+  const [selectedFile, setSelectedFile] = useState(null);
   const [serverKey, setServerKey] = useState("");
   const [isServerKeyValid, setIsServerKeyValid] = useState(false);
-  const handleInput = (event) => {
-    const input = event.target.value;
-    setServerKey(input);
-    if (input.length === 152) {
-      console.log(input, input.length);
-      setIsServerKeyValid(true);
-    } else {
-      setIsServerKeyValid(false);
-    }
+  const [dataForBackend, setDataForBackend] = useState(null)
+
+  const handleDropZoneDrop = useCallback(
+    (_dropFiles, acceptedFiles, _rejectedFiles) => setSelectedFile(acceptedFiles[0]),
+    [],
+  );
+  const useDataFetcher = (initialState, url, options) => {
+    const [data, setData] = useState(initialState);
+    const fetch = useFetch();
+
+    const fetchData = async () => {
+      const result = await (await fetch(url, options))?.json();
+      
+      console.log(result);
+      if(result.message="firebase access token already exists")
+      navigate("/push-notification/template")
+    };
+
+    return [data, fetchData];
   };
-  // const postOptions = {
-  //   headers: {
-  //     Accept: "application/json",
-  //     "Content-Type": "application/json",
-  //   },
-  //   method: "POST",
-  //   body: JSON.stringify({ serverKey: serverKey }),
-  // };
-
-  // const getServerKey = {
-  //   headers: {
-  //     Accept: "application/json",
-  //     "Content-Type": "application/json",
-  //   },
-  //   method: "GET",
-  // };
-  // const useDataFetcher = (initialState, url, options) => {
-  //   const [data, setData] = useState(initialState);
-  //   const fetch = useFetch();
-
-  //   const fetchData = async () => {
-  //     setData("loading...");
-  //     const result = await (await fetch(url, options)).json();
-  //     if ("serverKey" in result) {
-  //       setData(result.serverKey);
-  //     }
-  //   };
-
-  //   return [data, fetchData];
-  // };
-
-  // const [serverKeyPost, fetchServerKeyPost] = useDataFetcher(
-  //   "",
-  //   "/api/updateServerKey",
-  //   postOptions
-  // );
-  // const [responseServerKey, fetchServerKey] = useDataFetcher(
-  //   "",
-  //   "/api/getServerKey",
-  //   getServerKey
-  // );
-  const handleSubmit = () => {
-    // fetchServerKeyPost();
-    navigate("/push-notification/template");
+  const postOptions = {
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    method: "POST",
+    body: JSON.stringify({ dataForBackend }),
+  };
+  const [serverKeyPost, postServerKey] = useDataFetcher(
+    "",
+    "/apps/api/firebase/token",
+    postOptions
+  );
+useEffect(()=>{
+  console.log(dataForBackend) 
+  if(dataForBackend!=null){
+    postServerKey();
+  }
+},[dataForBackend])
+  const handleSubmit = async () => {
+    if (!selectedFile) {
+      alert("Please select a file");
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = async (event) => {
+      try {
+        const fileContent = JSON.parse(event.target.result);
+        console.log(fileContent)
+        setDataForBackend(fileContent)
+        // Send fileContent to the POST API
+      } catch (error) {
+        console.error("Error parsing JSON file:", error);
+      }
+    };
+    reader.readAsText(selectedFile);
   };
 
   // useEffect(() => {
@@ -82,6 +87,29 @@ export default function Landing() {
   //     navigate("/templates");
   //   }
   // }, [responseServerKey]);
+  const fileUpload = !selectedFile && <DropZone.FileUpload />;
+  const uploadedFile = selectedFile && (
+    <LegacyStack>
+      <Thumbnail
+        size="small"
+        alt={selectedFile.name}
+        source={NoteIcon}
+      />
+      <div>
+        {selectedFile.name}{' '}
+        <Text variant="bodySm" as="p">
+          {selectedFile.size} bytes
+        </Text>
+      </div>
+    </LegacyStack>  
+  );
+
+  // return (
+  //   <DropZone allowMultiple={false} onDrop={handleDropZoneDrop}>
+  //     {uploadedFile}
+  //     {fileUpload}
+  //   </DropZone>
+  // );
 
   return (
     <>
@@ -95,31 +123,18 @@ export default function Landing() {
           </div>
           <div className={styles.bottomHalf}>
             <Text id={styles.heading} variant="headingMd">
-              Please enter your server key
+              Please upload your Firebase Configuration File
             </Text>
-            <input
-              onChange={handleInput}
-              type="text"
-              value={serverKey}
-              maxLength="152"
-              className={styles.serverKeyInput}
-              placeholder=" Enter Sever Key"
-              size="small"
-            ></input>
-            {/* <Button
-              disabled={!isServerKeyValid}
+            <DropZone allowMultiple={false} onDrop={handleDropZoneDrop} variableHeight={true}>
+      {uploadedFile}
+      {fileUpload}
+    </DropZone >
+            <button
+              disabled={!selectedFile}
               id={styles.submitBtn}
-              variant="contained"
               onClick={handleSubmit}
             >
               Submit
-            </Button> */}
-            <button
-            disabled={!isServerKeyValid}
-            id={styles.submitBtn}
-            onClick={handleSubmit}
-            >
-                Submit
             </button>
           </div>
         </div>
