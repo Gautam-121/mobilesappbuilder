@@ -212,6 +212,15 @@
 } */
 
 /* Save button positioning */
+
+
+.button-and-success-message{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+
 .save-btn-div {
     display: flex;
     justify-content: flex-end;
