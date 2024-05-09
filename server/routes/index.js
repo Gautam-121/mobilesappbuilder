@@ -46,8 +46,8 @@ const {
   getThemeById,
 } = require("../controllers/theme.Controller.js");
 const {
-  getServerKey,
-  updateServerKey,
+  getFirebaseAccessToken,
+  // updateServerKey,
   sendNotification,
   createCustomer,
   createSegment,
@@ -65,7 +65,7 @@ const router = Router();
 
 router.get("/api/storeDetail/:shopId", getStoreDetail);
 
-router.get("/api/shop/detail", verifyRequest , getStoreDetailByWeb);
+router.get("/api/shop/detail" , getStoreDetailByWeb);
 
 router.put("/api/store/appDesign/theme" , verifyRequest ,  updateStoreAppDesignDetail);
 
@@ -90,9 +90,9 @@ router.get(
 
 router.get("/api/shopify/segment", verifyRequest , getAllSegment)
 
-router.get("/api/shopify/shop-policies" , verifyRequest ,  getShopPolicies)
+router.get("/api/shopify/shop-policies" ,  getShopPolicies)
 
-router.put("/api/shopify/update-shop-policies", verifyRequest ,  updateShopPolicies)
+router.put("/api/shopify/update-shop-policies" ,  updateShopPolicies)
 
 
 /*----------------------------FirebaseRouting-------------------------------------------------*/
@@ -113,9 +113,9 @@ router.put("/api/firebase/segment/:segmentId" , updateSegment)
 
 router.delete("/api/firebase/segment/:segmentId" , deleteSegment)
 
-router.get("/api/firebase/server-key", verifyRequest , getServerKey)
+router.get("/api/firebase/firebase-access-token", getFirebaseAccessToken)
 
-router.put("/api/firebase/server-key", verifyRequest , updateServerKey)
+// router.put("/api/firebase/server-key", verifyRequest , updateServerKey)
 
 router.post("/api/firebase/send-notification" , sendNotification)
 

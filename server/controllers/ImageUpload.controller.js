@@ -5,10 +5,25 @@ const asyncHandler = require("../utils/asyncHandler.js");
 dotenv.config();
 
 const uploadImages = asyncHandler(async (req, res, next) => {
-    console.log("enetr")
+
   const file = req.files
 
-  console.log("file from API",file)
+  const store = await Payload.find({
+    collection: 'Store',
+    where: { 
+      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
+      isActive: { equals : true}
+    },
+  })
+
+  if(!store.docs[0]){
+    return next(
+      new ApiError(
+        `store not found with id: ${req.shop_id}`,
+         404
+      )
+    )
+  }
 
   if (!file) {
     return next(

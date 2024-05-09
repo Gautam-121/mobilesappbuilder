@@ -11,7 +11,8 @@ import SettingsPage from "./pages/PushNotification/Settings/SettingsPage";
 import Banners from "./Phase One/Banner/Banners";
 import StoreConfigurations from "./Phase One/Store Configuration/StoreConfigurations";
 import ChatSupport from "./Phase One/ChatSupport/ChatSupport";
-import Segments from "./pages/PushNotification/Segments/Segments";
+import Segments from "./pages/PushNotification/Segments/AllSegments/Segments";
+import EditSegment from "./pages/PushNotification/Segments/EditSegment/EditSegment";
 
 const routes = {
   "/app-design": () => <GetData />,
@@ -19,7 +20,8 @@ const routes = {
   "/push-notification/template":()=><Templates/>,
   "/push-notification/createNotification":()=><CreateNotification/>,
   "/push-notification/settings":()=><SettingsPage/>,
-  "/push-notification/segments":()=><Segments></Segments>,
+  "/push-notification/segments":()=><Segments/>,
+  "/push-notification/edit-segment/:segmentId":({segmentId})=><EditSegment id={segmentId}/>,
   "/banners": () => <Banners />,
   "/store-configuration": () => <StoreConfigurations />,
   "/support": () => <ChatSupport />,

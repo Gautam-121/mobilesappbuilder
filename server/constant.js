@@ -283,6 +283,8 @@ const otherScreen = {
 
 const scopes = ['https://www.googleapis.com/auth/firebase.messaging'];
 
+const topicName = "notify"
+
 module.exports = {
     graphqlQueryForProducts,
     graphqlQueryForCollections,
@@ -298,5 +300,6 @@ module.exports = {
     sendNotificationApiEndpoint,
     unsuscribeTopicApiEndpoint,
     shopPolicyUpdateMutation,
-    scopes
+    scopes,
+    topicName
 }
