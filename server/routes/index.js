@@ -49,7 +49,14 @@ const {
   getServerKey,
   updateServerKey,
   sendNotification,
-  createCustomer
+  createCustomer,
+  createSegment,
+  getSegment,
+  updateSegment,
+  deleteSegment,
+  createFirebaseToken,
+  getSegmentById,
+  getAllcustomer
 } = require("../controllers/firebase.controller.js")
 
 const router = Router();
@@ -89,14 +96,28 @@ router.put("/api/shopify/update-shop-policies", verifyRequest ,  updateShopPolic
 
 
 /*----------------------------FirebaseRouting-------------------------------------------------*/
-router.post("/api/firebase/customerDetail", verifyRequest , createCustomer)
-// router.post("//api/firebase/segmentDetail" , verifyRequest , create)
+
+router.post("/api/firebase/customerDetail/:shopId", createCustomer)
+
+router.get("/api/firebase/customer", getAllcustomer)
+
+router.post("/api/firebase/token" , createFirebaseToken)
+
+router.post("/api/firebase/segment", createSegment)
+
+router.get("/api/firebase/segment" , getSegment)
+
+router.get("/api/firebase/segment/:segmentId" , getSegmentById)
+
+router.put("/api/firebase/segment/:segmentId" , updateSegment)
+
+router.delete("/api/firebase/segment/:segmentId" , deleteSegment)
 
 router.get("/api/firebase/server-key", verifyRequest , getServerKey)
 
 router.put("/api/firebase/server-key", verifyRequest , updateServerKey)
 
-router.post("/api/firebase/send-notification", verifyRequest , sendNotification)
+router.post("/api/firebase/send-notification" , sendNotification)
 
 /*----------------------------HomePageRouter-------------------------------------------------- */
 

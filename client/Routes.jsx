@@ -11,14 +11,15 @@ import SettingsPage from "./pages/PushNotification/Settings/SettingsPage";
 import Banners from "./Phase One/Banner/Banners";
 import StoreConfigurations from "./Phase One/Store Configuration/StoreConfigurations";
 import ChatSupport from "./Phase One/ChatSupport/ChatSupport";
+import Segments from "./pages/PushNotification/Segments/Segments";
 
 const routes = {
   "/app-design": () => <GetData />,
-  "/push-notification":()=><Landing/>,
+  "/push-notifications":()=><Landing/>,
   "/push-notification/template":()=><Templates/>,
   "/push-notification/createNotification":()=><CreateNotification/>,
   "/push-notification/settings":()=><SettingsPage/>,
-
+  "/push-notification/segments":()=><Segments></Segments>,
   "/banners": () => <Banners />,
   "/store-configuration": () => <StoreConfigurations />,
   "/support": () => <ChatSupport />,

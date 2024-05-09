@@ -86,6 +86,7 @@ const HomeTab = (props) => {
   useEffect(() => {
     console.log("Collections set to recoil atom", collections)
   }, [collections])
+  
   const useDataFetcherForShopifyData = (initialState, url, options) => {
     console.log("");
     const [data, setData] = useState(initialState);

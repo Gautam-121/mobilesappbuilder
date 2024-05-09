@@ -68,7 +68,6 @@ export default function VerticalProductgridEdit(props) {
     console.log(updatedObject);
     setCurrentObject(updatedObject);
   };
-useEffect(()=>{fetchProducts()},[collectionId])
   const handleTitleChange = (newValue) => {
     console.log(newValue);
     let updatedObject = JSON.parse(JSON.stringify(currentObject));

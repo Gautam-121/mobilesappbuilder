@@ -1,12 +1,13 @@
 /* eslint-disable react/prop-types */
 import React from "react";
-import { useRef } from "react";
+import { useRef, useEffect, useState } from "react";
 import { uid } from "uid";
 import imgIcon from '../../../../images/imgIcon.jpg'
 import { Scrollable } from "@shopify/polaris";
 import './HorizontalProductGrid.css'
 import { useRecoilValue } from "recoil";
-import { productsByCollectionAtom } from "../../recoil/store";
+import { componentListArrayAtom} from "../../recoil/store";
+import useFetch from "../../../../hooks/useFetch";
 export default function Horizontalproductgrid({
   gridItems,
   text,
@@ -14,8 +15,46 @@ export default function Horizontalproductgrid({
   handleEdit,
   draggable,
 }) {
+  const componentListArray = useRecoilValue(componentListArrayAtom)
   const dragRef = useRef(null);
-  const products = useRecoilValue(productsByCollectionAtom)
+  useEffect(()=>{fetchProducts()},[gridItems,componentListArray])
+  const [products, setProducts ] = useState([])
+
+  const getProducts = {
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    method: "GET",    
+  }
+
+  const useDataFetcherForShopifyData = (initialState, url, options) => {
+    const [data, setData] = useState(initialState);
+    const fetch = useFetch();
+
+    const fetchData = async () => {
+      console.log("fetch data triggered");
+      setData("");
+      const result = await (await fetch(url, options))?.json();
+      // console.log("result", result?.collections);
+      console.log("result", result?.products);
+      console.log("result", result);
+      setData(result.data);
+      if(result.data.length>0){
+        setProducts(result.data)
+      }
+    };
+    return [data, fetchData];
+  };
+
+  const [responseData, fetchProducts] = useDataFetcherForShopifyData(
+    "",
+    `/apps/api/shopify/product/collectionId?collectionId=${gridItems.data.productGroupId}`,
+    getProducts
+  );
+
+
+  // const products = useRecoilValue(productsByCollectionAtom)
   const handleDragStart = (e) => {
     console.log(gridItems);
     const newElement = { ...gridItems };
@@ -96,7 +135,7 @@ export default function Horizontalproductgrid({
             </p>
           ))} */}
           <span>{gridItems.data.title}</span>
-          {!handleEdit?(
+          {gridItems.data.productGroupId===null?(
             <Scrollable scrollbarWidth="none"
             className="ScrollableImgContainer">
               <img className="demoImg" src={imgIcon} alt="" />
