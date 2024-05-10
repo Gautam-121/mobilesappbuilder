@@ -96,6 +96,45 @@ const Store = {
           defaultValue: true
         }
       ]
+    },
+    {
+      name: "policies",
+      type: "array",
+      fields: [
+        {
+          name: "type",
+          label: "Type",
+          type: "select",
+          options: [
+            {
+              label: 'PRIVACY POLICY',
+              value: 'PRIVACY_POLICY',
+            },
+            {
+              label: 'CONTACT INFORMATION',
+              value: 'CONTACT_INFORMATION',
+            },
+            {
+              label: 'REFUND POLICY',
+              value: 'REFUND_POLICY',
+            },
+            {
+              label: 'TERMS OF SERVICE',
+              value: 'TERMS_OF_SERVICE',
+            },
+            {
+              label: "SHIPPING POLICY",
+              value: "SHIPPING_POLICY"
+            }
+          ],
+          required:true
+        },
+        {
+          name: "body",
+          type: "text",
+          defaultValue: undefined
+        },
+      ]
     }
   ]
 };

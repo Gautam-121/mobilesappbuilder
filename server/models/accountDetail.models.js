@@ -12,43 +12,54 @@ const AccountScreen = {
       defaultValue: "Apprikart"
     },
     {
-      name: "header_bar",
-      label:"Header Icon",
+      name: "main_section",
+      label:"Main-Portion",
       type: "group",
       fields:[
         {
-            name:"cart",
-            label:"Cart",
+            name:"profile",
+            label:"Profile",
             type:"checkbox",
             defaultValue:true
         },
         {
-            name:"settings",
-            label:"Setting",
+            name:"orders",
+            label:"Orders",
             type:"checkbox",
             defaultValue:true
+        },
+        {
+          name:"wishlist",
+          label:"Wishlist",
+          type:"checkbox",
+          defaultValue:true
+        },
+        {
+          name: "shipping_address",
+          label: "Shipping Address",
+          type: "checkbox",
+          defaultValue: true
+        },
+        {
+          name: "aboutUs",
+          label: "About Us",
+          type: "checkbox",
+          defaultValue: true
         }
       ]
     },
     {
-        name: "main_section",
-        label:"Main-Portion",
-        type: "array",
-        fields:[
-          {
-              name:"type",
-              label:"Type",
-              type:"select",
-              options:["orders" , "personal_information", "shipping_address"],
-              unique: true
-          },
-          {
-              name:"isVisible",
-              label:"Visible",
-              type:"checkbox",
-              defaultValue:true
-          }
-        ]
+      name: "footer_section",
+      label: "Footer-Section",
+      type: "group",
+      fields:[
+        {
+          name: "socialApperance",
+          label: "Social Apperance",
+          type: "checkbox",
+          defaultValue: true
+        }
+      ]
     }
   ],
 };

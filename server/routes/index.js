@@ -65,7 +65,7 @@ const router = Router();
 
 router.get("/api/storeDetail/:shopId", getStoreDetail);
 
-router.get("/api/shop/detail", verifyRequest , getStoreDetailByWeb);
+router.get("/api/shop/detail" , getStoreDetailByWeb);
 
 router.put("/api/store/appDesign/theme" , verifyRequest ,  updateStoreAppDesignDetail);
 
@@ -90,9 +90,9 @@ router.get(
 
 router.get("/api/shopify/segment", verifyRequest , getAllSegment)
 
-router.get("/api/shopify/shop-policies" , verifyRequest ,  getShopPolicies)
+router.get("/api/shopify/shop-policies" ,  getShopPolicies)
 
-router.put("/api/shopify/update-shop-policies", verifyRequest ,  updateShopPolicies)
+router.put("/api/shopify/update-shop-policies" ,  updateShopPolicies)
 
 
 /*----------------------------FirebaseRouting-------------------------------------------------*/

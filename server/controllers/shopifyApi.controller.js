@@ -392,62 +392,48 @@ const updateShopPolicies = asyncHandler(async (req, res , next) => {
   if (!Array.isArray(shopPolicies) || shopPolicies.length === 0) {
     return next(
       new ApiError(
-        'Invalid shop policies data',
+        'Please provide data',
         400
       )
     )
   }
 
-  const promises = shopPolicies.map(async (policy) => {
+  shopPolicies.forEach(policy => {
+
     const { body, type } = policy;
 
     if (!body || !type) {
-      return { error: 'Missing required fields (body or type)' };
+      return next(
+        new ApiError(
+          "missing required field body and type"
+        )
+      )
     }
 
-    const variables = { shopPolicy: { body, type } };
+  })
 
-    try {
-      const response = await fetch(shopifyGraphQLEndpoint(req?.shop), {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Shopify-Access-Token': "shpua_99b2e0d318036dd12fe2300e9f95c5fb" || req.accessToken,
-        },
-        body: JSON.stringify({ query: shopPolicyUpdateMutation, variables }),
-      });
-
-      const data = await response.json();
-
-      if (data.errors) {
-        return { error: data.errors };
-      }
-
-      return data.data.shopPolicyUpdate;
-    } catch (error) {
-      return { error: error.message };
-    }
-  });
-
-  const results = await Promise.all(promises);
-
-  const errors = results.filter((result) => result.error);
-  const updates = results.filter((result) => !result.error);
-
-  if (errors.length > 0) {
+  if(shopPolicies.some(policy => !(["PRIVACY_POLICY","CONTACT_INFORMATION","REFUND_POLICY","TERMS_OF_SERVICE","SHIPPING_POLICY"].includes(policy?.type)))){
     return next(
       new ApiError(
-        errors,
+        "title should be only PRIVACY_POLICY CONTACT_INFORMATION REFUND_POLICY TERMS_OF_SERVICE SHIPPING_POLICY",
         400
       )
     )
   }
 
-  return res.status(200).json(
-    {
+  await Payload.update({
+    collection: "Store",
+    where: {
+      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
+    },
+    data:{
+      policies: shopPolicies
+    },
+  });
+
+  return res.status(200).json({
       success: true,
       message: "Policy update successfully",
-      updates
     }
   )
 })

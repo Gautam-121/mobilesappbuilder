@@ -8,7 +8,8 @@ const {
   operationQuery,
   subscribeTopicApiEndpoint,
   sendNotificationApiEndpoint,
-  unsuscribeTopicApiEndpoint
+  unsuscribeTopicApiEndpoint,
+  topicName
 } = require("../constant")
 const {
   shopifyApiData,
@@ -24,6 +25,15 @@ const createCustomer = asyncHandler(async (req, res, next) => {
 
   // Check if all required fields are provided
   const { id, customerName, deviceId, deviceType, firebaseToken } = customerData;
+
+  if (!req.params.shopId) {
+    return next(
+      new ApiError(
+        "ShopId is missing",
+         400
+      )
+    )
+  }
 
   if (![id, customerName, deviceId, deviceType, firebaseToken,].every(field => field && String(field).trim() !== "")) {
     return res.status(400).json({
@@ -102,7 +112,7 @@ const createCustomer = asyncHandler(async (req, res, next) => {
 
       return res.status(200).json({
         success: true,
-        message: "Customer data updated successfully",
+        message: "Customer data create successfully",
         data: updatedCustomerInfo,
       });
     } else {
@@ -516,6 +526,7 @@ const deleteSegment = asyncHandler(async (req, res, next) => {
 
 const createFirebaseToken = async (req, res, next) => {
   try {
+
     const { serviceAccount } = req.body;
 
     const store = await Payload.find({
@@ -675,8 +686,6 @@ const getFirebaseAccessToken = asyncHandler(async (req, res, next) => {
     },
   })
 
-  // return res.status(200).send(store)
-
   if (!store.docs[0]) {
     return next(
       new ApiError(
@@ -693,16 +702,15 @@ const getFirebaseAccessToken = asyncHandler(async (req, res, next) => {
     }
   });
 
-  if (existFirebaseToken.docs.length === 0) {
+  if (existFirebaseAccessToken.docs.length === 0) {
     return next(
       new ApiError("document not found", 404)
     );
   }
 
-  // return res.status(200).send(existFirebaseAccessToken)
-
   return res.status(200).json({
     success: true,
+    message: "Data send successfully",
     firebaseAccessToken: existFirebaseAccessToken?.docs[0].firbaseAccessToken
   });
 })
@@ -1018,7 +1026,7 @@ const sendNotification = asyncHandler(async (req, res, next) => {
     const subscribeTopic = await axios.post(
       subscribeTopicApiEndpoint,
       {
-        to: "/topics/notify",
+        to: `/topics/${topicName}`,
         registration_tokens: firebaseTokens,
       },
       axiosFirebaseConfig
@@ -1029,8 +1037,9 @@ const sendNotification = asyncHandler(async (req, res, next) => {
       const error = new ApiError(`${subscribeTopic?.data?.results[0]?.error} firebaseTokens are not linked to your firebase account`, 401);
       return next(error);
     }
-    console.log("hii line 1032");
-    const topicName = "notify"
+    // console.log("hii line 1032");
+    // const topicName = "notify"
+    
     const sendMessage = {
       message: {
         // token:['dd32AcnHeE7jjDVDy1dkpM:APA91bHbYHNPuWvduI55fNx9TJNTf_0XtZpAXvvLrCmit8eHa4_MRdjyzp_Vo3YoOS_ui7yR3VbsjrmpSICCk43fhNXr9fb6tXYuc56BoavUhaZwC2iWML8ppo35gEjSW015Rsqi7BMW'],
