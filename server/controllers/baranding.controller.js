@@ -50,14 +50,6 @@ const getBrandingApp = asyncHandler(async (req, res, next) => {
 
   brandingData.docs[0].themeId = brandingData.docs[0].themeId.id;
 
-  if (brandingData.docs[0].app_title === "appText") {
-    brandingData.docs[0].app_title_logo = null;
-  } 
-  else {
-    brandingData.docs[0].app_title_text = null;
-    brandingData.docs[0].app_title_logo = brandingData.docs[0].app_title_logo.url;
-  }
-
   return res.status(200).json({
     success: true,
     message: "Data Send Successfully",
@@ -108,7 +100,7 @@ const getBrandingAppWeb = asyncHandler(async (req, res, next) => {
         shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
         themeId: { equals: req.params.themeId },
       },
-      depth: 0,
+      depth: req.query.depth || 1
     });
 
     if (brandingData.docs.length === 0) {
@@ -120,13 +112,8 @@ const getBrandingAppWeb = asyncHandler(async (req, res, next) => {
       )
     }
 
-    if (brandingData.docs[0].app_title === "appText") {
-      brandingData.docs[0].app_title_logo = null;
-    } 
-    else {
-      brandingData.docs[0].app_title_text = null;
-      brandingData.docs[0].app_title_logo = brandingData.docs[0]?.app_title_logo?.url;
-    }
+    brandingData.docs[0].themeId = brandingData.docs[0].themeId.id;
+
 
     return res.status(200).json({
       success: true,
@@ -189,7 +176,7 @@ const updateBrandingApp = asyncHandler(async (req, res, next) => {
     )
   }
 
-  const brandingData = await Payload.update({
+  await Payload.update({
     collection: "branding",
     where: {
       shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
@@ -201,7 +188,6 @@ const updateBrandingApp = asyncHandler(async (req, res, next) => {
   return res.status(200).json({
     success: true,
     message: "BrandingData Update Successfully",
-    data: brandingData,
   });
   
 })

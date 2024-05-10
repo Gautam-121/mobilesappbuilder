@@ -12,6 +12,13 @@ const AccountScreen = {
       defaultValue: "Apprikart"
     },
     {
+      name: "themeId",
+      label: "Theme",
+      type: "relationship",
+      relationTo: "theme",
+      // required: true
+    },
+    {
       name: "main_section",
       label:"Main-Portion",
       type: "group",
