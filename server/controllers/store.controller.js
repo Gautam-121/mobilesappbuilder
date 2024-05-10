@@ -36,6 +36,7 @@ const updateStoreAppDesignDetail = asyncHandler(  async (req, res, next) => {
       shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
       isActive: { equals : true }
     },
+    depth: req.query?.depth || 0
   });
 
   if(!UserStoreData?.docs[0]){
@@ -64,6 +65,7 @@ const updateStoreAppDesignDetail = asyncHandler(  async (req, res, next) => {
         shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
         themeId: { equals: themeId },
       },
+      depth: req.query?.depth || 0
     });
 
     if (isDataByThemeExist.docs[0]?.themeId) {
