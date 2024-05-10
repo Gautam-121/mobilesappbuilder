@@ -180,3 +180,8 @@ strong {
 .inputWrapper Icon{
   cursor: pointer;
 }
+.MuiAutocomplete-hasPopupIcon.MuiAutocomplete-hasClearIcon.css-clttge-MuiAutocomplete-root .MuiFilledInput-root{
+  background: white !important;
+    border: 1px solid rgb(207, 207, 207) !important;
+    font-size: small !important;
+}

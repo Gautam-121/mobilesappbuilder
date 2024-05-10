@@ -31,7 +31,7 @@ const createCustomer = asyncHandler(async (req, res, next) => {
   }
 
   try {
-    
+
     const store = await Payload.find({
       collection: 'Store',
       where: {
@@ -48,60 +48,32 @@ const createCustomer = asyncHandler(async (req, res, next) => {
         )
       );
     }
-    // Check for uniqueness of deviceId
-    const existingDeviceId = await Payload.find({
-      collection: 'customers',
-      where: {
-        'deviceIds.deviceId': { equals: deviceId }
-      }
-    });
-
-    if (existingDeviceId.docs[0]) {
-      return res.status(400).json({
-        success: false,
-        message: "Device ID already exists for another customer"
-      });
-    }
-
-    // Check for uniqueness of deviceType
-    const existingDeviceType = await Payload.find({
-      collection: 'customers',
-      where: {
-        'deviceTypes.deviceType': { equals: deviceType }
-      }
-    });
-
-    if (existingDeviceType.docs[0]) {
-      return res.status(400).json({
-        success: false,
-        message: "Device Type already exists for another customer"
-      });
-    }
-
-    // Check for uniqueness of firebaseToken
-    const existingFirebaseToken = await Payload.find({
-      collection: 'customers',
-      where: {
-        'firebaseTokens.firebaseToken': { equals: firebaseToken }
-      }
-    });
-
-    if (existingFirebaseToken.docs[0]) {
-      return res.status(400).json({
-        success: false,
-        message: "Firebase Token already exists for another customer"
-      });
-    }
 
     // Check if the customer already exists
     const customerExist = await Payload.find({
       collection: 'customers',
       where: {
         id: { equals: id },
-        shopId: { equals: req?.user?.shopId || store.docs[0].id }
+        shopId: { equals: req?.user?.shopId || store.docs[0].id },
+        or: [
+          { 'deviceIds.deviceId': { equals: deviceId } },
+          { 'deviceTypes.deviceType': { equals: deviceType } },
+          { 'firebaseTokens.firebaseToken': { equals: firebaseToken } }
+        ]
       }
     });
-    // console.log(customerExist.docs[0]);
+
+    if (customerExist.docs.length > 0) {
+      // At least one of the fields (device ID, device type, or Firebase token) already exists for another customer
+      return res.status(400).json({
+        success: false,
+        message: "One or more fields already exists"
+      });
+    }
+
+    // return res.status(200).json({
+    //   success: true,
+    //   data:customerExist.docs[0]});
 
     if (customerExist.docs[0]) {
       const existingCustomerData = customerExist.docs[0];
@@ -379,6 +351,178 @@ const getFirebaseAccessToken = asyncHandler(async (req, res,next) => {
     firebaseAccessToken: existFirebaseAccessToken?.docs[0].firbaseAccessToken
   });
 })
+
+const sendNotification = asyncHandler(async (req, res, next) => {
+
+  const { title, body, click_action, type } = req.body;
+
+  const store = await Payload.find({
+    collection: 'Store',
+    where: {
+      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
+      isActive: { equals: true }
+    },
+  });
+
+  if (!store.docs[0]) {
+    return next(
+      new ApiError(
+        `store not found with id: ${req.shop_id}`,
+        404
+      )
+    );
+  }
+
+  if (!title || !body) {
+    const error = new ApiError(" title and body is required", 400);
+    return next(error);
+  }
+
+  const allCustomer = await Payload.find({
+    collection: "customers",
+    where: {
+      // id: { equals: id },
+      shopId: { equals: store.docs[0].id || req.shop_id }
+    }
+  });
+
+  if (allCustomer.docs.length === 0) {
+    return next(
+      new ApiError("customer not found", 404)
+    );
+  }
+
+  // return res.status(200).send(allCustomer)
+  const firebaseTokens = allCustomer.docs.flatMap(customer => customer.firebaseTokens.map(token => token.firebaseToken));
+  console.log(firebaseTokens);
+
+  // const topicName = name.replace(/\W+/g, '_'); // Replace non-alphanumeric characters with underscores
+  // console.log(topicName);
+
+  const storeFirebaseAccessToken = await Payload.find({
+    collection: 'firebaseServiceAccount',
+    where: {
+      shopId: { equals: store.docs[0].id || req.shop_id || "gid://shopify/Shop/81447387454" }
+    }
+  });
+
+  if (!storeFirebaseAccessToken.docs[0]) {
+    const error = new ApiError("Firebase Access Token not found", 404);
+    return next(error);
+  }
+
+  const accessTokenDuration = 3600000; // 1 hour in milliseconds
+  const expiryTimestamp = storeFirebaseAccessToken.docs[0].tokenExpiry;
+  const currentTimestamp = Date.now();
+
+  let accessToken; // Define accessToken variable in a wider scope
+
+  if (currentTimestamp >= expiryTimestamp - accessTokenDuration) {
+    // Refresh the token
+    const newTokens = await getAccessToken(storeFirebaseAccessToken.docs[0].serviceAccount);
+    accessToken = newTokens.access_token;
+    const newTokenExpiry = newTokens.expiry_date;
+
+    console.log("hii line 845", accessToken);
+    console.log("hii line 846", newTokenExpiry);
+    // Update the access token and expiry in the database
+    await Payload.update({
+      collection: "firebaseServiceAccount",
+      where: {
+        shopId: { equals: store.docs[0].id || req.shop_id || "gid://shopify/Shop/81447387454" },
+        id: { equals: storeFirebaseAccessToken.docs[0].id }
+      },
+      data: {
+        firbaseAccessToken: accessToken,
+        tokenExpiry: newTokenExpiry,
+      },
+      depth: req.query?.depth || 0
+    });
+
+  } else {
+    accessToken = storeFirebaseAccessToken.docs[0].firbaseAccessToken;
+  }
+
+  // Now, accessToken is accessible here
+
+  // Configure Axios request for Firebase Cloud Messaging
+  const axiosFirebaseConfig = {
+    headers: {
+      'Authorization': 'Bearer ' + accessToken,
+      access_token_auth: true
+    }
+  };
+  try {
+    const subscribeTopic = await axios.post(
+      subscribeTopicApiEndpoint,
+      {
+        to: `/topics/${topicName}`,
+        registration_tokens: firebaseTokens,
+      },
+      axiosFirebaseConfig
+    );
+    console.log("hii line 478", subscribeTopic?.data);
+
+    if (subscribeTopic?.data?.results[0]?.error) {
+      const error = new ApiError(`${subscribeTopic?.data?.results[0]?.error} firebaseTokens are not linked to your firebase account`, 401);
+      return next(error);
+    }
+    // console.log("hii line 1032");
+    // const topicName = "notify"
+    
+    const sendMessage = {
+      message: {
+        // token:['dd32AcnHeE7jjDVDy1dkpM:APA91bHbYHNPuWvduI55fNx9TJNTf_0XtZpAXvvLrCmit8eHa4_MRdjyzp_Vo3YoOS_ui7yR3VbsjrmpSICCk43fhNXr9fb6tXYuc56BoavUhaZwC2iWML8ppo35gEjSW015Rsqi7BMW'],
+        topic: topicName,
+        notification: {
+          title: title,
+          body: body,
+        },
+        // data: {
+        //   type: type
+        // },
+      }
+    };
+    if (click_action) {
+      console.log("click action", click_action);
+      // Add android field with notification object containing click_action
+      sendMessage.message.android = {
+        notification: {
+          click_action: click_action
+        }
+      };
+    }
+    
+    // Add apns field with payload object containing aps field with category
+    sendMessage.message.apns = {
+      payload: {
+        aps: {
+          click_action: click_action,
+          type:type
+        }
+      }
+    };
+    console.log("hii line 1047");
+
+    // console.log("hii line 498");
+    const sendNotification = await axios.post(
+      sendNotificationApiEndpoint,
+      sendMessage,
+      axiosFirebaseConfig
+    );
+    console.log("hii line 1055", sendNotification);
+    if (sendNotification?.data?.failure === 1) {
+      const error = new ApiError("Notification Not Send", 400);
+      return next(error);
+    }
+
+    return res.status(200).json({ success: true, message: "Notification Send Successfully" });
+  } catch (error) {
+    console.error("Error sending notification:", error.response.data);
+    const apiError = new ApiError("Failed to send notification", error.response.data, 500);
+    return next(apiError);
+  }
+});
 
 const getAllcustomer = asyncHandler(async (req, res, next) => {
 
@@ -758,8 +902,6 @@ const deleteSegment = asyncHandler(async (req, res, next) => {
 
 })
 
-
-
 const updateServerKey = asyncHandler(async (req, res) => {
 
   const { serverKey } = req?.body
@@ -816,160 +958,11 @@ const updateServerKey = asyncHandler(async (req, res) => {
 
 })
 
-// const sendNotification = asyncHandler(async (req, res, next) => {
 
-//   const { title, body, segments: { name, id }, click_action } = req.body;
-
-//   const store = await Payload.find({
-//     collection: 'Store',
-//     where: {
-//       shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
-//       isActive: { equals: true }
-//     },
-//   });
-
-//   if (!store.docs[0]) {
-//     return next(
-//       new ApiError(
-//         `store not found with id: ${req.shop_id}`,
-//         404
-//       )
-//     );
-//   }
-
-//   if (!title || !body || !name || !id) {
-//     const error = new ApiError("Please Provide title message and selected Segment", 400);
-//     return next(error);
-//   }
-
-//   const customerUnderSegment = await Payload.find({
-//     collection: "segments",
-//     where: {
-//       id: { equals: id },
-//       shopId: { equals: store.docs[0].id || req.shop_id }
-//     }
-//   });
-
-//   if (customerUnderSegment.docs.length === 0) {
-//     return next(
-//       new ApiError("Segment not found", 404)
-//     );
-//   }
-
-//   const firebaseTokens = customerUnderSegment.docs[0]?.customer.flatMap(customer => customer.firebaseTokens.map(token => token.firebaseToken)) || [];
-//   console.log(firebaseTokens);
-
-//   const topicName = name.replace(/\W+/g, '_'); // Replace non-alphanumeric characters with underscores
-//   console.log(topicName);
-
-//   const storeFirebaseAccessToken = await Payload.find({
-//     collection: 'firebaseServiceAccount',
-//     where: {
-//       shopId: { equals: store.docs[0].id || req.shop_id || "gid://shopify/Shop/81447387454" }
-//     }
-//   });
-
-//   if (!storeFirebaseAccessToken.docs[0]) {
-//     const error = new ApiError("Firebase Access Token not found", 404);
-//     return next(error);
-//   }
-
-//   const accessTokenDuration = 3600000; // 1 hour in milliseconds
-//   const expiryTimestamp = storeFirebaseAccessToken.docs[0].tokenExpiry;
-//   const currentTimestamp = Date.now();
-
-//   let accessToken; // Define accessToken variable in a wider scope
-
-//   if (currentTimestamp >= expiryTimestamp - accessTokenDuration) {
-//     // Refresh the token
-//     const newTokens = await getAccessToken(storeFirebaseAccessToken.docs[0].serviceAccount);
-//     accessToken = newTokens.access_token;
-//     const newTokenExpiry = newTokens.expiry_date;
-
-//     console.log("hii line 845",accessToken );
-//     console.log("hii line 846",newTokenExpiry );
-//     // Update the access token and expiry in the database
-//     await Payload.update({
-//       collection: "firebaseServiceAccount",
-//       where: {
-//         shopId: { equals: store.docs[0].id || req.shop_id || "gid://shopify/Shop/81447387454" },
-//         id: { equals: storeFirebaseAccessToken.docs[0].id }
-//       },
-//       data: {
-//         firbaseAccessToken: accessToken,
-//         tokenExpiry: newTokenExpiry,
-//       },
-//       depth: req.query?.depth || 0
-//     });
-
-//   } else {
-//     accessToken = storeFirebaseAccessToken.docs[0].firbaseAccessToken;
-//   }
-
-//   // Now, accessToken is accessible here
-
-//   // Configure Axios request for Firebase Cloud Messaging
-//   const axiosFirebaseConfig = {
-//     headers: {
-//       'Authorization': 'Bearer ' + accessToken,
-//       access_token_auth: true
-//     }
-//   };
-//   try {
-//     const subscribeTopic = await axios.post(
-//       subscribeTopicApiEndpoint,
-//       {
-//         to: `/topics/${topicName}`,
-//         registration_tokens: firebaseTokens,
-//       },
-//       axiosFirebaseConfig
-//     );
-//     console.log("hii line 478", subscribeTopic?.data);
-
-//     if (subscribeTopic?.data?.results[0]?.error) {
-//       const error = new ApiError(`${subscribeTopic?.data?.results[0]?.error} firebaseTokens are not linked to your serverKey`, 401);
-//       return next(error);
-//     }
-
-//     const sendMessage = {
-//       message: {
-//         // token:['dd32AcnHeE7jjDVDy1dkpM:APA91bHbYHNPuWvduI55fNx9TJNTf_0XtZpAXvvLrCmit8eHa4_MRdjyzp_Vo3YoOS_ui7yR3VbsjrmpSICCk43fhNXr9fb6tXYuc56BoavUhaZwC2iWML8ppo35gEjSW015Rsqi7BMW'],
-//         topic: topicName,
-//         notification: {
-//           title: title,
-//           body: body,
-//         },
-//       }
-//     };
-
-//     if (click_action) {
-//       sendMessage.notification["click_action"] = click_action;
-//     }
-
-//     console.log("hii line 498");
-//     const sendNotification = await axios.post(
-//       sendNotificationApiEndpoint,
-//       sendMessage,
-//       axiosFirebaseConfig
-//     );
-//     console.log("hii line 504", sendNotification);
-//     if (sendNotification?.data?.failure === 1) {
-//       const error = new ApiError("Notification Not Send", 400);
-//       return next(error);
-//     }
-
-//     return res.status(200).json({ success: true, message: "Notification Send Successfully" });
-//   } catch (error) {
-//     console.error("Error sending notification:", error.response.data);
-//     const apiError = new ApiError("Failed to send notification", error.response.data, 500);
-//     return next(apiError);
-//   }
-// });
-
-
+/*
 const sendNotification = asyncHandler(async (req, res, next) => {
 
-  const { title, body, click_action } = req.body;
+  const { title, body, segments: { name, id }, click_action } = req.body;
 
   const store = await Payload.find({
     collection: 'Store',
@@ -988,31 +981,30 @@ const sendNotification = asyncHandler(async (req, res, next) => {
     );
   }
 
-  if (!title || !body) {
-    const error = new ApiError(" title and body is required", 400);
+  if (!title || !body || !name || !id) {
+    const error = new ApiError("Please Provide title message and selected Segment", 400);
     return next(error);
   }
 
-  const allCustomer = await Payload.find({
-    collection: "customers",
+  const customerUnderSegment = await Payload.find({
+    collection: "segments",
     where: {
-      // id: { equals: id },
+      id: { equals: id },
       shopId: { equals: store.docs[0].id || req.shop_id }
     }
   });
 
-  if (allCustomer.docs.length === 0) {
+  if (customerUnderSegment.docs.length === 0) {
     return next(
-      new ApiError("customer not found", 404)
+      new ApiError("Segment not found", 404)
     );
   }
 
-  // return res.status(200).send(allCustomer)
-  const firebaseTokens = allCustomer.docs.flatMap(customer => customer.firebaseTokens.map(token => token.firebaseToken));
+  const firebaseTokens = customerUnderSegment.docs[0]?.customer.flatMap(customer => customer.firebaseTokens.map(token => token.firebaseToken)) || [];
   console.log(firebaseTokens);
 
-  // const topicName = name.replace(/\W+/g, '_'); // Replace non-alphanumeric characters with underscores
-  // console.log(topicName);
+  const topicName = name.replace(/\W+/g, '_'); // Replace non-alphanumeric characters with underscores
+  console.log(topicName);
 
   const storeFirebaseAccessToken = await Payload.find({
     collection: 'firebaseServiceAccount',
@@ -1038,8 +1030,8 @@ const sendNotification = asyncHandler(async (req, res, next) => {
     accessToken = newTokens.access_token;
     const newTokenExpiry = newTokens.expiry_date;
 
-    console.log("hii line 845", accessToken);
-    console.log("hii line 846", newTokenExpiry);
+    console.log("hii line 845",accessToken );
+    console.log("hii line 846",newTokenExpiry );
     // Update the access token and expiry in the database
     await Payload.update({
       collection: "firebaseServiceAccount",
@@ -1079,10 +1071,10 @@ const sendNotification = asyncHandler(async (req, res, next) => {
     console.log("hii line 478", subscribeTopic?.data);
 
     if (subscribeTopic?.data?.results[0]?.error) {
-      const error = new ApiError(`${subscribeTopic?.data?.results[0]?.error} firebaseTokens are not linked to your firebase account`, 401);
+      const error = new ApiError(`${subscribeTopic?.data?.results[0]?.error} firebaseTokens are not linked to your serverKey`, 401);
       return next(error);
     }
-    
+
     const sendMessage = {
       message: {
         // token:['dd32AcnHeE7jjDVDy1dkpM:APA91bHbYHNPuWvduI55fNx9TJNTf_0XtZpAXvvLrCmit8eHa4_MRdjyzp_Vo3YoOS_ui7yR3VbsjrmpSICCk43fhNXr9fb6tXYuc56BoavUhaZwC2iWML8ppo35gEjSW015Rsqi7BMW'],
@@ -1117,6 +1109,8 @@ const sendNotification = asyncHandler(async (req, res, next) => {
     return next(apiError);
   }
 });
+ */
+
 
 
 module.exports = {

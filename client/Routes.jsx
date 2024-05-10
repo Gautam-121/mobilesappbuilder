@@ -18,7 +18,7 @@ const routes = {
   "/app-design": () => <GetData />,
   "/push-notifications":()=><Landing/>,
   "/push-notification/template":()=><Templates/>,
-  "/push-notification/createNotification":()=><CreateNotification/>,
+  "/push-notification/create-notification/:notificationType":({notificationType})=><CreateNotification type={notificationType}/>,
   "/push-notification/settings":()=><SettingsPage/>,
   "/push-notification/segments":()=><Segments/>,
   "/push-notification/edit-segment/:segmentId":({segmentId})=><EditSegment id={segmentId}/>,

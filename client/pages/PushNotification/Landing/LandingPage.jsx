@@ -15,11 +15,12 @@ export default function Landing() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [serverKey, setServerKey] = useState("");
   const [isServerKeyValid, setIsServerKeyValid] = useState(false);
-  const [dataForBackend, setDataForBackend] = useState(null)
+  const [dataForBackend, setDataForBackend] = useState(null);
 
   const handleDropZoneDrop = useCallback(
-    (_dropFiles, acceptedFiles, _rejectedFiles) => setSelectedFile(acceptedFiles[0]),
-    [],
+    (_dropFiles, acceptedFiles, _rejectedFiles) =>
+      setSelectedFile(acceptedFiles[0]),
+    []
   );
   const useDataFetcher = (initialState, url, options) => {
     const [data, setData] = useState(initialState);
@@ -27,10 +28,10 @@ export default function Landing() {
 
     const fetchData = async () => {
       const result = await (await fetch(url, options))?.json();
-      
+
       console.log(result);
-      if(result.message="firebase access token already exists")
-      navigate("/push-notification/template")
+      if ((result.message = "firebase access token already exists"))
+        navigate("/push-notification/template");
     };
 
     return [data, fetchData];
@@ -43,17 +44,32 @@ export default function Landing() {
     method: "POST",
     body: JSON.stringify({ dataForBackend }),
   };
+  const getData = {
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    method: "GET",
+  };
   const [serverKeyPost, postServerKey] = useDataFetcher(
     "",
     "/apps/api/firebase/token",
     postOptions
   );
-useEffect(()=>{
-  console.log(dataForBackend) 
-  if(dataForBackend!=null){
-    postServerKey();
-  }
-},[dataForBackend])
+  const [serverKeyResponse, getServerKey] = useDataFetcher(
+    "",
+    "apps/api/firebase/firebase-access-token",
+    getData
+  );
+  useEffect(()=>{
+    getServerKey();
+  },[])
+  useEffect(() => {
+    console.log(dataForBackend);
+    if (dataForBackend != null) {
+      postServerKey();
+    }
+  }, [dataForBackend]);
   const handleSubmit = async () => {
     if (!selectedFile) {
       alert("Please select a file");
@@ -63,8 +79,8 @@ useEffect(()=>{
     reader.onload = async (event) => {
       try {
         const fileContent = JSON.parse(event.target.result);
-        console.log(fileContent)
-        setDataForBackend(fileContent)
+        console.log(fileContent);
+        setDataForBackend(fileContent);
         // Send fileContent to the POST API
       } catch (error) {
         console.error("Error parsing JSON file:", error);
@@ -90,18 +106,14 @@ useEffect(()=>{
   const fileUpload = !selectedFile && <DropZone.FileUpload />;
   const uploadedFile = selectedFile && (
     <LegacyStack>
-      <Thumbnail
-        size="small"
-        alt={selectedFile.name}
-        source={NoteIcon}
-      />
+      <Thumbnail size="small" alt={selectedFile.name} source={NoteIcon} />
       <div>
-        {selectedFile.name}{' '}
+        {selectedFile.name}{" "}
         <Text variant="bodySm" as="p">
           {selectedFile.size} bytes
         </Text>
       </div>
-    </LegacyStack>  
+    </LegacyStack>
   );
 
   // return (
@@ -125,10 +137,14 @@ useEffect(()=>{
             <Text id={styles.heading} variant="headingMd">
               Please upload your Firebase Configuration File
             </Text>
-            <DropZone allowMultiple={false} onDrop={handleDropZoneDrop} variableHeight={true}>
-      {uploadedFile}
-      {fileUpload}
-    </DropZone >
+            <DropZone
+              allowMultiple={false}
+              onDrop={handleDropZoneDrop}
+              variableHeight={true}
+            >
+              {uploadedFile}
+              {fileUpload}
+            </DropZone>
             <button
               disabled={!selectedFile}
               id={styles.submitBtn}

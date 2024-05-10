@@ -56,7 +56,7 @@ export default function BannerEdit({ data, handleDelete }) {
       console.log(result);
       let newImg = {
         isVisible: true,
-        bannerType: "none",
+        bannerType: "marketing",
         actionUrl: null,
         imageUrl: { ...result.data },
         id: uid(),

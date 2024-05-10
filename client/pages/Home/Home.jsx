@@ -55,6 +55,47 @@ const Home = () => {
 
   const fetchAllThemeApi = "https://appbuilder.xircular.io/apps/api/getAllTheme";
 
+
+  const postOptions = {
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    method: "PUT",
+    body: JSON.stringify({themeId:"3E"}),
+  };
+
+  const useDataFetcher = (initialState, url, options) => {
+    const [data, setData] = useState(initialState);
+    const fetch = useFetch();
+
+    const fetchData = async () => {
+      setData("");
+      try {
+        const result = await (await fetch(url, options)).json();
+        console.log("result after setting theme Id", result);
+    
+  
+      } catch (error) {
+        console.error("Error while fetching data:", error);
+        // Handle error here, such as setting an error state or displaying a message to the user
+      } finally {
+        
+      }
+    };
+    
+    return [data, fetchData];
+  };
+
+
+  const [responseFromServer, setThemeId] = useDataFetcher(
+    "",
+    "/apps/api/store/appDesign/theme",
+    postOptions
+  );
+
+
+
   useEffect(() => {
     // async function fetchData() {
     //     const res = await fetch("/api/getAllTheme"); //fetch instance of useFetch()
@@ -67,14 +108,15 @@ const Home = () => {
 
     // fetchData();
 
-    axios
-      .get(fetchAllThemeApi)
-      .then((res) => {
-        console.log("theme daata: ", res);
-        setThemeData(res?.data?.data);
-        setSelectedTheme(res?.data?.data[0]);
-      })
-      .catch((error) => console.log("error while fetching themes: ", error));
+    // axios
+    //   .get(fetchAllThemeApi)
+    //   .then((res) => {
+    //     console.log("theme daata: ", res);
+    //     setThemeData(res?.data?.data);
+    //     setSelectedTheme(res?.data?.data[0]);
+    //   })
+    //   .catch((error) => console.log("error while fetching themes: ", error));
+    setThemeId()
   }, []);
 
   const cards = [
@@ -136,7 +178,8 @@ const Home = () => {
           </div>
         </div>
 
-        <button className="submission-btn">
+        <button className="submission-btn" 
+        >
           <FaWandMagicSparkles /> App Submission
         </button>
       </div>

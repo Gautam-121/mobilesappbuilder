@@ -2,30 +2,24 @@ import React, { useState } from "react";
 import styles from "./Templates.module.css";
 import { Page, Text, Tooltip } from "@shopify/polaris";
 import { useSetRecoilState } from "recoil";
-import { useNavigate } from "raviger";
+import { Link, useNavigate } from "raviger";
 import { templateAtom } from "../../UpdatedCode/recoil/store";
+import { templates } from "../../../utils/services";
 
 export default function Templates() {
   const setTemplate = useSetRecoilState(templateAtom);
   const navigate = useNavigate();
-       
-        const helperTextBasic =  "Choose the 'Basic Notification' option to send a simple yet effective message to your customers. When clicked, this notification will direct users to your app's inviting landing page, providing them with a seamless experience to explore everything your app has to offer.";
-  const helperTextProduct = "Opt for the 'Product-Specific Notification' to deliver targeted messages about specific products. This option enables you to provide personalized experiences for your customers. When clicked, this notification will take users directly to the detailed page of the mentioned product within your app, enhancing their engagement and encouraging swift actions.";
-  const handleTemplateSelect = (temp) => {
-    console.log(temp)
-    setTemplate(temp);
-    navigate("/push-notification/createNotification");
+  const helperTextBasic =
+    "Engage users with targeted marketing messages using the 'Marketing Notification'. When clicked, this notification redirects users to an external URL of your choice. Explore exclusive offers and promotions to enhance customer experience and drive conversions.";
+  const helperTextProduct =
+    "Deliver targeted messages about specific products with the 'Product-Specific Notification'. When clicked, this notification takes users directly to the detailed page of the mentioned product within your app. Enhance engagement and encourage swift actions by providing personalized experiences for your customers."
+ const helperTextCategory = "Deliver targeted messages about specific categories with the 'Category-Specific Notification'.When clicked, this notification takes users directly to the category page in your app. Enhance engagement and encourage swift actions with relevant content."
+    const handleTemplateSelect = (temp) => {
+    console.log(temp);
+    // setTemplate(temp);
+    navigate(`/push-notification/create-notification/${temp}`);
   };
-  const handleMouseOver = (temp) => {
-    // if (temp == "basic")
-    //   setHelperText(
-    //   );
-    // else {
-    //   setHelperText(
-        
-    //   );
-    // }
-  };
+
   return (
     <div>
       <Page>
@@ -39,31 +33,20 @@ export default function Templates() {
             </Text>
           </div>
           <div className={styles.body}>
-          <Tooltip  content={helperTextBasic} width="wide" >
-            <div
-              className={styles.cardBasic}
-              onClick={() => handleTemplateSelect("basic notification")}
-              onMouseOver={() => handleMouseOver("basic")}
-            >
-            
-              <Text fontWeight="bold" as="h1" variant="headingXl">
-          Basic Notification
-        </Text>
-              <div className={styles.arrow}></div>
-            </div>
-            </Tooltip>
-            <Tooltip  content={helperTextProduct} width="wide" >
-            <div
-              className={styles.cardProduct}
-              onClick={() => handleTemplateSelect("product notification")}
-              onMouseOver={() => handleMouseOver("product")}
-              
-            >
-             <Text fontWeight="bold" as="h1" variant="headingXl"> Notification for a specific product</Text>
-
-            </div>
-            </Tooltip>
-
+            {templates.map((type)=>(
+       
+                <Tooltip content={type.helperText} width="wide">
+                <div
+                  className={styles.cardBasic}
+                  onClick={() => handleTemplateSelect(type.type)}
+                >
+                  <Text fontWeight="bold" as="h1" variant="headingXl">
+                    {type.title}
+                  </Text>
+                </div>
+              </Tooltip>
+        
+            ))}
           </div>
         </div>
       </Page>

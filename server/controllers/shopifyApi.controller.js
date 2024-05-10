@@ -397,7 +397,7 @@ const getShopPolicies = asyncHandler( async(req,res,next)=>{
       `https://${req?.shop || "renergii.myshopify.com"}/admin/api/2024-01/policies.json`,
       {
         headers: {
-          'X-Shopify-Access-Token': req?.accessToken || "shpua_bc161c745338c326e583c1efad096ade",
+          'X-Shopify-Access-Token': req?.accessToken || "shpua_feecc4ecd2b979fd860d0ac0ad8a864f",
         },
       }
     );
