@@ -55,6 +55,7 @@ const getHomePage = asyncHandler(async (req, res, next) => {
 });
 
 const getHomePageByWeb = asyncHandler(async (req, res, next) => {
+
   if (!req.params.themeId) {
     return next(new ApiError("themeId is missing", 400));
   }
@@ -65,6 +66,7 @@ const getHomePageByWeb = asyncHandler(async (req, res, next) => {
       shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
       isActive: { equals: true },
     },
+    depth: req.query?.depth || 0
   });
 
   if (!isSelectedTheme.docs[0]) {
@@ -111,6 +113,7 @@ const getHomePageByWeb = asyncHandler(async (req, res, next) => {
 });
 
 const updateHomePage = asyncHandler(async (req, res, next) => {
+
   const { datas } = req.body;
 
   console.log("datas from line 149", datas);

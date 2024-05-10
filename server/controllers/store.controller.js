@@ -274,6 +274,10 @@ const updateStoreAppDesignDetail = asyncHandler(  async (req, res, next) => {
 
   brandingData.docs[0].app_title_text.app_name = UserStoreData?.docs[0]?.shopName;
 
+  if(brandingData.docs[0]?.app_title_logo && brandingData.docs[0]?.app_title_logo?.id){
+    brandingData.docs[0].app_title_logo  = brandingData.docs[0]?.app_title_logo?.id
+  }
+
   await Payload.create({
     collection: "branding",
     data: {

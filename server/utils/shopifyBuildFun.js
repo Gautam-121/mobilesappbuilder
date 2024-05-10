@@ -17,7 +17,7 @@ const shopifyApiData = async (
     return shopifyResult;
 };
 
-const shopifyGraphQLEndpoint = (shop) =>  `https://${shop || "renergii.myshopify.com"}/admin/api/${process.env.SHOPIFY_API_VERSION}/graphql.json`;
+const shopifyGraphQLEndpoint = (shop) =>  `https://${shop}/admin/api/${process.env.SHOPIFY_API_VERSION}/graphql.json`;
 
 const axiosShopifyConfig = function(accessToken) {
     return {

@@ -46,7 +46,7 @@ const Branding = {
           label:"logo",
           type: "relationship",
           relationTo: "media",
-          required: true
+          required: false
     },
     {
       name: "launch_screen_bg_color",
