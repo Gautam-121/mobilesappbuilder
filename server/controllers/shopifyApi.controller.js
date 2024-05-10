@@ -328,7 +328,7 @@ const getShopPolicies = asyncHandler( async(req,res,next)=>{
       `https://${req?.shop || "renergii.myshopify.com"}/admin/api/2024-01/policies.json`,
       {
         headers: {
-          'X-Shopify-Access-Token': req?.accessToken || "shpua_bc161c745338c326e583c1efad096ade",
+          'X-Shopify-Access-Token': req?.accessToken || "shpua_feecc4ecd2b979fd860d0ac0ad8a864f",
         },
       }
     );
@@ -412,7 +412,7 @@ const updateShopPolicies = asyncHandler(async (req, res , next) => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-Shopify-Access-Token': "shpua_99b2e0d318036dd12fe2300e9f95c5fb" || req.accessToken,
+          'X-Shopify-Access-Token': "shpua_feecc4ecd2b979fd860d0ac0ad8a864f" || req.accessToken,
         },
         body: JSON.stringify({ query: shopPolicyUpdateMutation, variables }),
       });

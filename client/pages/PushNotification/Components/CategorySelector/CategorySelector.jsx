@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "./ProductSelection.css";
+import "../ProductSelector/ProductSelection.css";
 import { Autocomplete, TextField } from "@mui/material";
 import {
   dataFromApiAtom,
@@ -13,8 +13,8 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import useFetch from "../../../../hooks/useFetch";
 import CircularProgress from "@mui/material/CircularProgress";
 
-export default function ProductSelection() {
-  console.log("product selector   ");
+export default function CategorySelection() {
+  console.log("category selector   ");
   const setSelectedProductId = useSetRecoilState(selectedProductIdAtom);
   const [selectedProduct, setSelectedProduct] =
     useRecoilState(selectedProductAtom);
@@ -35,20 +35,18 @@ const useDataFetcher = (initialState, url, options) => {
   console.log("")
   const [data, setData] = useState(initialState);
   const fetch = useFetch();
-
-
   const fetchData = async () => {
     console.log("fetch data triggered")
     setData("");
     const result = await (await fetch(url, options)).json();
-    console.log("result", result.products);
-    setDataFromApi(result.products)
+    console.log("result", result);
+    setDataFromApi(result.collections)
   }
   return [data, fetchData];
 };
 const [responseProducts, fetchProducts] = useDataFetcher(
   [],
-  "/apps/api/getProduct",
+  "/apps/api/getCollection",
   getData
 );
 
@@ -81,14 +79,14 @@ useEffect(()=>{fetchProducts()},[])
         style={{ width: "90%", marginTop: "-20px", outline: "none" }}
         renderInput={(params) => (
           <>
-            <label className="toTag">Product*</label>
+            <label className="toTag">Category*</label>
             <TextField
               {...params}
               value={""}
               size="small"
               style={productStyle}
               variant="filled"
-              placeholder={"Please select a Product"}
+              placeholder={"Please select a Category"}
               InputProps={{
                 ...params.InputProps,
                 endAdornment: (

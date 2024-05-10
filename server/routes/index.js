@@ -90,9 +90,9 @@ router.get(
 
 router.get("/api/shopify/segment", verifyRequest , getAllSegment)
 
-router.get("/api/shopify/shop-policies" , verifyRequest ,  getShopPolicies)
+router.get("/api/shopify/shop-policies" ,   getShopPolicies)
 
-router.put("/api/shopify/update-shop-policies", verifyRequest ,  updateShopPolicies)
+router.put("/api/shopify/update-shop-policies",   updateShopPolicies)
 
 
 /*----------------------------FirebaseRouting-------------------------------------------------*/

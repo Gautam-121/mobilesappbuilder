@@ -6,3 +6,14 @@
 .css-1h51icj-MuiAutocomplete-root .MuiFilledInput-root.MuiInputBase-sizeSmall .MuiFilledInput-input{
     font-family: sora;
 }
+.css-clttge-MuiAutocomplete-root .MuiFilledInput-root.MuiInputBase-sizeSmall .MuiFilledInput-input {
+    font-size: 14px !important;
+    margin-top: 4px;
+}
+.css-clttge-MuiAutocomplete-root .MuiFilledInput-root.MuiInputBase-sizeSmall{
+    background-color: white !important;
+    border: 1px solid #ccc;
+}
+.css-reij49-MuiInputBase-root-MuiFilledInput-root{
+    border-radius: 4px;
+}

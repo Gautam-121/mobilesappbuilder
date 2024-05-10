@@ -18,6 +18,7 @@ import {
 } from "../../store/appDesignPageRefreshedSlice";
 import useFetch from "../../hooks/useFetch";
 import { componentListArrayAtom } from "../UpdatedCode/recoil/store";
+import { duration } from "@mui/material";
 
 const AppDesign = (props) => {
 const [componentListArray, setComponentListArray] = useRecoilState(componentListArrayAtom)
@@ -45,7 +46,18 @@ useEffect(()=>{
           data: modifiedData,
         },
       };
-    } else {
+    } 
+    else if(item.featureType === "announcement"){
+      let newObj = {
+        isVisible: item.isVisible,
+        featureType: item.featureType,
+        layoutType: item.layoutType,
+        data:item.data
+      }
+      return newObj
+    }
+    
+    else {
       // Return the unchanged object for other feature types
       return item;
     }
@@ -169,7 +181,9 @@ useEffect(()=>{
       try {
         const result = await (await fetch(url, options)).json();
         console.log("result after publishing changes", result);
-    
+          shopify.toast.show("Changes Published",{
+            duration:5000
+          })
   
       } catch (error) {
         console.error("Error while fetching data:", error);
@@ -223,7 +237,7 @@ useEffect(()=>{
             </Button>
           </div>
           {/* <div className='appdesign-preview-btn'><HiQrCode className='appdesign-qr'/> Preview on mobile</div> */}
-          <button onClick={handlePublish} className="appdesign-publish-btn">{loading?"loading":"Publish changes"}</button>
+          <button onClick={handlePublish} className="appdesign-publish-btn">{loading?"Publishing":"Publish changes"}</button>
         </div>
       </div>
 

@@ -14,7 +14,7 @@ const ExitFrame = () => {
       const shop = shopify?.config?.shop;
       if(shop !== undefined){
         
-        open(`https://${appOrigin}/api/auth?shop=${shop}`, "_top");
+        open(`https://${appOrigin}/auth?shop=${shop}`, "_top");
 
       }
 
