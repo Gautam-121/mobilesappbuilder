@@ -64,6 +64,14 @@ const Home = () => {
     method: "PUT",
     body: JSON.stringify({themeId:"3E"}),
   };
+  const getOptions = {
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    method: "GET",
+    
+  };
 
   const useDataFetcher = (initialState, url, options) => {
     const [data, setData] = useState(initialState);
@@ -73,8 +81,10 @@ const Home = () => {
       setData("");
       try {
         const result = await (await fetch(url, options)).json();
-        console.log("result after setting theme Id", result);
-    
+        console.log("shop details", result);
+        if(!result?.data?.themeId){
+          setThemeId()
+        }
   
       } catch (error) {
         console.error("Error while fetching data:", error);
@@ -86,7 +96,11 @@ const Home = () => {
     
     return [data, fetchData];
   };
-
+  const [responseDetails, getShopDetails] = useDataFetcher(
+    "",
+    "/apps/api/shop/detail",
+    getOptions
+  )
 
   const [responseFromServer, setThemeId] = useDataFetcher(
     "",
@@ -116,7 +130,10 @@ const Home = () => {
     //     setSelectedTheme(res?.data?.data[0]);
     //   })
     //   .catch((error) => console.log("error while fetching themes: ", error));
-    setThemeId()
+
+
+    getShopDetails()
+  
   }, []);
 
   const cards = [
