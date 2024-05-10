@@ -8,7 +8,8 @@ const {
   operationQuery,
   subscribeTopicApiEndpoint,
   sendNotificationApiEndpoint,
-  unsuscribeTopicApiEndpoint
+  unsuscribeTopicApiEndpoint,
+  topicName
 } = require("../constant")
 const {
   shopifyApiData,
@@ -24,6 +25,15 @@ const createCustomer = asyncHandler(async (req, res, next) => {
 
   // Check if all required fields are provided
   const { id, customerName, deviceId, deviceType, firebaseToken } = customerData;
+
+  if (!req.params.shopId) {
+    return next(
+      new ApiError(
+        "ShopId is missing",
+         400
+      )
+    )
+  }
 
   if (![id, customerName, deviceId, deviceType, firebaseToken,].every(field => field && String(field).trim() !== "")) {
     return res.status(400).json({
@@ -49,60 +59,32 @@ const createCustomer = asyncHandler(async (req, res, next) => {
         )
       );
     }
-    // Check for uniqueness of deviceId
-    const existingDeviceId = await Payload.find({
-      collection: 'customers',
-      where: {
-        'deviceIds.deviceId': { equals: deviceId }
-      }
-    });
-
-    if (existingDeviceId.docs[0]) {
-      return res.status(400).json({
-        success: false,
-        message: "Device ID already exists for another customer"
-      });
-    }
-
-    // Check for uniqueness of deviceType
-    const existingDeviceType = await Payload.find({
-      collection: 'customers',
-      where: {
-        'deviceTypes.deviceType': { equals: deviceType }
-      }
-    });
-
-    if (existingDeviceType.docs[0]) {
-      return res.status(400).json({
-        success: false,
-        message: "Device Type already exists for another customer"
-      });
-    }
-
-    // Check for uniqueness of firebaseToken
-    const existingFirebaseToken = await Payload.find({
-      collection: 'customers',
-      where: {
-        'firebaseTokens.firebaseToken': { equals: firebaseToken }
-      }
-    });
-
-    if (existingFirebaseToken.docs[0]) {
-      return res.status(400).json({
-        success: false,
-        message: "Firebase Token already exists for another customer"
-      });
-    }
 
     // Check if the customer already exists
     const customerExist = await Payload.find({
       collection: 'customers',
       where: {
         id: { equals: id },
-        shopId: { equals: req?.user?.shopId || store.docs[0].id }
+        shopId: { equals: req?.user?.shopId || store.docs[0].id },
+        or: [
+          { 'deviceIds.deviceId': { equals: deviceId } },
+          { 'deviceTypes.deviceType': { equals: deviceType } },
+          { 'firebaseTokens.firebaseToken': { equals: firebaseToken } }
+        ]
       }
     });
-    // console.log(customerExist.docs[0]);
+
+    if (customerExist.docs.length > 0) {
+      // At least one of the fields (device ID, device type, or Firebase token) already exists for another customer
+      return res.status(400).json({
+        success: false,
+        message: "One or more fields already exists"
+      });
+    }
+
+    // return res.status(200).json({
+    //   success: true,
+    //   data:customerExist.docs[0]});
 
     if (customerExist.docs[0]) {
       const existingCustomerData = customerExist.docs[0];
@@ -130,7 +112,7 @@ const createCustomer = asyncHandler(async (req, res, next) => {
 
       return res.status(200).json({
         success: true,
-        message: "Customer data updated successfully",
+        message: "Customer data create successfully",
         data: updatedCustomerInfo,
       });
     } else {
@@ -544,6 +526,7 @@ const deleteSegment = asyncHandler(async (req, res, next) => {
 
 const createFirebaseToken = async (req, res, next) => {
   try {
+
     const { serviceAccount } = req.body;
 
     const store = await Payload.find({
@@ -693,7 +676,7 @@ const createFirebaseToken = async (req, res, next) => {
   }
 }
 
-const getFirebaseAccessToken = asyncHandler(async (req, res,next) => {
+const getFirebaseAccessToken = asyncHandler(async (req, res, next) => {
 
   const store = await Payload.find({
     collection: 'Store',
@@ -702,8 +685,6 @@ const getFirebaseAccessToken = asyncHandler(async (req, res,next) => {
       isActive: { equals: true }
     },
   })
-
-  // return res.status(200).send(store)
 
   if (!store.docs[0]) {
     return next(
@@ -721,16 +702,15 @@ const getFirebaseAccessToken = asyncHandler(async (req, res,next) => {
     }
   });
 
-  if (existFirebaseToken.docs.length === 0) {
+  if (existFirebaseAccessToken.docs.length === 0) {
     return next(
       new ApiError("document not found", 404)
     );
   }
 
-  // return res.status(200).send(existFirebaseAccessToken)
-
   return res.status(200).json({
     success: true,
+    message: "Data send successfully",
     firebaseAccessToken: existFirebaseAccessToken?.docs[0].firbaseAccessToken
   });
 })
@@ -944,7 +924,7 @@ const updateServerKey = asyncHandler(async (req, res) => {
 
 const sendNotification = asyncHandler(async (req, res, next) => {
 
-  const { title, body, click_action } = req.body;
+  const { title, body, click_action, type } = req.body;
 
   const store = await Payload.find({
     collection: 'Store',
@@ -1046,7 +1026,7 @@ const sendNotification = asyncHandler(async (req, res, next) => {
     const subscribeTopic = await axios.post(
       subscribeTopicApiEndpoint,
       {
-        to: "/topics/notify",
+        to: `/topics/${topicName}`,
         registration_tokens: firebaseTokens,
       },
       axiosFirebaseConfig
@@ -1057,7 +1037,9 @@ const sendNotification = asyncHandler(async (req, res, next) => {
       const error = new ApiError(`${subscribeTopic?.data?.results[0]?.error} firebaseTokens are not linked to your firebase account`, 401);
       return next(error);
     }
-    const topicName = "notify"
+    // console.log("hii line 1032");
+    // const topicName = "notify"
+    
     const sendMessage = {
       message: {
         // token:['dd32AcnHeE7jjDVDy1dkpM:APA91bHbYHNPuWvduI55fNx9TJNTf_0XtZpAXvvLrCmit8eHa4_MRdjyzp_Vo3YoOS_ui7yR3VbsjrmpSICCk43fhNXr9fb6tXYuc56BoavUhaZwC2iWML8ppo35gEjSW015Rsqi7BMW'],
@@ -1066,20 +1048,39 @@ const sendNotification = asyncHandler(async (req, res, next) => {
           title: title,
           body: body,
         },
+        // data: {
+        //   type: type
+        // },
       }
     };
-
     if (click_action) {
-      sendMessage.notification["click_action"] = click_action;
+      console.log("click action", click_action);
+      // Add android field with notification object containing click_action
+      sendMessage.message.android = {
+        notification: {
+          click_action: click_action
+        }
+      };
     }
+    
+    // Add apns field with payload object containing aps field with category
+    sendMessage.message.apns = {
+      payload: {
+        aps: {
+          click_action: click_action,
+          type:type
+        }
+      }
+    };
+    console.log("hii line 1047");
 
-    console.log("hii line 498");
+    // console.log("hii line 498");
     const sendNotification = await axios.post(
       sendNotificationApiEndpoint,
       sendMessage,
       axiosFirebaseConfig
     );
-    console.log("hii line 504", sendNotification);
+    console.log("hii line 1055", sendNotification);
     if (sendNotification?.data?.failure === 1) {
       const error = new ApiError("Notification Not Send", 400);
       return next(error);
