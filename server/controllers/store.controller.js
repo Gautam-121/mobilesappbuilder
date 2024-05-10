@@ -36,6 +36,7 @@ const updateStoreAppDesignDetail = asyncHandler(  async (req, res, next) => {
       shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
       isActive: { equals : true }
     },
+    depth: req.query?.depth || 0
   });
 
   if(!UserStoreData?.docs[0]){
@@ -64,6 +65,7 @@ const updateStoreAppDesignDetail = asyncHandler(  async (req, res, next) => {
         shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
         themeId: { equals: themeId },
       },
+      depth: req.query?.depth || 0
     });
 
     if (isDataByThemeExist.docs[0]?.themeId) {
@@ -273,6 +275,10 @@ const updateStoreAppDesignDetail = asyncHandler(  async (req, res, next) => {
 
 
   brandingData.docs[0].app_title_text.app_name = UserStoreData?.docs[0]?.shopName;
+
+  if(brandingData.docs[0]?.app_title_logo && brandingData.docs[0]?.app_title_logo?.id){
+    brandingData.docs[0].app_title_logo  = brandingData.docs[0]?.app_title_logo?.id
+  }
 
   await Payload.create({
     collection: "branding",
