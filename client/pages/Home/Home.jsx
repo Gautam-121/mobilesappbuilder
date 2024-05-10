@@ -21,7 +21,7 @@ import axios from "axios";
 
 const Home = () => {
   //if appDesignPageRefreshedState then enter fullsccreen
-
+  const [details, setDetails] = useState(null)
   const isAppDesignPageRefreshed = useSelector(
     (state) => state.appDesignPageRefreshedSlice
   );
@@ -73,7 +73,7 @@ const Home = () => {
     
   };
 
-  const useDataFetcher = (initialState, url, options) => {
+  const useDataFetcherForShopDetails = (initialState, url, options) => {
     const [data, setData] = useState(initialState);
     const fetch = useFetch();
 
@@ -82,9 +82,7 @@ const Home = () => {
       try {
         const result = await (await fetch(url, options)).json();
         console.log("shop details", result);
-        if(!result?.data?.themeId){
-          setThemeId()
-        }
+        setDetails(result)
   
       } catch (error) {
         console.error("Error while fetching data:", error);
@@ -93,22 +91,53 @@ const Home = () => {
         
       }
     };
-    
+    // if(!result?.data?.themeId){
+    //   setThemeId
+    // }
     return [data, fetchData];
   };
-  const [responseDetails, getShopDetails] = useDataFetcher(
+  const useDataFetcherForThemeId = (initialState, url, options) => {
+    const [data, setData] = useState(initialState);
+    const fetch = useFetch();
+
+    const fetchData = async () => {
+      setData("");
+      try {
+        const result = await (await fetch(url, options)).json();
+        console.log("shop details", result);
+  
+      } catch (error) {
+        console.error("Error while fetching data:", error);
+        // Handle error here, such as setting an error state or displaying a message to the user
+      } finally {
+        
+      }
+    };
+    // if(!result?.data?.themeId){
+    //   setThemeId
+    // }
+    return [data, fetchData];
+  };
+
+
+
+  const [responseDetails, getShopDetails] = useDataFetcherForShopDetails(
     "",
     "/apps/api/shop/detail",
     getOptions
   )
 
-  const [responseFromServer, setThemeId] = useDataFetcher(
+  const [responseFromServer, setThemeId] = useDataFetcherForThemeId(
     "",
     "/apps/api/store/appDesign/theme",
     postOptions
   );
 
-
+  useEffect(()=>{
+    if(!details?.data?.themeId && details!==null){
+      setThemeId()
+    }
+    },[details])
 
   useEffect(() => {
     // async function fetchData() {
