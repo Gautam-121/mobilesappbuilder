@@ -4,20 +4,8 @@ const Payload = require("payload");
 const axios = require('axios')
 const asyncHandler = require("../utils/asyncHandler")
 const {
-  customerSegmentBulkQuery,
-  operationQuery,
-  subscribeTopicApiEndpoint,
-  sendNotificationApiEndpoint,
-  unsuscribeTopicApiEndpoint,
   topicName
 } = require("../constant")
-const {
-  shopifyApiData,
-  axiosShopifyConfig,
-  shopifyGraphQLEndpoint
-} = require("../utils/shopifyBuildFun.js")
-const dowloadJsonFile = require("../utils/downloadJsonFile.js")
-const readJsonFile = require("../utils/readJsonFile.js")
 
 const createCustomer = asyncHandler(async (req, res, next) => {
 
@@ -43,6 +31,7 @@ const createCustomer = asyncHandler(async (req, res, next) => {
   }
 
   try {
+    
     const store = await Payload.find({
       collection: 'Store',
       where: {
@@ -173,6 +162,223 @@ const createCustomer = asyncHandler(async (req, res, next) => {
     });
   }
 });
+
+const createFirebaseToken = async (req, res, next) => {
+  try {
+
+    const { serviceAccount } = req.body;
+
+    const store = await Payload.find({
+      collection: 'Store',
+      where: {
+        shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
+        isActive: { equals: true }
+      },
+    });
+
+    if (!store.docs[0]) {
+      return next(
+        new ApiError(
+          `Shop not found with id: ${req.params.shopId}`,
+          404
+        )
+      );
+    }
+    const existFirebaseToken = await Payload.find({
+      collection: 'firebaseServiceAccount',
+      where: {
+        shopId: { equals: store.docs[0].id },
+      },
+    });
+    console.log("Enter firebaseController", existFirebaseToken)
+    //  return res.status(200).send({"data":existFirebaseToken})
+    if (existFirebaseToken.docs[0]?.firbaseAccessToken) {
+      return next(
+        new ApiError(
+          "firebase access token already exists",
+          409
+        )
+      )
+    }
+
+    // Check for required properties
+    const requiredProperties = [
+      'type',
+      'project_id',
+      'private_key_id',
+      'private_key',
+      'client_email',
+      'client_id',
+      'auth_uri',
+      'token_uri',
+      'auth_provider_x509_cert_url',
+      'client_x509_cert_url'
+    ];
+
+    const missingProperties = requiredProperties.filter(prop => !serviceAccount.hasOwnProperty(prop));
+
+    if (missingProperties.length > 0) {
+      return next(
+        new ApiError(
+          `Missing required properties: ${missingProperties.join(', ')} `,
+          400
+        )
+      )
+    }
+
+    // Check the type property
+    if (serviceAccount.type !== 'service_account') {
+      return next(
+        new ApiError(
+          'Invalid service account type',
+          400
+        )
+      )
+    }
+
+    // Attempt to create a JWT client instance
+    try {
+      // Generate the access token
+      console.log("ENter");
+      const tokens = await getAccessToken(serviceAccount);
+      console.log("Tokens", tokens);
+      const accessToken = tokens.access_token;
+      console.log("AccessToken", accessToken);
+      const tokenExpiry = tokens.expiry_date;
+      console.log("tokenExpiry", tokenExpiry);
+
+      const firebaseConfig = await Payload.create({
+        collection: "firebaseServiceAccount",
+        data: {
+          serviceAccount: serviceAccount,
+          firbaseAccessToken: accessToken,
+          tokenExpiry: tokenExpiry,
+          shopId: store.docs[0].id
+        }
+      });
+
+      if (!firebaseConfig) {
+        return next(
+          new ApiError(
+            "Something went wrong while storing data in database",
+            500
+          )
+        );
+      }
+
+      // const accessTokenDuration = 3600000; // 1 hour in milliseconds
+      // const expiryTimestamp = tokenExpiry;
+      // const refreshInterval = setInterval(async () => {
+      //   const currentTimestamp = Date.now();
+      //   if (currentTimestamp >= expiryTimestamp - accessTokenDuration) {
+      //     // Access token is about to expire within the next hour
+      //     // Refresh the token
+      //     try {
+      //       const newTokens = await getAccessToken(serviceAccount);
+      //       const newAccessToken = newTokens.access_token;
+      //       const newTokenExpiry = newTokens.expiry_date;
+
+      //       // Update the access token and expiry in the database
+      //       const updatedFirebaseTokens = await Payload.update({
+      //         collection: "firebaseServiceAccount",
+      //         where: {
+      //           shopId: { equals: `gid://shopify/Shop/${req.params.shopId}` },
+      //           id: { equals: firebaseConfig.id }
+      //         },
+      //         data: {
+      //           firbaseAccessToken: newAccessToken,
+      //           tokenExpiry: newTokenExpiry,
+      //         },
+      //         depth: req.query?.depth || 0
+      //       });
+
+      //       console.log('New access token:', newAccessToken);
+
+      //       if (!updatedFirebaseTokens) {
+      //         return next(
+      //           new ApiError(
+      //             "Something went wrong while storing data in database",
+      //             500
+      //           )
+      //         );
+      //       }
+      //     } catch (error) {
+      //       console.error('Failed to refresh access token:', error);
+      //       return next(
+      //         new ApiError(
+      //           "Failed to refresh access token",
+      //           500
+      //         )
+      //       );
+      //     }
+      //   }
+      // }, accessTokenDuration / 2); // Check every 30 minutes
+
+      return res.status(200).json({
+        success: true,
+        message: "Data stored successfully"
+      });
+
+    } catch (err) {
+      return next(
+        new Error(
+          'Invalid service account credentials',
+          400
+        )
+      )
+    }
+  } catch (err) {
+    console.error('Error creating access token:', err);
+    return next(
+      new ApiError(
+        'Failed to create access token',
+        500
+      )
+    )
+  }
+}
+
+const getFirebaseAccessToken = asyncHandler(async (req, res,next) => {
+
+  const store = await Payload.find({
+    collection: 'Store',
+    where: {
+      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
+      isActive: { equals: true }
+    },
+  })
+
+  if (!store.docs[0]) {
+    return next(
+      new ApiError(
+        `store not found with id: ${req.shop_id}`,
+        404
+      )
+    );
+  }
+  const existFirebaseAccessToken = await Payload.find({
+    collection: "firebaseServiceAccount",
+    where: {
+      // id: { equals: id },
+      shopId: { equals: store.docs[0].id || req.shop_id }
+    }
+  });
+
+  if (existFirebaseAccessToken.docs.length === 0) {
+    return next(
+      new ApiError(
+        "document not found", 
+        404
+      )
+    );
+  }
+
+  return res.status(200).json({
+    success: true,
+    message: "Data send successfully",
+    firebaseAccessToken: existFirebaseAccessToken?.docs[0].firbaseAccessToken
+  });
+})
 
 const getAllcustomer = asyncHandler(async (req, res, next) => {
 
@@ -552,196 +758,7 @@ const deleteSegment = asyncHandler(async (req, res, next) => {
 
 })
 
-const createFirebaseToken = async (req, res, next) => {
-  try {
 
-    const { serviceAccount } = req.body;
-
-    const store = await Payload.find({
-      collection: 'Store',
-      where: {
-        shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
-        isActive: { equals: true }
-      },
-    });
-
-    if (!store.docs[0]) {
-      return next(
-        new ApiError(
-          `Shop not found with id: ${req.params.shopId}`,
-          404
-        )
-      );
-    }
-    const existFirebaseToken = await Payload.find({
-      collection: 'firebaseServiceAccount',
-      where: {
-        shopId: { equals: store.docs[0].id },
-      },
-    });
-    console.log("Enter firebaseController", existFirebaseToken)
-    //  return res.status(200).send({"data":existFirebaseToken})
-    if (existFirebaseToken.docs[0]?.firbaseAccessToken) {
-      return next(
-        new ApiError(
-          "firebase access token already exists",
-          409
-        )
-      )
-    }
-
-    // Check for required properties
-    const requiredProperties = [
-      'type',
-      'project_id',
-      'private_key_id',
-      'private_key',
-      'client_email',
-      'client_id',
-      'auth_uri',
-      'token_uri',
-      'auth_provider_x509_cert_url',
-      'client_x509_cert_url'
-    ];
-
-    const missingProperties = requiredProperties.filter(prop => !serviceAccount.hasOwnProperty(prop));
-
-    if (missingProperties.length > 0) {
-      return res.status(400).json({ error: `Missing required properties: ${missingProperties.join(', ')} ` });
-    }
-
-    // Check the type property
-    if (serviceAccount.type !== 'service_account') {
-      return res.status(400).json({ error: 'Invalid service account type' });
-    }
-
-    // Attempt to create a JWT client instance
-    try {
-      // Generate the access token
-      console.log("ENter");
-      const tokens = await getAccessToken(serviceAccount);
-      console.log("Tokens", tokens);
-      const accessToken = tokens.access_token;
-      console.log("AccessToken", accessToken);
-      const tokenExpiry = tokens.expiry_date;
-      console.log("tokenExpiry", tokenExpiry);
-
-      const firebaseConfig = await Payload.create({
-        collection: "firebaseServiceAccount",
-        data: {
-          serviceAccount: serviceAccount,
-          firbaseAccessToken: accessToken,
-          tokenExpiry: tokenExpiry,
-          shopId: store.docs[0].id
-        }
-      });
-
-      if (!firebaseConfig) {
-        return next(
-          new ApiError(
-            "Something went wrong while storing data in database",
-            500
-          )
-        );
-      }
-
-      // const accessTokenDuration = 3600000; // 1 hour in milliseconds
-      // const expiryTimestamp = tokenExpiry;
-      // const refreshInterval = setInterval(async () => {
-      //   const currentTimestamp = Date.now();
-      //   if (currentTimestamp >= expiryTimestamp - accessTokenDuration) {
-      //     // Access token is about to expire within the next hour
-      //     // Refresh the token
-      //     try {
-      //       const newTokens = await getAccessToken(serviceAccount);
-      //       const newAccessToken = newTokens.access_token;
-      //       const newTokenExpiry = newTokens.expiry_date;
-
-      //       // Update the access token and expiry in the database
-      //       const updatedFirebaseTokens = await Payload.update({
-      //         collection: "firebaseServiceAccount",
-      //         where: {
-      //           shopId: { equals: `gid://shopify/Shop/${req.params.shopId}` },
-      //           id: { equals: firebaseConfig.id }
-      //         },
-      //         data: {
-      //           firbaseAccessToken: newAccessToken,
-      //           tokenExpiry: newTokenExpiry,
-      //         },
-      //         depth: req.query?.depth || 0
-      //       });
-
-      //       console.log('New access token:', newAccessToken);
-
-      //       if (!updatedFirebaseTokens) {
-      //         return next(
-      //           new ApiError(
-      //             "Something went wrong while storing data in database",
-      //             500
-      //           )
-      //         );
-      //       }
-      //     } catch (error) {
-      //       console.error('Failed to refresh access token:', error);
-      //       return next(
-      //         new ApiError(
-      //           "Failed to refresh access token",
-      //           500
-      //         )
-      //       );
-      //     }
-      //   }
-      // }, accessTokenDuration / 2); // Check every 30 minutes
-
-      return res.status(200).json({ success: true });
-    } catch (err) {
-      console.error('Error creating JWT client:', err);
-      return res.status(400).json({ error: 'Invalid service account credentials' });
-    }
-  } catch (err) {
-    console.error('Error creating access token:', err);
-    res.status(500).json({ error: 'Failed to create access token' });
-  }
-}
-
-const getFirebaseAccessToken = asyncHandler(async (req, res,next) => {
-
-  const store = await Payload.find({
-    collection: 'Store',
-    where: {
-      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
-      isActive: { equals: true }
-    },
-  })
-
-  if (!store.docs[0]) {
-    return next(
-      new ApiError(
-        `store not found with id: ${req.shop_id}`,
-        404
-      )
-    );
-  }
-  const existFirebaseAccessToken = await Payload.find({
-    collection: "firebaseServiceAccount",
-    where: {
-      // id: { equals: id },
-      shopId: { equals: store.docs[0].id || req.shop_id }
-    }
-  });
-
-  if (existFirebaseAccessToken.docs.length === 0) {
-    return next(
-      new ApiError("document not found", 404)
-    );
-  }
-
-  return res.status(200).json({
-    success: true,
-    message: "Data send successfully",
-    firebaseAccessToken: existFirebaseAccessToken?.docs[0].firbaseAccessToken
-  });
-})
 
 const updateServerKey = asyncHandler(async (req, res) => {
 

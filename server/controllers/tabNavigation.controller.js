@@ -46,7 +46,7 @@ const getTabMenuDataByWeb = asyncHandler( async (req, res, next) => {
       shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
       themeId: { equals: req.params.themeId },
     },
-    depth: 0,
+    depth: req.query?.depth || 0,
   });
 
   if (tabData.docs.length === 0) {

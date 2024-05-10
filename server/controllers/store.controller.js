@@ -9,9 +9,13 @@ const {
 } = require("../constant.js") 
 const ApiError = require("../utils/ApiError.js");
 const asyncHandler = require("../utils/asyncHandler.js");
-const Cryptr = require("cryptr");
-const cryption = new Cryptr(process.env.ENCRYPTION_STRING);
-const axios = require("axios")
+const {
+  isValidFacebookUrl,
+  isValidInstagramUrl,
+  isValidTwitterUrl,
+  isValidWhatsAppUrl,
+  isValidYoutubeUrl
+} = require("../utils/validator.js")
 
 const updateStoreAppDesignDetail = asyncHandler(  async (req, res, next) => {
   
@@ -80,7 +84,7 @@ const updateStoreAppDesignDetail = asyncHandler(  async (req, res, next) => {
     }
   }
 
-  const shop = req.query.shop || "renergii.myshopify.com";
+  const shop = UserStoreData.docs[0].shopify_domain;
 
   const fetchCollections = await shopifyApiData(
     shopifyGraphQLEndpoint(shop),
@@ -113,6 +117,22 @@ const updateStoreAppDesignDetail = asyncHandler(  async (req, res, next) => {
       shopId: { equals: "Apprikart" },
     },
   });
+
+  const accountData = await Payload.find({
+    collection: "accountScreen",
+    where:{
+      themeId: { equals: themeId},
+      shopId: { equals: "Apprikart"}
+    }
+  })
+
+  const productData = await Payload.find({
+    collection: "productDetailScreen",
+    where:{
+      themeId: { equals: themeId},
+      shopId: { equals: "Apprikart"}
+    }
+  })
 
   for (val of homeData?.docs[0].homeData) {
 
@@ -241,14 +261,33 @@ const updateStoreAppDesignDetail = asyncHandler(  async (req, res, next) => {
     },
   });
 
-  if (brandingData?.docs[0]?.app_title === "appText") {
-    brandingData.docs[0].app_title_text.app_name = UserStoreData?.docs[0]?.shopName;
-  }
+  await Payload.create({
+    collection: "accountScreen",
+    data: {
+      main_section: accountData.docs[0]?.main_section,
+      footer_section: accountData.docs[0]?.footer_section,
+      shopId: req.shop_id || "gid://shopify/Shop/81447387454",
+      themeId: themeId,
+    },
+  });
+
+
+  brandingData.docs[0].app_title_text.app_name = UserStoreData?.docs[0]?.shopName;
 
   await Payload.create({
     collection: "branding",
     data: {
       ...brandingData.docs[0],
+      shopId: req.shop_id || "gid://shopify/Shop/81447387454",
+      themeId: themeId,
+    },
+  });
+
+  await Payload.create({
+    collection: "productDetailScreen",
+    data: {
+      actions: productData.docs[0]?.actions,
+      faster_checkout: productData.docs[0]?.faster_checkout,
       shopId: req.shop_id || "gid://shopify/Shop/81447387454",
       themeId: themeId,
     },
@@ -286,6 +325,7 @@ const getStoreDetail = asyncHandler( async(req,res,next)=> {
       shopId: { equals: `gid://shopify/Shop/${req.params.shopId}` },
       isActive: { equals: true }
     },
+    depth: req.query?.depth || 0
   });
 
   if (store.docs.length === 0) {
@@ -302,67 +342,6 @@ const getStoreDetail = asyncHandler( async(req,res,next)=> {
     message: "shop Details send successfully",
     data: store.docs[0]
   })
-
-  // const offlineAccessToken =  await Payload.find({
-  //   collection: 'Session',
-  //   where: { 
-  //     shopId: { equals: req.params?.id || "gid://shopify/Shop/81447387454" },
-  //     isOnline: false
-  //   },
-  // })
-
-  // if(!offlineAccessToken?.docs[0]){
-  //   return next(
-  //     new ApiError(
-  //       `store not found with id: ${req.params?.shopId}`,
-  //       404
-  //     )
-  //   )
-  // }
-
-  // // fetch metafield of product from shopify
-  // const shopName = store.docs[0].shopify_domain;
-  // const offlineSession =  JSON.parse(
-  //   cryption.decrypt(offlineAccessToken.docs[0].token)
-  // );
-
-  // try {
-
-  //   const response = await axios.get(
-  //     `https://${shopName}/admin/api/${process.env.SHOPIFY_API_VERSION}/policies.json`,
-  //     {
-  //       headers: {
-  //         'X-Shopify-Access-Token':  offlineSession?.accessToken,
-  //         'Content-Type': 'application/json',
-  //       },
-  //     }
-  //   );
-
-  //   const policies = response?.data?.policies || []
-  //   store.docs[0].policies = policies
-    
-    
-
-  // } catch (error) {
-  //   if (error.response) {
-  //     // The error is from the server's response
-  //     return next(
-  //       new ApiError(
-  //         error.message,
-  //         error.response?.status || 500
-  //       )
-  //     )
-
-  //   } else {
-  //     // The error is not from the server's response
-  //     return next(
-  //       new ApiError(
-  //         error.message,
-  //         500
-  //       )
-  //     )
-  //   }
-  // }
 })
 
 const getStoreDetailByWeb = asyncHandler( async(req,res,next)=>{
@@ -373,6 +352,7 @@ const getStoreDetailByWeb = asyncHandler( async(req,res,next)=>{
       shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
       isActive: { equals : true }
     },
+    depth: req.query?.depth || 0
   })
 
   if (store.docs.length === 0) {
@@ -422,6 +402,19 @@ const updateSocialMediaOfStore = asyncHandler( async(req,res,next)=>{
     )
   }
 
+  socialMedia.forEach(policy => {
+
+    const { title, profileUrl } = policy;
+
+    if (!title || !profileUrl) {
+      return next(
+        new ApiError(
+          "missing required field title and profileUrl"
+        )
+      )
+    }
+  })
+
   if(socialMedia.some(account => !(["instagram","facebook","twitter","youTube","whatsApp"].includes(account?.title)))){
     return next(
       new ApiError(
@@ -431,50 +424,50 @@ const updateSocialMediaOfStore = asyncHandler( async(req,res,next)=>{
     )
   }
 
-  // socialMedia.forEach(account=>{
-  //   if(account.title == "instagram" && !isValidInstagramUrl(account.profileUrl)){
-  //     return next(
-  //       new ApiError(
-  //         "Invalid instagram Url",
-  //         400
-  //       )
-  //     )
-  //   }
-  //   if(account.title == "facebook" && !isValidFacebookUrl(account.profileUrl)){
-  //     return next(
-  //       new ApiError(
-  //         "Invalid facebook Url",
-  //         400
-  //       )
-  //     )
-  //   }
-  //   if(account.title == "twitter" && !isValidTwitterUrl(account.profileUrl)){
-  //     return next(
-  //       new ApiError(
-  //         "Invalid twitter Url",
-  //         400
-  //       )
-  //     )
-  //   }
-  //   if(account.title == "youTube" && !isValidYoutubeUrl(account.profileUrl)){
-  //     return next(
-  //       new ApiError(
-  //         "Invalid youTube Url",
-  //         400
-  //       )
-  //     )
-  //   }
-  //   if(account.title == "whatsApp" && !isValidWhatsAppUrl(account.profileUrl)){
-  //     return next(
-  //       new ApiError(
-  //         "Invalid youTube Url",
-  //         400
-  //       )
-  //     )
-  //   }
-  // })
+  socialMedia.forEach(account=>{
+    if(account.title == "instagram" && !isValidInstagramUrl(account.profileUrl)){
+      return next(
+        new ApiError(
+          "Invalid instagram Url",
+          400
+        )
+      )
+    }
+    if(account.title == "facebook" && !isValidFacebookUrl(account.profileUrl)){
+      return next(
+        new ApiError(
+          "Invalid facebook Url",
+          400
+        )
+      )
+    }
+    if(account.title == "twitter" && !isValidTwitterUrl(account.profileUrl)){
+      return next(
+        new ApiError(
+          "Invalid twitter Url",
+          400
+        )
+      )
+    }
+    if(account.title == "youTube" && !isValidYoutubeUrl(account.profileUrl)){
+      return next(
+        new ApiError(
+          "Invalid youTube Url",
+          400
+        )
+      )
+    }
+    if(account.title == "whatsApp" && !isValidWhatsAppUrl(account.profileUrl)){
+      return next(
+        new ApiError(
+          "Invalid youTube Url",
+          400
+        )
+      )
+    }
+  })
 
-  const socialMediaAcc = await Payload.update({
+   await Payload.update({
     collection: "Store",
     where: {
       shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
@@ -483,15 +476,6 @@ const updateSocialMediaOfStore = asyncHandler( async(req,res,next)=>{
       socialMediaAccount: socialMedia
     },
   });
-
-  if(socialMediaAcc?.errors && socialMediaAcc.errors.length > 0){
-    return next(
-      new ApiError(
-        socialMediaAcc?.errors[0]?.message,
-        400
-      )
-    )
-  }
 
   return res.status(200).json({
     success: true,

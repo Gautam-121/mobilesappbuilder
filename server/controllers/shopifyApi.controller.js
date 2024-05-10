@@ -9,7 +9,6 @@ const {
   graphqlQueryForCollections,
   graphqlQueryForProductsByCollectionId,
   graphqlQueryForSegments,
-  shopPolicyUpdateMutation
 } = require("../constant.js");
 const asyncHandler = require("../utils/asyncHandler.js");
 const Payload = require("payload")
@@ -123,6 +122,7 @@ const getCollection = asyncHandler( async (req, res, next) => {
 } )
 
 const getProductByCollectionId = asyncHandler( async (req, res, next) => {
+
   if (!req.query.collectionId) {
     return next(
       new ApiError(
@@ -179,6 +179,75 @@ console.log("data",fetchCollectionsProducts.data.data.collection)
     nextCursor,
     data: products,
   });
+})
+
+const updateShopPolicies = asyncHandler(async (req, res , next) => {
+
+  const shopPolicies = req.body.shopPolicies;
+
+  const store = await Payload.find({
+    collection: 'Store',
+    where: { 
+      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
+      isActive: { equals: true}
+    },
+  })
+
+  if(!store.docs[0]){
+    return next(
+      new ApiError(
+        `store not found with id: ${req.shop_id}`,
+        404
+      )
+    )
+  }
+
+  if (!Array.isArray(shopPolicies) || shopPolicies.length === 0) {
+    return next(
+      new ApiError(
+        'Please provide data',
+        400
+      )
+    )
+  }
+
+  shopPolicies.forEach(policy => {
+
+    const { body, type } = policy;
+
+    if (!body || !type) {
+      return next(
+        new ApiError(
+          "missing required field body and type"
+        )
+      )
+    }
+  })
+
+  if(shopPolicies.some(policy => !(["PRIVACY_POLICY","CONTACT_INFORMATION","REFUND_POLICY","TERMS_OF_SERVICE","SHIPPING_POLICY"].includes(policy?.type)))){
+    return next(
+      new ApiError(
+        "title should be only PRIVACY_POLICY CONTACT_INFORMATION REFUND_POLICY TERMS_OF_SERVICE SHIPPING_POLICY",
+        400
+      )
+    )
+  }
+
+  await Payload.update({
+    collection: "Store",
+    where: {
+      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
+    },
+    data:{
+      policies: shopPolicies
+    },
+  });
+
+  return res.status(200).json({
+      success: true,
+      message: "Policy update successfully",
+    }
+  )
 })
 
 const metafieldByProductId = asyncHandler( async(req,res,next)=>{
@@ -366,76 +435,6 @@ const getShopPolicies = asyncHandler( async(req,res,next)=>{
     return next(generalError);
   }
   
-})
-
-const updateShopPolicies = asyncHandler(async (req, res , next) => {
-
-  const shopPolicies = req.body.shopPolicies;
-
-  const store = await Payload.find({
-    collection: 'Store',
-    where: { 
-      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
-      isActive: { equals: true}
-    },
-  })
-
-  if(!store.docs[0]){
-    return next(
-      new ApiError(
-        `store not found with id: ${req.shop_id}`,
-        404
-      )
-    )
-  }
-
-  if (!Array.isArray(shopPolicies) || shopPolicies.length === 0) {
-    return next(
-      new ApiError(
-        'Please provide data',
-        400
-      )
-    )
-  }
-
-  shopPolicies.forEach(policy => {
-
-    const { body, type } = policy;
-
-    if (!body || !type) {
-      return next(
-        new ApiError(
-          "missing required field body and type"
-        )
-      )
-    }
-
-  })
-
-  if(shopPolicies.some(policy => !(["PRIVACY_POLICY","CONTACT_INFORMATION","REFUND_POLICY","TERMS_OF_SERVICE","SHIPPING_POLICY"].includes(policy?.type)))){
-    return next(
-      new ApiError(
-        "title should be only PRIVACY_POLICY CONTACT_INFORMATION REFUND_POLICY TERMS_OF_SERVICE SHIPPING_POLICY",
-        400
-      )
-    )
-  }
-
-  await Payload.update({
-    collection: "Store",
-    where: {
-      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
-    },
-    data:{
-      policies: shopPolicies
-    },
-  });
-
-  return res.status(200).json({
-      success: true,
-      message: "Policy update successfully",
-    }
-  )
 })
 
 

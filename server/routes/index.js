@@ -28,7 +28,8 @@ const {
   createCartDetailPage,
   createAccountDetailPage,
   getOtherScreenPageDetailByWeb,
-  getProductDetails
+  getProductDetails,
+  getAccountScreen
 } = require("../controllers/otherScreen.controller.js");
 const {
   updateStoreAppDesignDetail,
@@ -154,6 +155,10 @@ router.get("/api/geThemeById/:themeId", verifyRequest , getThemeById);
 router.get("/api/productDetail/:shopId", getProductDetails)
 
 router.put("/api/product/detail/:themeId" ,verifyRequest , updateProductDetail);
+
+/*-------------------------AccountScreen---------------------------------------*/
+
+router.get("/api/account/:shopId" , getAccountScreen)
 
 /*--------------------------OtherScreenRouting-------------------------------------- */
 

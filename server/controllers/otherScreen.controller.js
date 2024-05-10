@@ -59,96 +59,29 @@ const updateProductDetail = asyncHandler( async (req, res, next) => {
     }
   })
 
-  if(isProductDetailForThemeExist?.docs[0]){
-
-    await Payload.update({
-      collection: "productDetailScreen",
-      where: {
-        shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
-        themeId: { equals: req.params.themeId },
-      },
-      data: data,
-    });
-
-    return res.status(200).json({
-      success: true,
-      message: "Product detail updated successfully",
-    })
-
-  }
-  else{
-    const productDetail = await Payload.create({
-      collection: "productDetailScreen",
-      data: {
-        ...data,
-        shopId: req.shop_id || "gid://shopify/Shop/81447387454",
-        themeId: req.params?.themeId
-      },
-    });
-
-    if(!productDetail){
-      return next(
-        new ApiError(
-          "Something went wrong while updating product detail",
-           500
-        )
+  if (isProductDetailForThemeExist.docs.length === 0) {
+    return next(
+      new ApiError(
+        "No document found",
+         400
       )
-    }
-
-    return res.status(200).json({
-      success: true,
-      message: "Product detail updated successfully",
-    })
-  }
-})
-
-const createCartDetailPage = asyncHandler( async (req, res, next) => {
-  
-  const data = req.body;
-
-  if (!data) {
-    const error = new ApiError("Please select all neccessary field", 400)
-    return next(error);
+    )
   }
 
-  const cartDetail = await Payload.create({
-    collection: "emptyCartPageDetail",
-    data: {
-      ...data,
-      shopId: req.shop_id || "gid://shopify/Shop/81447387454",
+  await Payload.update({
+    collection: "productDetailScreen",
+    where: {
+      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
+      themeId: { equals: req.params.themeId },
     },
+    data: data,
   });
 
   return res.status(200).json({
     success: true,
-    message: "Created Successfully",
-    data: cartDetail,
+    message: "Product detail updated successfully",
   })
 
-})
-
-const createAccountDetailPage = asyncHandler( async (req, res, next) => {
-
-    const data = req.body;
-
-    if (!data) {
-      const error = new ApiError("Please select all neccessary field", 400)
-      return next(error);
-    }
-
-    const accountDetail = await Payload.create({
-      collection: "accountPageDetail",
-      data: {
-        ...data,
-        shopId: req.shop_id || "gid://shopify/Shop/81447387454",
-      },
-    });
-
-    return res.status(200).json({
-      success: true,
-      message: "Created Successfully",
-      data: accountDetail,
-    })
 })
 
 const getProductDetails = asyncHandler( async(req , res , next)=> {
@@ -194,7 +127,54 @@ const getProductDetails = asyncHandler( async(req , res , next)=> {
   return res.status(200).json({
     success: true,
     message: "Data Send Successfully",
-    productDetail: productDetail?.docs[0] || otherScreen?.data?.productDetail,
+    productDetail: productDetail?.docs[0]
+  })
+})
+
+const getAccountScreen = asyncHandler( async(req , res , next)=> {
+
+  if (!req.params.shopId) {
+    return next(
+      new ApiError(
+        "ShopId is Missing",
+         400
+      )
+    )
+  }
+
+  const store = await Payload.find({
+    collection: 'Store',
+    where: { 
+      shopId: { equals: `gid://shopify/Shop/${req.params.shopId}` },
+      isActive : { equals: true }
+    },
+  })
+
+  if(!store.docs[0]){
+    return next(
+      new ApiError(
+        `Shop not found with id: ${req.params.shopId}`,
+         404
+      )
+    )
+  }
+
+  const accountScreenData = await Payload.find({
+    collection: "accountScreen",
+    where: { 
+      shopId: { equals: `gid://shopify/Shop/${req.params.shopId}` },
+      themeId: { equals: store?.docs[0]?.themeId}
+    },
+  });
+
+  if(accountScreenData?.docs[0]){
+    accountScreenData.docs[0].themeId = accountScreenData.docs[0].themeId.id
+  }
+
+  return res.status(200).json({
+    success: true,
+    message: "Data Send Successfully",
+    dat: accountScreenData?.docs[0]
   })
 })
 
@@ -274,6 +254,54 @@ const getOtherScreenPageDetailByWeb = asyncHandler( async (req, res, next) => {
 
 })
 
+const createCartDetailPage = asyncHandler( async (req, res, next) => {
+  
+  const data = req.body;
+
+  if (!data) {
+    const error = new ApiError("Please select all neccessary field", 400)
+    return next(error);
+  }
+
+  const cartDetail = await Payload.create({
+    collection: "emptyCartPageDetail",
+    data: {
+      ...data,
+      shopId: req.shop_id || "gid://shopify/Shop/81447387454",
+    },
+  });
+
+  return res.status(200).json({
+    success: true,
+    message: "Created Successfully",
+    data: cartDetail,
+  })
+
+})
+
+const createAccountDetailPage = asyncHandler( async (req, res, next) => {
+
+  const data = req.body;
+
+  if (!data) {
+    const error = new ApiError("Please select all neccessary field", 400)
+    return next(error);
+  }
+
+  const accountDetail = await Payload.create({
+    collection: "accountPageDetail",
+    data: {
+      ...data,
+      shopId: req.shop_id || "gid://shopify/Shop/81447387454",
+    },
+  });
+
+  return res.status(200).json({
+    success: true,
+    message: "Created Successfully",
+    data: accountDetail,
+  })
+})
 
 
 module.exports = {
@@ -281,5 +309,6 @@ module.exports = {
   createCartDetailPage,
   createAccountDetailPage,
   getOtherScreenPageDetailByWeb,
-  getProductDetails
+  getProductDetails,
+  getAccountScreen
 };

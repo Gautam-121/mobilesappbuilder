@@ -23,26 +23,6 @@ const Branding = {
       required: true
     },
     {
-      name: 'app_title', // required
-      label: "App Title",
-      type: 'radio', // required
-      options: [
-        // required
-        {
-          label: 'Title Text',
-          value: 'appText',
-        },
-        {
-          label: 'Upload logo',
-          value: 'applogo',
-        },
-      ],
-      defaultValue: 'appText', // The first value in options.
-      admin: {
-        layout: 'horizontal',
-      },
-    },
-    {
       name: "app_title_text",
       label: "App Title Text",
       type: "group",
@@ -51,6 +31,7 @@ const Branding = {
           name: "app_name",
           label:"App Name",
           type: "text",
+          required: true
         },
         {
           name: "app_name_text_colour",
@@ -59,18 +40,13 @@ const Branding = {
           defaultValue: "#ffffff"
         },
       ],
-      admin: {
-        condition: (data) => data.app_title === 'appText' // Show if appTitle is 'appText'
-      }
     },
     {
           name: "app_title_logo",
           label:"logo",
           type: "relationship",
           relationTo: "media",
-          admin: {
-            condition: (data) => data.app_title === 'applogo' // Show if appTitle is 'logo'
-          }
+          required: true
     },
     {
       name: "launch_screen_bg_color",
