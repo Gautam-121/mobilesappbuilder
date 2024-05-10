@@ -924,7 +924,7 @@ const updateServerKey = asyncHandler(async (req, res) => {
 
 const sendNotification = asyncHandler(async (req, res, next) => {
 
-  const { title, body, click_action } = req.body;
+  const { title, body, click_action, type } = req.body;
 
   const store = await Payload.find({
     collection: 'Store',
@@ -1048,6 +1048,9 @@ const sendNotification = asyncHandler(async (req, res, next) => {
           title: title,
           body: body,
         },
+        // data: {
+        //   type: type
+        // },
       }
     };
     if (click_action) {
@@ -1059,6 +1062,16 @@ const sendNotification = asyncHandler(async (req, res, next) => {
         }
       };
     }
+    
+    // Add apns field with payload object containing aps field with category
+    sendMessage.message.apns = {
+      payload: {
+        aps: {
+          click_action: click_action,
+          type:type
+        }
+      }
+    };
     console.log("hii line 1047");
 
     // console.log("hii line 498");
