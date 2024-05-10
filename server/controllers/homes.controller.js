@@ -128,6 +128,7 @@ const updateHomePage = asyncHandler(async (req, res, next) => {
       shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
       isActive: { equals: true },
     },
+    depth: req.query?.depth || 0 
   });
 
   if (!isSelectedTheme.docs[0]) {
