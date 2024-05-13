@@ -24,10 +24,12 @@ const createCustomer = asyncHandler(async (req, res, next) => {
   }
 
   if (![id, customerName, deviceId, deviceType, firebaseToken,].every(field => field && String(field).trim() !== "")) {
-    return res.status(400).json({
-      success: false,
-      message: "All fields are required"
-    });
+    return next(
+      new ApiError(
+        "All fields are required",
+        400
+      )
+    )
   }
 
   try {
@@ -65,15 +67,13 @@ const createCustomer = asyncHandler(async (req, res, next) => {
 
     if (customerExist.docs.length > 0) {
       // At least one of the fields (device ID, device type, or Firebase token) already exists for another customer
-      return res.status(400).json({
-        success: false,
-        message: "One or more fields already exists"
-      });
+      return next(
+        new ApiError(
+          "One or more fields already exists",
+          400
+        )
+      )
     }
-
-    // return res.status(200).json({
-    //   success: true,
-    //   data:customerExist.docs[0]});
 
     if (customerExist.docs[0]) {
       const existingCustomerData = customerExist.docs[0];
@@ -143,7 +143,7 @@ const createFirebaseToken = async (req, res, next) => {
     const store = await Payload.find({
       collection: 'Store',
       where: {
-        shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
+        shopId: { equals: req.shop_id},
         isActive: { equals: true }
       },
     });
@@ -374,8 +374,12 @@ const sendNotification = asyncHandler(async (req, res, next) => {
   }
 
   if (!title || !body) {
-    const error = new ApiError(" title and body is required", 400);
-    return next(error);
+    return next(
+      new ApiError(
+        "title and body is required",
+        400 
+      )
+    )
   }
 
   const allCustomer = await Payload.find({
@@ -388,13 +392,24 @@ const sendNotification = asyncHandler(async (req, res, next) => {
 
   if (allCustomer.docs.length === 0) {
     return next(
-      new ApiError("customer not found", 404)
+      new ApiError(
+        "customer not found", 
+        404
+      )
     );
   }
 
   // return res.status(200).send(allCustomer)
-  const firebaseTokens = allCustomer.docs.flatMap(customer => customer.firebaseTokens.map(token => token.firebaseToken));
-  console.log(firebaseTokens);
+  const firebaseTokens = allCustomer.docs?.flatMap(customer => customer?.firebaseTokens?.map(token => token?.firebaseToken));
+
+  if(!firebaseTokens || firebaseTokens.length == 0){
+    return next(
+      new ApiError(
+        "No one exist with firebase token",
+         400
+      )
+    )
+  }
 
   // const topicName = name.replace(/\W+/g, '_'); // Replace non-alphanumeric characters with underscores
   // console.log(topicName);
@@ -407,8 +422,12 @@ const sendNotification = asyncHandler(async (req, res, next) => {
   });
 
   if (!storeFirebaseAccessToken.docs[0]) {
-    const error = new ApiError("Firebase Access Token not found", 404);
-    return next(error);
+    return next(
+       new ApiError(
+        "Firebase Access Token not found", 
+        404
+      )
+    );
   }
 
   const accessTokenDuration = 3600000; // 1 hour in milliseconds
@@ -464,8 +483,12 @@ const sendNotification = asyncHandler(async (req, res, next) => {
     console.log("hii line 478", subscribeTopic?.data);
 
     if (subscribeTopic?.data?.results[0]?.error) {
-      const error = new ApiError(`${subscribeTopic?.data?.results[0]?.error} firebaseTokens are not linked to your firebase account`, 401);
-      return next(error);
+      return next(
+        new ApiError(
+          `${subscribeTopic?.data?.results[0]?.error} firebaseTokens are not linked to your firebase account`,
+          401
+        )
+      )
     }
     // console.log("hii line 1032");
     // const topicName = "notify"
@@ -512,15 +535,26 @@ const sendNotification = asyncHandler(async (req, res, next) => {
     );
     console.log("hii line 1055", sendNotification);
     if (sendNotification?.data?.failure === 1) {
-      const error = new ApiError("Notification Not Send", 400);
-      return next(error);
+      return next(
+        new ApiError(
+          "Notification Not Send", 
+           400
+        )
+      );
     }
 
-    return res.status(200).json({ success: true, message: "Notification Send Successfully" });
+    return res.status(200).json({ 
+      success: true, 
+      message: "Notification Send Successfully" 
+    });
+
   } catch (error) {
-    console.error("Error sending notification:", error.response.data);
-    const apiError = new ApiError("Failed to send notification", error.response.data, 500);
-    return next(apiError);
+    return next(
+      new ApiError(
+        "Failed to send notification", error.response.data, 
+        500
+      )
+    );
   }
 });
 

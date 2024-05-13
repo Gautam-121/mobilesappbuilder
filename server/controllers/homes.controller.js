@@ -3,8 +3,14 @@ const ApiError = require("../utils/ApiError.js");
 const asyncHandler = require("../utils/asyncHandler.js");
 
 const getHomePage = asyncHandler(async (req, res, next) => {
+
   if (!req.params.shopId) {
-    return next(new ApiError("ShopId is missing", 400));
+    return next(
+      new ApiError(
+        "ShopId is missing", 
+        400
+      )
+    );
   }
 
   const store = await Payload.find({
@@ -17,7 +23,10 @@ const getHomePage = asyncHandler(async (req, res, next) => {
 
   if (!store.docs[0]) {
     return next(
-      new ApiError(`Shop not found with id: ${req.params.shopId}`, 404)
+      new ApiError(
+        `Shop not found with id: ${req.params.shopId}`, 
+        404
+      )
     );
   }
 
@@ -31,7 +40,10 @@ const getHomePage = asyncHandler(async (req, res, next) => {
 
   if (homeData.docs.length === 0) {
     return next(
-      new ApiError(`No data found with shopId: ${req.params.shopId}`, 400)
+      new ApiError(
+        `No data found with shopId: ${req.params.shopId}`, 
+        400
+      )
     );
   }
 
@@ -57,7 +69,12 @@ const getHomePage = asyncHandler(async (req, res, next) => {
 const getHomePageByWeb = asyncHandler(async (req, res, next) => {
 
   if (!req.params.themeId) {
-    return next(new ApiError("themeId is missing", 400));
+    return next(
+      new ApiError(
+        "themeId is missing", 
+        400
+      )
+    );
   }
 
   const isSelectedTheme = await Payload.find({
@@ -70,14 +87,24 @@ const getHomePageByWeb = asyncHandler(async (req, res, next) => {
   });
 
   if (!isSelectedTheme.docs[0]) {
-    return next(new ApiError(`store not found with id: ${req.shop_id}`, 404));
+    return next(
+      new ApiError(
+        `store not found with id: ${req.shop_id}`,
+         404
+      )
+    );
   }
 
   if (
     !isSelectedTheme.docs[0]?.themeId ||
     isSelectedTheme.docs[0]?.themeId != req.params.themeId
   ) {
-    return next(new ApiError("Params is not matched with store themeId", 400));
+    return next(
+      new ApiError(
+        "Params is not matched with store themeId", 
+        400
+      )
+    );
   }
 
   const homeData = await Payload.find({
@@ -90,7 +117,12 @@ const getHomePageByWeb = asyncHandler(async (req, res, next) => {
   });
 
   if (homeData.docs.length === 0) {
-    return next(new ApiError("No Document Found", 400));
+    return next(
+      new ApiError(
+        "No Document Found", 
+        400
+      )
+    );
   }
 
   // Update the homeData.docs[0].homeData array
@@ -119,7 +151,12 @@ const updateHomePage = asyncHandler(async (req, res, next) => {
   console.log("datas from line 149", datas);
 
   if (!req.params.themeId) {
-    return next(new ApiError("ThemeId is missing"));
+    return next(
+      new ApiError(
+        "ThemeId is missing" , 
+        400
+      )
+    );
   }
 
   const isSelectedTheme = await Payload.find({
@@ -132,14 +169,24 @@ const updateHomePage = asyncHandler(async (req, res, next) => {
   });
 
   if (!isSelectedTheme.docs[0]) {
-    return next(new ApiError(`store not found with id: ${req.shop_id}`, 404));
+    return next(
+      new ApiError(
+        `store not found with id: ${req.shop_id}`, 
+        404
+      )
+    );
   }
 
   if (
     !isSelectedTheme.docs[0]?.themeId ||
     isSelectedTheme.docs[0]?.themeId != req.params.themeId
   ) {
-    return next(new ApiError("Params is not matched with store themeId", 400));
+    return next(
+      new ApiError(
+        "Params is not matched with store themeId",
+         400
+      )
+    );
   }
 
   const isExistHomeData = await Payload.find({
@@ -151,7 +198,12 @@ const updateHomePage = asyncHandler(async (req, res, next) => {
   });
 
   if (isExistHomeData.docs.length === 0) {
-    return next(new ApiError("No Document Found", 400));
+    return next(
+      new ApiError(
+        "No Document Found",
+         400
+      )
+    );
   }
 
   try {
@@ -376,7 +428,7 @@ const updateHomePage = asyncHandler(async (req, res, next) => {
   await Payload.update({
     collection: "homeScreen",
     where: {
-      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
+      shopId: { equals: req.shop_id },
       themeId: { equals: req.params.themeId },
     },
     data: {
