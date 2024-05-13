@@ -30,7 +30,7 @@ export default function Landing() {
       const result = await (await fetch(url, options))?.json();
 
       console.log(result);
-      if ((result.message = "firebase access token already exists"))
+      if (result.message = "firebase access token already exists")
         navigate("/push-notification/template");
     };
 

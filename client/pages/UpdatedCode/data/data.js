@@ -63,11 +63,12 @@ export const data = [
 //   }
 // },
 {
-  id:4,
+ 
   isVisible: true,
   featureType: "categories",
   layoutType: "horizontal_grid",
   data: {
+    id:4,
    data: [
       {
         title: "Title 1",
