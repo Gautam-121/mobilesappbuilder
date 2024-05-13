@@ -133,159 +133,166 @@ console.log("index from", index)
 }
   return (
     <div className="mobilePreviewContainer" onClick={handleOutsideClick}>
-      {componentListArray !== null && componentListArray.length > 0 ? (
+    
         <DndProvider backend={HTML5Backend}>
-          <div className="header-main-mobile-preview-div">
-            <div>
-              {/* <label htmlFor="menu-toggle" className="menu-icon">
-                &#9776;
-              </label> */}
-              <nav className="menu">
-                <ul>
-                  <li>
-                    <a href="#">Account</a>
-                  </li>
-                  <li>
-                    <a href="#">Orders</a>
-                  </li>
-                  <li>
-                    <a href="#">Addresses</a>
-                  </li>
-                  <li>
-                    <a href="#">Login</a>
-                  </li>
-                </ul>
-              </nav>
-            </div>
-            <div>{shopify.config.shop.split(".")[0] || "Renergii"}</div>
-            {/* <div>cart</div> */}
+        {/* {componentListArray !== null && componentListArray.length > 0 ? ( */}
+         <div>
+         <div className="header-main-mobile-preview-div">
+          
+          <div>
+            {/* <label htmlFor="menu-toggle" className="menu-icon">
+              &#9776;
+            </label> */}
+            <nav className="menu">
+              <ul>
+                <li>
+                  <a href="#">Account</a>
+                </li>
+                <li>
+                  <a href="#">Orders</a>
+                </li>
+                <li>
+                  <a href="#">Addresses</a>
+                </li>
+                <li>
+                  <a href="#">Login</a>
+                </li>
+              </ul>
+            </nav>
           </div>
-
-          <div
-            className="content-container"
-            onDrop={handleDrop}
-            onDragOver={handleDragOver}
-          >
-            <div className="scrollable-content">
-              {componentListArray.map((ele, index) => {
-                switch (ele.featureType) {
-                  case "announcement":
-                    return (
-                  <div onClick={()=>handleCurrentIndex(index)}>
-                        <DraggableAnnouncementBar
-                        key={ele.id}
-                        id={ele.id}
-                        index={index}
-                        moveComponent={moveComponent}
-                        handleEdit={() => handleEditButtonClick(ele.id)}
-                        textColor={ele.data.textColor}
-                        backgroundColor={ele.data.backgroundColor}
-                        animationType={ele.data.animationType}
-                        style={ele.style}
-                        text={ele.data.message}
-                        data={ele}
-                      />
-                  </div>
-                      
-                    );
-                  case "categories":
-                    return ele.layoutType === "vertical_grid" ? (
-                      <div onClick={()=>handleCurrentIndex(index)}>
-                      <DraggableVerticalCollectionGrid
-                        key={ele.id}
-                        gridItems={ele}
-                        index={index}
-                        moveComponent={moveComponent}
-                        handleEdit={() => handleEditButtonClick(ele.id)}
-                      />
-                      </div>
-                    ) : (
-                      <div onClick={()=>handleCurrentIndex(index)}>
-                      <DraggableHorizontalCollectionGrid
-                        key={ele.id}
-                        index={index}
-                        moveComponent={moveComponent}
-                        handleEdit={() => handleEditButtonClick(ele.id)}
-                        gridItems={ele}
-                      />
-                      </div>
-                    );
-                  case "text_paragraph":
-                    return (
-                      <DraggableTextParagraph
-                        key={ele.id}
-                        gridItems={ele}
-                        index={index}
-                        moveComponent={moveComponent}
-                        handleEdit={() => handleEditButtonClick(ele.id)}
-                      />
-                    );
-                  case "banner":
-                    return (
-                      <div onClick={()=>handleCurrentIndex(index)}>
-                      <DraggableBanner
-                        key={ele.id}
-                        gridItems={ele}
-                        index={index}
-                        moveComponent={moveComponent}
-                        handleEdit={() => handleEditButtonClick(ele.id)}
-                      />
-                      </div>
-                    );
-                  case "video":
-                    return (
-                      <DraggableVideo
-                        key={ele.id}
-                        gridItems={ele}
-                        index={index}
-                        moveComponent={moveComponent}
-                        handleEdit={() => handleEditButtonClick(ele.id)}
-                      />
-                    );
-                  case "productGroup":
-                    return ele.layoutType === "vertical_grid" ? (
-                      <DragableVerticalProduct
-                        key={ele.id}
-                        gridItems={ele}
-                        index={index}
-                        moveComponent={moveComponent}
-                        handleEdit={() => handleEditButtonClick(ele.id)}
-                      />
-                    ) : (
-                      <div onClick={()=>handleCurrentIndex(index)}>
-                      <DragableHorizontalProductGrid
-                        key={ele.id}
-                        gridItems={ele}
-                        index={index}
-                        moveComponent={moveComponent}
-                        handleEdit={() => handleEditButtonClick(ele.id)}
-                      />
-                      </div>
-                    );
-                  default:
-                    return null;
-                }
-              })}
-            </div>
-          </div>
-
-          <div className="footer-main-mobile-preview-div">
-            <div className="search-footer-icon">&#128269;</div>
-
-            <div>
-              <label htmlFor="home-btn" className="home-footer-icon">
-                &#8962;
-              </label>
-            </div>
-
-            <div className="cart-footer-icon">&#128722;</div>
-          </div>
-        </DndProvider>
-      ) : (
-        <div className="the-spinner">
-          <Spinner accessibilityLabel="Spinner" size="large" />
+          <div>{shopify.config.shop.split(".")[0] || "Renergii"}</div>
+          {/* <div>cart</div> */}
         </div>
-      )}
+
+        <div
+          className="content-container"
+          onDrop={handleDrop}
+          onDragOver={handleDragOver}
+        >
+        {componentListArray.length>0? ( 
+        <div className="scrollable-content">
+            {componentListArray.map((ele, index) => {
+              switch (ele.featureType) {
+                case "announcement":
+                  return (
+                <div onClick={()=>handleCurrentIndex(index)}>
+                      <DraggableAnnouncementBar
+                      key={ele.id}
+                      id={ele.id}
+                      index={index}
+                      moveComponent={moveComponent}
+                      handleEdit={() => handleEditButtonClick(ele.id)}
+                      textColor={ele.data.textColor}
+                      backgroundColor={ele.data.backgroundColor}
+                      animationType={ele.data.animationType}
+                      style={ele.style}
+                      text={ele.data.message}
+                      data={ele}
+                    />
+                </div>
+                    
+                  );
+                case "categories":
+                  return ele.layoutType === "vertical_grid" ? (
+                    <div onClick={()=>handleCurrentIndex(index)}>
+                    <DraggableVerticalCollectionGrid
+                      key={ele.id}
+                      gridItems={ele}
+                      index={index}
+                      moveComponent={moveComponent}
+                      handleEdit={() => handleEditButtonClick(ele.id)}
+                    />
+                    </div>
+                  ) : (
+                    <div onClick={()=>handleCurrentIndex(index)}>
+                    <DraggableHorizontalCollectionGrid
+                      key={ele.id}
+                      index={index}
+                      moveComponent={moveComponent}
+                      handleEdit={() => handleEditButtonClick(ele.id)}
+                      gridItems={ele}
+                    />
+                    </div>
+                  );
+                case "text_paragraph":
+                  return (
+                    <DraggableTextParagraph
+                      key={ele.id}
+                      gridItems={ele}
+                      index={index}
+                      moveComponent={moveComponent}
+                      handleEdit={() => handleEditButtonClick(ele.id)}
+                    />
+                  );
+                case "banner":
+                  return (
+                    <div onClick={()=>handleCurrentIndex(index)}>
+                    <DraggableBanner
+                      key={ele.id}
+                      gridItems={ele}
+                      index={index}
+                      moveComponent={moveComponent}
+                      handleEdit={() => handleEditButtonClick(ele.id)}
+                    />
+                    </div>
+                  );
+                case "video":
+                  return (
+                    <DraggableVideo
+                      key={ele.id}
+                      gridItems={ele}
+                      index={index}
+                      moveComponent={moveComponent}
+                      handleEdit={() => handleEditButtonClick(ele.id)}
+                    />
+                  );
+                case "productGroup":
+                  return ele.layoutType === "vertical_grid" ? (
+                    <DragableVerticalProduct
+                      key={ele.id}
+                      gridItems={ele}
+                      index={index}
+                      moveComponent={moveComponent}
+                      handleEdit={() => handleEditButtonClick(ele.id)}
+                    />
+                  ) : (
+                    <div onClick={()=>handleCurrentIndex(index)}>
+                    <DragableHorizontalProductGrid
+                      key={ele.id}
+                      gridItems={ele}
+                      index={index}
+                      moveComponent={moveComponent}
+                      handleEdit={() => handleEditButtonClick(ele.id)}
+                    />
+                    </div>
+                  );
+                default:
+                  return null;
+              }
+            })}
+          </div>)
+       :  ( <div 
+        className="the-spinner">
+           {/* <Spinner accessibilityLabel="Spinner" size="large" /> */}
+           <span>Please add components here</span>
+         </div>)}
+        </div>
+
+        <div className="footer-main-mobile-preview-div">
+          <div className="search-footer-icon">&#128269;</div>
+
+          <div>
+            <label htmlFor="home-btn" className="home-footer-icon">
+              &#8962;
+            </label>
+          </div>
+
+          <div className="cart-footer-icon">&#128722;</div>
+        </div>
+         </div>
+      
+        </DndProvider>
+    
     </div>
   );
 }

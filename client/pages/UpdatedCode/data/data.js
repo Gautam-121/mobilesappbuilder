@@ -3,6 +3,7 @@ export const data = [
     id:1,
     featureType: "banner",
     layoutType: "horizontal",
+    isEditVisible:true,
    data:{
     data: [
       // {
@@ -32,9 +33,12 @@ export const data = [
   isVisible: "true",
   layoutType: "horizontal",
   featureType: "announcement",
-  id: 2,
+  isNew:true,
+  isEditVisible:true,
+
   data: 
     {
+      id: null,
       message: "Up to 50% off New Arrivals",
       textColor: "#000000",
       backgroundColor: "#FE6100",
@@ -67,8 +71,10 @@ export const data = [
   isVisible: true,
   featureType: "categories",
   layoutType: "horizontal_grid",
+  isEditVisible:true,
+
   data: {
-    id:4,
+   id:null,
    data: [
       {
         title: "Title 1",
@@ -145,11 +151,14 @@ export const data = [
 // },
 
 {
-id:6,
 isVisible:true,
+isEditVisible:true,
+
 featureType: "productGroup",
 layoutType: "horizontal_grid",
+isNew:true,
 data: {
+  id:null,
   title: "New Products",
   productGroupId: null
 }

@@ -19,6 +19,7 @@
   justify-content: center;
   align-items: center;
   padding-top: 20px;
+  height: 21.5rem;
 }
 
 .content-container {
@@ -42,6 +43,7 @@
   flex-direction: column;
   gap: 5px;
   padding: 2px;
+  height: 21.5rem;
   /* Add padding to prevent content from touching the edges */
 }
 
