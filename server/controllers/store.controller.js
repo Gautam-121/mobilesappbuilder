@@ -33,7 +33,7 @@ const updateStoreAppDesignDetail = asyncHandler(  async (req, res, next) => {
   let UserStoreData = await Payload.find({
     collection: "Store",
     where: {
-      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
+      shopId: { equals: req.shop_id },
       isActive: { equals : true }
     },
     depth: req.query?.depth || 0
@@ -62,7 +62,7 @@ const updateStoreAppDesignDetail = asyncHandler(  async (req, res, next) => {
     const isDataByThemeExist = await Payload.find({
       collection: "branding",
       where: {
-        shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
+        shopId: { equals: req.shop_id  },
         themeId: { equals: themeId },
       },
       depth: req.query?.depth || 0
@@ -72,7 +72,7 @@ const updateStoreAppDesignDetail = asyncHandler(  async (req, res, next) => {
       UserStoreData = await Payload.update({
         collection: "Store",
         where: {
-          shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
+          shopId: { equals: req.shop_id },
         },
         data: {
           themeId: themeId
@@ -91,7 +91,7 @@ const updateStoreAppDesignDetail = asyncHandler(  async (req, res, next) => {
   const fetchCollections = await shopifyApiData(
     shopifyGraphQLEndpoint(shop),
     graphqlQueryForFirstCollection,
-    axiosShopifyConfig(req.accessToken || "shpua_8f55d655921140091487fb890fc5071e")
+    axiosShopifyConfig(req.accessToken)
   );
 
   const collections = fetchCollections?.data?.data?.collections?.nodes[0];
@@ -248,7 +248,7 @@ const updateStoreAppDesignDetail = asyncHandler(  async (req, res, next) => {
   await Payload.create({
     collection: "homeScreen",
     data: {
-      shopId: req.shop_id || "gid://shopify/Shop/81447387454",
+      shopId: req.shop_id,
       themeId: themeId,
       homeData: homeData?.docs[0].homeData,
     },
@@ -258,7 +258,7 @@ const updateStoreAppDesignDetail = asyncHandler(  async (req, res, next) => {
     collection: "bottomMenuPannel",
     data: {
       setting: tabMenuData.docs[0]?.setting,
-      shopId: req.shop_id || "gid://shopify/Shop/81447387454",
+      shopId: req.shop_id,
       themeId: themeId,
     },
   });
@@ -268,7 +268,7 @@ const updateStoreAppDesignDetail = asyncHandler(  async (req, res, next) => {
     data: {
       main_section: accountData.docs[0]?.main_section,
       footer_section: accountData.docs[0]?.footer_section,
-      shopId: req.shop_id || "gid://shopify/Shop/81447387454",
+      shopId: req.shop_id,
       themeId: themeId,
     },
   });
@@ -284,7 +284,7 @@ const updateStoreAppDesignDetail = asyncHandler(  async (req, res, next) => {
     collection: "branding",
     data: {
       ...brandingData.docs[0],
-      shopId: req.shop_id || "gid://shopify/Shop/81447387454",
+      shopId: req.shop_id ,
       themeId: themeId,
     },
   });
@@ -294,7 +294,7 @@ const updateStoreAppDesignDetail = asyncHandler(  async (req, res, next) => {
     data: {
       actions: productData.docs[0]?.actions,
       faster_checkout: productData.docs[0]?.faster_checkout,
-      shopId: req.shop_id || "gid://shopify/Shop/81447387454",
+      shopId: req.shop_id,
       themeId: themeId,
     },
   });
@@ -302,7 +302,7 @@ const updateStoreAppDesignDetail = asyncHandler(  async (req, res, next) => {
   UserStoreData = await Payload.update({
     collection: "Store",
     where: {
-      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
+      shopId: { equals: req.shop_id },
     },
     data: req.body,
   });
@@ -355,7 +355,7 @@ const getStoreDetailByWeb = asyncHandler( async(req,res,next)=>{
   const store = await Payload.find({
     collection: 'Store',
     where: { 
-      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
+      shopId: { equals: req.shop_id },
       isActive: { equals : true }
     },
     depth: req.query?.depth || 0
@@ -385,7 +385,7 @@ const updateSocialMediaOfStore = asyncHandler( async(req,res,next)=>{
   const store = await Payload.find({
     collection: 'Store',
     where: { 
-      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
+      shopId: { equals: req.shop_id },
       isActive: { equals: true}
     },
   })
@@ -394,7 +394,7 @@ const updateSocialMediaOfStore = asyncHandler( async(req,res,next)=>{
     return next(
       new ApiError(
         `store not found with id: ${req.shop_id}`,
-        404
+         404
       )
     )
   }
@@ -415,7 +415,8 @@ const updateSocialMediaOfStore = asyncHandler( async(req,res,next)=>{
     if (!title || !profileUrl) {
       return next(
         new ApiError(
-          "missing required field title and profileUrl"
+          "missing required field title and profileUrl",
+           400
         )
       )
     }
@@ -466,7 +467,7 @@ const updateSocialMediaOfStore = asyncHandler( async(req,res,next)=>{
     if(account.title == "whatsApp" && !isValidWhatsAppUrl(account.profileUrl)){
       return next(
         new ApiError(
-          "Invalid youTube Url",
+          "Invalid whatsApp Url",
           400
         )
       )
@@ -476,7 +477,7 @@ const updateSocialMediaOfStore = asyncHandler( async(req,res,next)=>{
    await Payload.update({
     collection: "Store",
     where: {
-      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
+      shopId: { equals: req.shop_id },
     },
     data:{
       socialMediaAccount: socialMedia

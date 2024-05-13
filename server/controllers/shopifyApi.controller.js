@@ -22,7 +22,7 @@ const getProduct = asyncHandler( async (req, res , next) => {
   const store = await Payload.find({
     collection: 'Store',
     where: { 
-      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
+      shopId: { equals: req.shop_id  },
       isActive: { equals : true}
     },
   })
@@ -73,7 +73,7 @@ const getCollection = asyncHandler( async (req, res, next) => {
   const store = await Payload.find({
     collection: 'Store',
     where: { 
-      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
+      shopId: { equals: req.shop_id  },
       isActive: { equals : true}
     },
   })
@@ -135,7 +135,7 @@ const getProductByCollectionId = asyncHandler( async (req, res, next) => {
   const store = await Payload.find({
     collection: 'Store',
     where: { 
-      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
+      shopId: { equals: req.shop_id  },
       isActive: { equals : true}
     },
   })
@@ -158,7 +158,7 @@ const getProductByCollectionId = asyncHandler( async (req, res, next) => {
     axiosShopifyConfig(req.accessToken),
     { collectionId: req.query.collectionId, first: per_page, after: next_page }
   );
-console.log("data",fetchCollectionsProducts.data.data.collection)
+
   if(fetchCollectionsProducts?.data?.errors?.length > 0){
     return next(
       new ApiError(
@@ -188,7 +188,7 @@ const updateShopPolicies = asyncHandler(async (req, res , next) => {
   const store = await Payload.find({
     collection: 'Store',
     where: { 
-      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
+      shopId: { equals: req.shop_id },
       isActive: { equals: true}
     },
   })
@@ -218,7 +218,8 @@ const updateShopPolicies = asyncHandler(async (req, res , next) => {
     if (!body || !type) {
       return next(
         new ApiError(
-          "missing required field body and type"
+          "missing required field body and type",
+           400
         )
       )
     }
@@ -236,7 +237,7 @@ const updateShopPolicies = asyncHandler(async (req, res , next) => {
   await Payload.update({
     collection: "Store",
     where: {
-      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
+      shopId: { equals: req.shop_id },
     },
     data:{
       policies: shopPolicies
@@ -253,8 +254,12 @@ const updateShopPolicies = asyncHandler(async (req, res , next) => {
 const metafieldByProductId = asyncHandler( async(req,res,next)=>{
 
   if(!req.params?.shopId || !req?.params?.productId){
-    const error = new ApiError("shopId and productId is required", 400)
-    return next(error);
+    return next(
+      new ApiError(
+        "shopId and productId is required",
+         400
+      )
+    )
   }
 
   const storeExist = await Payload.find({
@@ -266,8 +271,12 @@ const metafieldByProductId = asyncHandler( async(req,res,next)=>{
   })
 
   if(!storeExist.docs[0]){
-    const error = new ApiError(`store not found with id: ${req.params?.shopId}`, 404)
-    return next(error);
+    return next(
+      new ApiError(
+        `store not found with id: ${req.params?.shopId}`,
+        404
+      )
+    )
   }
 
   const offlineAccessToken =  await Payload.find({
@@ -279,8 +288,12 @@ const metafieldByProductId = asyncHandler( async(req,res,next)=>{
   })
 
   if(!offlineAccessToken?.docs[0]){
-    const error = new ApiError(`store not found with id: ${req.params?.shopId}`, 404)
-    return next(error);
+    return next(
+      new ApiError(
+        `store not found with id: ${req.params?.shopId}`,
+        404
+      )
+    )
   }
 
   // fetch metafield of product from shopify
@@ -326,7 +339,7 @@ const getAllSegment = asyncHandler( async (req, res , next) => {
   const store = await Payload.find({
     collection: 'Store',
     where: { 
-      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
+      shopId: { equals: req.shop_id  },
       isActive: { equals : true}
     },
   })
@@ -377,7 +390,7 @@ const getShopPolicies = asyncHandler( async(req,res,next)=>{
   const store = await Payload.find({
     collection: 'Store',
     where: { 
-      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
+      shopId: { equals: req.shop_id  },
       isActive: { equals : true}
     },
   })
@@ -397,7 +410,7 @@ const getShopPolicies = asyncHandler( async(req,res,next)=>{
       `https://${req?.shop || "renergii.myshopify.com"}/admin/api/2024-01/policies.json`,
       {
         headers: {
-          'X-Shopify-Access-Token': req?.accessToken || "shpua_feecc4ecd2b979fd860d0ac0ad8a864f",
+          'X-Shopify-Access-Token': req?.accessToken ,
         },
       }
     );

@@ -259,8 +259,12 @@ const createCartDetailPage = asyncHandler( async (req, res, next) => {
   const data = req.body;
 
   if (!data) {
-    const error = new ApiError("Please select all neccessary field", 400)
-    return next(error);
+    return next(
+      new ApiError(
+        "Please select all neccessary field",
+         400
+      )
+    )
   }
 
   const cartDetail = await Payload.create({
@@ -284,8 +288,12 @@ const createAccountDetailPage = asyncHandler( async (req, res, next) => {
   const data = req.body;
 
   if (!data) {
-    const error = new ApiError("Please select all neccessary field", 400)
-    return next(error);
+    return next(
+      new ApiError(
+        "Please select all neccessary field",
+         400
+      )
+    )
   }
 
   const accountDetail = await Payload.create({

@@ -7,7 +7,7 @@ const getAllTheme = asyncHandler( async (req, res, next) => {
   const store = await Payload.find({
     collection: 'Store',
     where: { 
-      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
+      shopId: { equals: req.shop_id },
       isActive: { equals : true}
     },
   })
@@ -46,7 +46,7 @@ const getThemeById = asyncHandler( async (req, res, next) => {
   const store = await Payload.find({
     collection: 'Store',
     where: { 
-      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
+      shopId: { equals: req.shop_id },
       isActive: { equals : true}
     },
   })
