@@ -15,7 +15,7 @@ export default function Landing() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [serverKey, setServerKey] = useState("");
   const [isServerKeyValid, setIsServerKeyValid] = useState(false);
-  const [dataForBackend, setDataForBackend] = useState(null);
+  const [serviceAccount, setDataForBackend] = useState(null);
 
   const handleDropZoneDrop = useCallback(
     (_dropFiles, acceptedFiles, _rejectedFiles) =>
@@ -30,8 +30,11 @@ export default function Landing() {
       const result = await (await fetch(url, options))?.json();
 
       console.log(result);
-      if (result.message = "firebase access token already exists")
-        navigate("/push-notification/template");
+      if(result.message==="Data send successfully"){
+        navigate("/push-notification/template")
+      }
+      // if (result.message = "firebase access token already exists")
+      //   navigate("/push-notification/template");
     };
 
     return [data, fetchData];
@@ -42,7 +45,7 @@ export default function Landing() {
       "Content-Type": "application/json",
     },
     method: "POST",
-    body: JSON.stringify({ dataForBackend }),
+    body: JSON.stringify({ serviceAccount }),
   };
   const getData = {
     headers: {
@@ -58,18 +61,18 @@ export default function Landing() {
   );
   const [serverKeyResponse, getServerKey] = useDataFetcher(
     "",
-    "apps/api/firebase/firebase-access-token",
+    "/apps/api/firebase/firebase-access-token",
     getData
   );
   useEffect(()=>{
     getServerKey();
   },[])
   useEffect(() => {
-    console.log(dataForBackend);
-    if (dataForBackend != null) {
+    console.log(serviceAccount);
+    if (serviceAccount != null) {
       postServerKey();
     }
-  }, [dataForBackend]);
+  }, [serviceAccount]);
   const handleSubmit = async () => {
     if (!selectedFile) {
       alert("Please select a file");

@@ -140,6 +140,9 @@ const createFirebaseToken = async (req, res, next) => {
 
     const { serviceAccount } = req.body;
 
+    console.log(req.body)
+    console.log(serviceAccount)
+
     const store = await Payload.find({
       collection: 'Store',
       where: {
@@ -151,7 +154,7 @@ const createFirebaseToken = async (req, res, next) => {
     if (!store.docs[0]) {
       return next(
         new ApiError(
-          `Shop not found with id: ${req.params.shopId}`,
+          `Shop not found with id: ${req.shop_id}`,
           404
         )
       );
@@ -348,7 +351,6 @@ const getFirebaseAccessToken = asyncHandler(async (req, res,next) => {
   return res.status(200).json({
     success: true,
     message: "Data send successfully",
-    firebaseAccessToken: existFirebaseAccessToken?.docs[0].firbaseAccessToken
   });
 })
 
