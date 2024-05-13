@@ -30,8 +30,10 @@ export default function Landing() {
       const result = await (await fetch(url, options))?.json();
 
       console.log(result);
-      if (result.message = "firebase access token already exists")
+      if (result.message == "firebase access token already exists")
         navigate("/push-notification/template");
+      else if(result.message.includes("Missing required properties:"))
+        alert("Firebase file not correct, please check all the properties before uploading the file")
     };
 
     return [data, fetchData];
