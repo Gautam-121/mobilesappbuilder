@@ -228,13 +228,13 @@ useEffect(()=>{
 
         <div className="appdesign-right-header-buttons">
           <div>
-            <Button
+            {/* <Button
               variant="tertiary"
               textAlign="center"
               icon={<HiQrCode className="appdesign-qr" />}
             >
               Preview on mobile
-            </Button>
+            </Button> */}
           </div>
           {/* <div className='appdesign-preview-btn'><HiQrCode className='appdesign-qr'/> Preview on mobile</div> */}
           <button onClick={handlePublish} className="appdesign-publish-btn">{loading?"Publishing":"Publish changes"}</button>

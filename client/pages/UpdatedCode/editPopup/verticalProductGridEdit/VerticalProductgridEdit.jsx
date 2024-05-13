@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Button, TextField } from "@shopify/polaris";
 import { useRecoilState } from "recoil";
-import { componentListArrayAtom, collectionsAtom, productsByCollectionAtom } from "../../recoil/store";
+import { componentListArrayAtom, collectionsAtom, productsByCollectionAtom, isAuthErrorVisibleAtom } from "../../recoil/store";
 import styles from "./verticalProductGridEdit.module.css";
 import useFetch from "../../../../hooks/useFetch";
+import AlertBanner from "../../../PushNotification/Components/alert/Alert";
 
 export default function VerticalProductgridEdit(props) {
+  const [isAuthErrorVisible, setIsAuthErrorVisible] = useRecoilState(isAuthErrorVisibleAtom)
+  const [alertMessage, setAlertMessage] = useState("")
   // let collectionId = "gid://shopify/Collection/471598170430"
   const [collectionId, setCollectionId] = useState("")
   const [products, setProducts] = useRecoilState(productsByCollectionAtom)
@@ -82,6 +85,12 @@ export default function VerticalProductgridEdit(props) {
   };
 
   const updateComponentListArray = () => {
+   if(!currentObject.data.productGroupId){
+    // setAlertMessage("")
+    setAlertMessage("Please select atleast one collection before saving")
+    setIsAuthErrorVisible(true)
+   }
+   else {
     setComponentListArray((prevArray) => {
       const updatedArray = prevArray.map((item) =>
         item.id === currentObject.id ? currentObject : item
@@ -89,6 +98,7 @@ export default function VerticalProductgridEdit(props) {
       return updatedArray;
     });
     setCurrentObject((prevObject) => ({ ...prevObject, isEditVisible: false }));
+   }
   };
 
   return (
@@ -96,6 +106,7 @@ export default function VerticalProductgridEdit(props) {
       style={data.isEditVisible ? {} : { display: "none" }}
       className="editPopupContainer"
     >
+      {isAuthErrorVisible && <AlertBanner alertMessage={alertMessage}/>}
       <span className="editHeading">Edit Product Grid</span>
       <span>Edit Title</span>
       <TextField
@@ -105,8 +116,10 @@ export default function VerticalProductgridEdit(props) {
       <span>Select Collections</span>
       {collections &&
         collections.map((item) => (
-          <div key={item.id}>
-            <label htmlFor="">
+          <div className={styles.collectionDiv} key={item.id}>
+            <label className={styles.collectionLabel} 
+            style={currentObject.data.productGroupId === item.id?{border:'1px solid', backgroundColor:'aliceblue'}:{}}
+            >
               <input
                 type="radio"
                 checked={currentObject.data.productGroupId === item.id}

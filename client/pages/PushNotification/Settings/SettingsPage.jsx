@@ -116,7 +116,7 @@ export default function SettingsPage() {
       <Page
         backAction={{
           content: "back",
-          onAction: () => navigate("/push-notification/createnotification"),
+          onAction: () => navigate("/push-notification/template"),
         }}
         title="Settings"
       >

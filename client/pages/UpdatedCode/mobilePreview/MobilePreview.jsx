@@ -1,6 +1,6 @@
 import { useRecoilState } from "recoil";
 import "./monilePreview.css";
-import { componentListArrayAtom } from "../recoil/store";
+import { componentListArrayAtom, currentIndexAtom } from "../recoil/store";
 import DraggableAnnouncementBar from "../draggableComponents/DraggableAnnouncementBar";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
@@ -22,6 +22,7 @@ import { DeleteIcon, EditIcon } from "@shopify/polaris-icons";
 export default function MobilePreview() {
   const dispatch = useDispatch();
   const [isEditing, setIsEditing] = useState(false);
+  const [currentIndex, setCurrentIndex] = useRecoilState(currentIndexAtom)
   const [componentListArray, setComponentListArray] = useRecoilState(
     componentListArrayAtom
   );
@@ -126,16 +127,19 @@ export default function MobilePreview() {
     color: "black",
     textAlign: "left",
   };
-
+const  handleCurrentIndex = (index)=>{
+setCurrentIndex(index)
+console.log("index from", index)
+}
   return (
     <div className="mobilePreviewContainer" onClick={handleOutsideClick}>
       {componentListArray !== null && componentListArray.length > 0 ? (
         <DndProvider backend={HTML5Backend}>
           <div className="header-main-mobile-preview-div">
             <div>
-              <label htmlFor="menu-toggle" className="menu-icon">
+              {/* <label htmlFor="menu-toggle" className="menu-icon">
                 &#9776;
-              </label>
+              </label> */}
               <nav className="menu">
                 <ul>
                   <li>
@@ -154,7 +158,7 @@ export default function MobilePreview() {
               </nav>
             </div>
             <div>{shopify.config.shop.split(".")[0] || "Renergii"}</div>
-            <div>cart</div>
+            {/* <div>cart</div> */}
           </div>
 
           <div
@@ -167,15 +171,8 @@ export default function MobilePreview() {
                 switch (ele.featureType) {
                   case "announcement":
                     return (
-                      // <Tooltip
-                      //   content={
-                      //     <div style={{display:'flex',gap:'5px', cursor:'pointer', padding:'5px'}} >
-                      //        <Icon source={EditIcon} onClick={() => handleEditButtonClick(ele.id)} />
-                      //       <Icon source={DeleteIcon} tone='critical' />
-                      //     </div>
-                      //   }
-                      // >
-                      <DraggableAnnouncementBar
+                  <div onClick={()=>handleCurrentIndex(index)}>
+                        <DraggableAnnouncementBar
                         key={ele.id}
                         id={ele.id}
                         index={index}
@@ -188,10 +185,12 @@ export default function MobilePreview() {
                         text={ele.data.message}
                         data={ele}
                       />
-                      // </Tooltip>
+                  </div>
+                      
                     );
                   case "categories":
                     return ele.layoutType === "vertical_grid" ? (
+                      <div onClick={()=>handleCurrentIndex(index)}>
                       <DraggableVerticalCollectionGrid
                         key={ele.id}
                         gridItems={ele}
@@ -199,7 +198,9 @@ export default function MobilePreview() {
                         moveComponent={moveComponent}
                         handleEdit={() => handleEditButtonClick(ele.id)}
                       />
+                      </div>
                     ) : (
+                      <div onClick={()=>handleCurrentIndex(index)}>
                       <DraggableHorizontalCollectionGrid
                         key={ele.id}
                         index={index}
@@ -207,6 +208,7 @@ export default function MobilePreview() {
                         handleEdit={() => handleEditButtonClick(ele.id)}
                         gridItems={ele}
                       />
+                      </div>
                     );
                   case "text_paragraph":
                     return (
@@ -220,6 +222,7 @@ export default function MobilePreview() {
                     );
                   case "banner":
                     return (
+                      <div onClick={()=>handleCurrentIndex(index)}>
                       <DraggableBanner
                         key={ele.id}
                         gridItems={ele}
@@ -227,6 +230,7 @@ export default function MobilePreview() {
                         moveComponent={moveComponent}
                         handleEdit={() => handleEditButtonClick(ele.id)}
                       />
+                      </div>
                     );
                   case "video":
                     return (
@@ -248,6 +252,7 @@ export default function MobilePreview() {
                         handleEdit={() => handleEditButtonClick(ele.id)}
                       />
                     ) : (
+                      <div onClick={()=>handleCurrentIndex(index)}>
                       <DragableHorizontalProductGrid
                         key={ele.id}
                         gridItems={ele}
@@ -255,6 +260,7 @@ export default function MobilePreview() {
                         moveComponent={moveComponent}
                         handleEdit={() => handleEditButtonClick(ele.id)}
                       />
+                      </div>
                     );
                   default:
                     return null;

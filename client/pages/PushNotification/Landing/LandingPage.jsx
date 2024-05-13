@@ -1,5 +1,5 @@
 // import { Button } from "@mui/material";
-import { DropZone, LegacyStack, Page, Text, Thumbnail } from "@shopify/polaris";
+import { DropZone, LegacyStack, Page, Spinner, Text, Thumbnail } from "@shopify/polaris";
 import React, { useEffect, useState, useCallback } from "react";
 import styles from "./LandingPage.module.css";
 import { useNavigate } from "raviger";
@@ -7,15 +7,22 @@ import userImg from "../../../public/userImg.png";
 import { useRecoilState } from "recoil";
 import useFetch from "../../../hooks/useFetch";
 import { NoteIcon } from "@shopify/polaris-icons";
+import AlertBanner from "../Components/alert/Alert";
+import { isAuthErrorVisibleAtom } from "../../UpdatedCode/recoil/store";
 // import { serverKeyAtom } from "../recoilStore/store";
 // import useFetch from "../hooks/useFetch";
 
 export default function Landing() {
+  const [isAuthErrorVisible, setIsAuthErrorVisible] = useRecoilState(
+    isAuthErrorVisibleAtom
+  );
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(true)
   const [selectedFile, setSelectedFile] = useState(null);
   const [serverKey, setServerKey] = useState("");
   const [isServerKeyValid, setIsServerKeyValid] = useState(false);
   const [serviceAccount, setDataForBackend] = useState(null);
+  const [alertMessage, setAlertMessage] = useState("")
 
   const handleDropZoneDrop = useCallback(
     (_dropFiles, acceptedFiles, _rejectedFiles) =>
@@ -30,8 +37,16 @@ export default function Landing() {
       const result = await (await fetch(url, options))?.json();
 
       console.log(result);
-      if(result.message==="Data send successfully"){
+      if(result.message==="Data stored successfully"||result.message==="Data send successfully"){
         navigate("/push-notification/template")
+      }
+      else if(result.message.includes("Missing required properties") || result.message==="Invalid service account type"){
+        // alert("Invalid File. Please check whether the properties are valid or not")
+        setAlertMessage("Invalid File. Please check whether the properties are valid or not")
+        setIsAuthErrorVisible(true)
+      }
+      else{
+        setLoading(false)
       }
       // if (result.message = "firebase access token already exists")
       //   navigate("/push-notification/template");
@@ -128,35 +143,45 @@ export default function Landing() {
 
   return (
     <>
+   
       <Page>
-        <div className={styles.container}>
-          <div className={styles.topHalf}>
-            <img src={userImg} alt="userIcon" className={styles.userImg} />
-            <Text id={styles.greeting} as="h1" variant="headingMd">
-              Hi, Welcome!
-            </Text>
-          </div>
-          <div className={styles.bottomHalf}>
-            <Text id={styles.heading} variant="headingMd">
-              Please upload your Firebase Configuration File
-            </Text>
-            <DropZone
-              allowMultiple={false}
-              onDrop={handleDropZoneDrop}
-              variableHeight={true}
-            >
-              {uploadedFile}
-              {fileUpload}
-            </DropZone>
-            <button
-              disabled={!selectedFile}
-              id={styles.submitBtn}
-              onClick={handleSubmit}
-            >
-              Submit
-            </button>
-          </div>
-        </div>
+      {isAuthErrorVisible && (
+          <AlertBanner
+            alertMessage={alertMessage}
+            alertTitle="Error!"
+          />
+        )}
+        {loading? (  <Spinner size="large" />):( <div className={styles.container}>
+     
+     <div className={styles.topHalf}>
+       <img src={userImg} alt="userIcon" className={styles.userImg} />
+       <Text id={styles.greeting} as="h1" variant="headingMd">
+         Hi, Welcome!
+       </Text>
+     </div>
+     <div className={styles.bottomHalf}>
+       <Text id={styles.heading} variant="headingMd">
+         Please upload your Firebase Configuration File
+       </Text>
+       <DropZone
+         allowMultiple={false}
+         onDrop={handleDropZoneDrop}
+         variableHeight={true}
+       >
+         {uploadedFile}
+         {fileUpload}
+       </DropZone>
+       <button
+         disabled={!selectedFile}
+         id={styles.submitBtn}
+         onClick={handleSubmit}
+       >
+         Submit
+       </button>
+     </div>
+   </div>)}
+         
+       
       </Page>
     </>
   );

@@ -101,7 +101,7 @@ export default function HorizontalCollectionGrid({
 
   return (
     <div
-    onClick={addComponents || handleEdit}
+    onClick={ handleEdit}
     draggable={draggable}
       ref={dragRef}
       onDragStart={draggable ? handleDragStart : undefined}

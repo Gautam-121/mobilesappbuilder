@@ -10,6 +10,7 @@ import MobilePreview from '../../../UpdatedCode/mobilePreview/MobilePreview';
 import useFetch from '../../../../hooks/useFetch';
 import { useSetRecoilState, useRecoilState } from 'recoil';
 import { collectionsAtom, componentListArrayAtom, productsAtom } from '../../../UpdatedCode/recoil/store';
+import EditPopup from '../../../UpdatedCode/editPopup/EditPopup';
 
 
 const HomeTab = (props) => {

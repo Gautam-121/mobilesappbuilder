@@ -12,7 +12,11 @@ export const productsAtom = atom({
     key:"productsAtom",
     default:[]
 })
+export const currentIndexAtom = atom({
+    key:'currentIndex',
 
+    default:0
+})
 export const selectedSegmentsAtom = atom({
     key:'selectedSegmentsAtom',
     default:""

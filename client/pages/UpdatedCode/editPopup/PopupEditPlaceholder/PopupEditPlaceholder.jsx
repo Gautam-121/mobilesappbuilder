@@ -22,7 +22,7 @@ const PopupEditPlaceholder = (props) => {
                             fill="#4A4A4A"
                         />
                     </svg>
-                    <p>Click on a block to customize it here.</p>
+                    <p >Click on a block to customize it here.</p>
                 </div>
          
         </div>

@@ -1,5 +1,6 @@
 .dnd{
     display: flex;
+    justify-content: space-around;
     gap: 20px;
     background-color: rgba(241, 241, 241, 1);
     

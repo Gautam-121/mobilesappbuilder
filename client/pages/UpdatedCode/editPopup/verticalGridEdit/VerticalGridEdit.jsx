@@ -94,7 +94,7 @@ return (
       {collections.map((item) => (
         <div  key={item.id}>
           <label  
-          style={currentObject.data.data.some(dataItem => dataItem.collection_id === item.id)?{border:'1.5px solid black'}:{}}
+          style={currentObject.data.data.some(dataItem => dataItem.collection_id === item.id)?{border:'1px solid black', backgroundColor:'aliceblue'}:{}}
           className={styles.collectionContainer}htmlFor={item.id}>
             <input
             id={item.id}
