@@ -49,7 +49,7 @@ const handleCheckboxChange = (id) => {
     // Select the item (add to newData)
     newData.push({
       title: selectedCheckboxItem.title,
-      imageUrl: selectedCheckboxItem.image,
+      imageUrl: selectedCheckboxItem.image.url,
       collection_id: selectedCheckboxItem.id,
     });
 
