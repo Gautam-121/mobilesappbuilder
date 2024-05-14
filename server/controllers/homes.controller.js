@@ -19,7 +19,9 @@ const getHomePage = asyncHandler(async (req, res, next) => {
       shopId: { equals: `gid://shopify/Shop/${req.params.shopId}` },
       isActive: { equals: true },
     },
+    depth: req.query?.depth || 0
   });
+
 
   if (!store.docs[0]) {
     return next(

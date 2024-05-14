@@ -19,6 +19,7 @@ const getBrandingApp = asyncHandler(async (req, res, next) => {
       shopId: { equals: `gid://shopify/Shop/${req.params.shopId}` },
       isActive : { equals: true }
     },
+    depth: req.query?.depth || 0
   })
 
   if(!store.docs[0]){
@@ -74,6 +75,7 @@ const getBrandingAppWeb = asyncHandler(async (req, res, next) => {
         shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
         isActive: { equals: true}
       },
+      depth: req.query?.depth || 0
     })
   
     if(!isSelectedTheme.docs[0]){

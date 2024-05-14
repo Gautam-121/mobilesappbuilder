@@ -30,9 +30,9 @@ export default function Banner({
   const dragRef = useRef(null);
 
   const handleDragStart = (e) => {
-    let newArray = JSON.parse(JSON.stringify(componentListArray));
-    newArray[currentIndex].isVisible = false;
-    setComponentListArray(newArray);
+    // let newArray = JSON.parse(JSON.stringify(componentListArray));
+    // newArray[currentIndex].isVisible = false;
+    // setComponentListArray(newArray);
 
     const newElement = { ...element };
     newElement.id = uid();
