@@ -43,7 +43,7 @@ const HomeTab = (props) => {
           // Modify the objects inside the data array
           const modifiedData = item.data.data.map((dataItem) => ({
             title: dataItem.title,
-            imageUrl: JSON.parse(dataItem.imageUrl),
+            imageUrl: dataItem.imageUrl,
             collection_id: dataItem.collection_id, // Change the field name
           }));
 
