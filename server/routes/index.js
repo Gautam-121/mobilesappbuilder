@@ -118,7 +118,7 @@ router.get("/api/firebase/firebase-access-token", verifyRequest ,  getFirebaseAc
 
 // router.put("/api/firebase/server-key", verifyRequest , updateServerKey)
 
-router.post("/api/firebase/send-notification" , verifyRequest ,   sendNotification)
+router.post("/api/firebase/send-notification"  ,   sendNotification)
 
 /*----------------------------HomePageRouter-------------------------------------------------- */
 

@@ -182,6 +182,7 @@ let actionUrl=""
         body: message,
         // segments: result,
         click_action: actionUrl,
+        type:type
       });
     }
   };

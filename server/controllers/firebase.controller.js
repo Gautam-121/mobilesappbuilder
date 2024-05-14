@@ -4,6 +4,8 @@ const Payload = require("payload");
 const axios = require('axios')
 const asyncHandler = require("../utils/asyncHandler")
 const {
+  subscribeTopicApiEndpoint,
+  sendNotificationApiEndpoint,
   topicName
 } = require("../constant")
 
@@ -361,7 +363,7 @@ const sendNotification = asyncHandler(async (req, res, next) => {
   const store = await Payload.find({
     collection: 'Store',
     where: {
-      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
+      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454"  },
       isActive: { equals: true }
     },
   });
@@ -447,22 +449,26 @@ const sendNotification = asyncHandler(async (req, res, next) => {
     console.log("hii line 845", accessToken);
     console.log("hii line 846", newTokenExpiry);
     // Update the access token and expiry in the database
+
+    console.log(storeFirebaseAccessToken.docs[0].id)
+    console.log(store.docs[0].id)
+
     await Payload.update({
       collection: "firebaseServiceAccount",
       where: {
-        shopId: { equals: store.docs[0].id || req.shop_id || "gid://shopify/Shop/81447387454" },
+        shopId: { equals: store.docs[0].id  },
         id: { equals: storeFirebaseAccessToken.docs[0].id }
       },
       data: {
         firbaseAccessToken: accessToken,
         tokenExpiry: newTokenExpiry,
       },
-      depth: req.query?.depth || 0
     });
 
   } else {
     accessToken = storeFirebaseAccessToken.docs[0].firbaseAccessToken;
   }
+
 
   // Now, accessToken is accessible here
 
