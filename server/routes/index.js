@@ -44,7 +44,7 @@ const {
 } = require("../controllers/tabNavigation.controller.js");
 const {
   getAllTheme,
-  getThemeById,
+  getThemeById
 } = require("../controllers/theme.Controller.js");
 const {
   getFirebaseAccessToken,
@@ -59,6 +59,12 @@ const {
   getSegmentById,
   getAllcustomer
 } = require("../controllers/firebase.controller.js")
+
+const {
+  createCart,
+  getCartByCustomerId,
+  updateCartOfCustomer
+} = require("../controllers/customerCart.controller.js")
 
 const router = Router();
 
@@ -148,7 +154,7 @@ router.put(
 
 router.get("/api/getAllTheme", verifyRequest ,  getAllTheme);
 
-router.get("/api/geThemeById/:themeId", verifyRequest , getThemeById);
+router.get("/api/geThemeById/:themeId" , getThemeById);
 
 /*-------------------------ProductDetailScreen---------------------------------------*/
 
@@ -190,5 +196,13 @@ router.get("/api/getData", (req, res) => {
   const sendData = { text: "This is coming from /apps/api route." };
   return res.status(200).json(sendData);
 });
+
+/*------------------------------CustomerCart---------------------------------------------------------- */
+
+router.post("/api/customer/cart/:shopId", createCart)
+
+router.get("/api/customer/:customerId/cart/:shopId" , getCartByCustomerId)
+
+router.put("/api/customer/:customerId/cart/:shopId" , updateCartOfCustomer)
 
 module.exports = router;

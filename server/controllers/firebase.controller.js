@@ -52,11 +52,11 @@ const createCustomer = asyncHandler(async (req, res, next) => {
     }
 
     // Check if the customer already exists
-    const customerExist = await Payload.find({
+    let customerExist = await Payload.find({
       collection: 'customers',
       where: {
-        id: { equals: id },
-        shopId: { equals: req?.user?.shopId || store.docs[0].id },
+        id: { equals: `gid://shopify/Customer/${id}` },
+        shopId: { equals: store.docs[0].id },
         or: [
           { 'deviceIds.deviceId': { equals: deviceId } },
           { 'deviceTypes.deviceType': { equals: deviceType } },
@@ -74,6 +74,14 @@ const createCustomer = asyncHandler(async (req, res, next) => {
         )
       )
     }
+
+     customerExist = await Payload.find({
+      collection: 'customers',
+      where: {
+        id: { equals: `gid://shopify/Customer/${id}` },
+        shopId: { equals: store.docs[0].id },
+      }
+    });
 
     if (customerExist.docs[0]) {
       const existingCustomerData = customerExist.docs[0];
@@ -110,7 +118,7 @@ const createCustomer = asyncHandler(async (req, res, next) => {
       const customerInfo = await Payload.create({
         collection: "customers",
         data: {
-          id: id,
+          id: `gid://shopify/Customer/${id}`,
           customerName: customerName,
           deviceIds: [{ deviceId: deviceId }], // Ensure to match the schema structure
           deviceTypes: [{ deviceType: deviceType }], // Ensure to match the schema structure
@@ -536,7 +544,7 @@ const sendNotification = asyncHandler(async (req, res, next) => {
     console.log("hii line 1055", sendNotification);
     if (sendNotification?.data?.failure === 1) {
       return next(
-        new ApiError(
+        new ApiError(      
           "Notification Not Send", 
            400
         )
