@@ -1,11 +1,16 @@
 import React from "react";
 import "./announcementBarEdit.css";
 import { useState, useEffect } from "react";
-import { componentListArrayAtom } from "../../recoil/store";
+import { componentListArrayAtom,isAuthErrorVisibleAtom } from "../../recoil/store";
 import { useRecoilState } from "recoil";
 import { Button, ButtonGroup } from "@shopify/polaris";
+import AlertBanner from "../../../PushNotification/Components/alert/Alert";
 
 export default function AnnouncementBarEdit(props) {
+  const [isAuthErrorVisible, setIsAuthErrorVisible] = useRecoilState(
+    isAuthErrorVisibleAtom
+  );
+  const [alertMessage, setAlertMessage] = useState("")
   let data = props.data;
 
   const [componentListArray, setComponentListArray] = useRecoilState(
@@ -72,6 +77,16 @@ export default function AnnouncementBarEdit(props) {
 
   // Function to update componentListArray with the modified currentObject
   function updateComponentListArray() {
+   if(currentObject.data.message.length<1){
+    setAlertMessage("Announcement Bar Text cannot be empty")
+    setIsAuthErrorVisible(true)
+   }
+   else if(currentObject.data.textColor===currentObject.data.backgroundColor){
+    setAlertMessage("Text Color and Background Color cannot be same")
+    setIsAuthErrorVisible(true)
+
+   }
+   else{
     setComponentListArray((prevArray) => {
       const updatedArray = prevArray.map((item) =>
         item.id === currentObject.id ? currentObject : item
@@ -79,6 +94,10 @@ export default function AnnouncementBarEdit(props) {
       return updatedArray;
     });
     setCurrentObject((prevObject) => ({ ...prevObject, isEditVisible: false }));
+    setIsAuthErrorVisible(false)
+    
+
+  }
   }
 
   const handleRadioChange = (newAnimation) => {
@@ -106,6 +125,7 @@ export default function AnnouncementBarEdit(props) {
           style={data.isEditVisible ? {} : { display: "none" }}
           className="editPopupContainer"
         >
+          {isAuthErrorVisible && <AlertBanner alertMessage={alertMessage}/>}
           <span className="announcementbar-edit-heading">
             Edit Announcement Bar
           </span>
@@ -163,25 +183,26 @@ export default function AnnouncementBarEdit(props) {
                 <label
                   style={
                     currentObject.data.animationType == "None"
-                      ? { border: "1px solid rgba(0, 0, 0, 0.500)" }
+                      ? { border: "1px solid rgba(0, 0, 0, 0.500)", backgroundColor:'aliceblue' }
                       : {}
                   }
                 >
-                  None
+              
                   <input
                     type="radio"
                     checked={currentObject.data.animationType == "None"}
                     onChange={() => handleRadioChange("None")}
                   />
+                      None
                 </label>
                 <label
                   style={
                     currentObject.data.animationType == "Left To Right"
-                      ? { border: "1px solid rgba(0, 0, 0, 0.500)" }
+                      ? { border: "1px solid rgba(0, 0, 0, 0.500)",  backgroundColor:'aliceblue' }
                       : {}
                   }
                 >
-                  Left to Right
+                 
                   <input
                     type="radio"
                     checked={
@@ -189,15 +210,16 @@ export default function AnnouncementBarEdit(props) {
                     }
                     onChange={() => handleRadioChange("Left To Right")}
                   />
+                   Left to Right
                 </label>
                 <label
                 style={
                   currentObject.data.animationType == "Right To Left"
-                    ? { border: "1px solid rgba(0, 0, 0, 0.500)" }
+                    ? { border: "1px solid rgba(0, 0, 0, 0.500)" ,backgroundColor:'aliceblue'  }
                     : {}
                 }
                 >
-                  Right to Left
+                 
                   <input
                     type="radio"
                     checked={
@@ -205,6 +227,7 @@ export default function AnnouncementBarEdit(props) {
                     }
                     onChange={() => handleRadioChange("Right To Left")}
                   />
+                   Right to Left
                 </label>
               </div>
             </div>
@@ -218,9 +241,9 @@ export default function AnnouncementBarEdit(props) {
               >
                 Delete Component
               </Button>
-              <Button onClick={updateComponentListArray} variant="primary">
+              <div onClick={updateComponentListArray} className="primaryBtn">
                 Save Changes
-              </Button>
+              </div>
               {/* </ButtonGroup> */}
             </div>
           </div>

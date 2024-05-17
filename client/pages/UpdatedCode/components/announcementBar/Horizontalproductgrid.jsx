@@ -16,6 +16,7 @@ export default function Horizontalproductgrid({
   draggable,
 }) {
   const componentListArray = useRecoilValue(componentListArrayAtom)
+
   const dragRef = useRef(null);
   useEffect(()=>{fetchProducts()},[gridItems,componentListArray])
   const [products, setProducts ] = useState([])
@@ -27,6 +28,7 @@ export default function Horizontalproductgrid({
     },
     method: "GET",    
   }
+  console.log("Grid items from HPG", gridItems)
 
   const useDataFetcherForShopifyData = (initialState, url, options) => {
     const [data, setData] = useState(initialState);
@@ -56,6 +58,7 @@ export default function Horizontalproductgrid({
 
   // const products = useRecoilValue(productsByCollectionAtom)
   const handleDragStart = (e) => {
+
     console.log(gridItems);
     const newElement = { ...gridItems };
     newElement.id = uid();

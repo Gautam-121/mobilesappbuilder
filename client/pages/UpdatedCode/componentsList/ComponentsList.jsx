@@ -31,7 +31,8 @@ export default function ComponentsList() {
 
   function addComponents(data) {
     let newData = { ...data }
-    newData.id = uid()
+    newData.id = uid();
+    newData.isNew = true
     console.log(newData);
     const newArray = [...componentListArray];
     newArray.push(newData);

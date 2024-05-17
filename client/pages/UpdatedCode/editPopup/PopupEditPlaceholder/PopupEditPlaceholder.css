@@ -19,3 +19,10 @@
   padding: 80px;
   
 }
+.editPopupContainer p{
+  margin: 0;
+  font-size: 1em;
+  font-weight: var(--p-font-weight-regular);
+  text-align: center;
+  margin-top: 10px;
+}

@@ -16,7 +16,7 @@ import EditSegment from "./pages/PushNotification/Segments/EditSegment/EditSegme
 
 const routes = {
   "/app-design": () => <GetData />,
-  "/push-notifications":()=><Landing/>,
+  "/push-notification":()=><Landing/>,
   "/push-notification/template":()=><Templates/>,
   "/push-notification/create-notification/:notificationType":({notificationType})=><CreateNotification type={notificationType}/>,
   "/push-notification/settings":()=><SettingsPage/>,

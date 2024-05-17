@@ -1,5 +1,7 @@
 .dnd{
+    min-width: 55vw;
     display: flex;
+    justify-content: space-between;
     gap: 20px;
     background-color: rgba(241, 241, 241, 1);
     

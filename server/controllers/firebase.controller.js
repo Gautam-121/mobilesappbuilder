@@ -4,6 +4,8 @@ const Payload = require("payload");
 const axios = require('axios')
 const asyncHandler = require("../utils/asyncHandler")
 const {
+  subscribeTopicApiEndpoint,
+  sendNotificationApiEndpoint,
   topicName
 } = require("../constant")
 
@@ -148,6 +150,9 @@ const createFirebaseToken = async (req, res, next) => {
 
     const { serviceAccount } = req.body;
 
+    console.log(req.body)
+    console.log(serviceAccount)
+
     const store = await Payload.find({
       collection: 'Store',
       where: {
@@ -159,7 +164,7 @@ const createFirebaseToken = async (req, res, next) => {
     if (!store.docs[0]) {
       return next(
         new ApiError(
-          `Shop not found with id: ${req.params.shopId}`,
+          `Shop not found with id: ${req.shop_id}`,
           404
         )
       );
@@ -356,7 +361,6 @@ const getFirebaseAccessToken = asyncHandler(async (req, res,next) => {
   return res.status(200).json({
     success: true,
     message: "Data send successfully",
-    firebaseAccessToken: existFirebaseAccessToken?.docs[0].firbaseAccessToken
   });
 })
 
@@ -367,7 +371,7 @@ const sendNotification = asyncHandler(async (req, res, next) => {
   const store = await Payload.find({
     collection: 'Store',
     where: {
-      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
+      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454"  },
       isActive: { equals: true }
     },
   });
@@ -453,22 +457,26 @@ const sendNotification = asyncHandler(async (req, res, next) => {
     console.log("hii line 845", accessToken);
     console.log("hii line 846", newTokenExpiry);
     // Update the access token and expiry in the database
+
+    console.log(storeFirebaseAccessToken.docs[0].id)
+    console.log(store.docs[0].id)
+
     await Payload.update({
       collection: "firebaseServiceAccount",
       where: {
-        shopId: { equals: store.docs[0].id || req.shop_id || "gid://shopify/Shop/81447387454" },
+        shopId: { equals: store.docs[0].id  },
         id: { equals: storeFirebaseAccessToken.docs[0].id }
       },
       data: {
         firbaseAccessToken: accessToken,
         tokenExpiry: newTokenExpiry,
       },
-      depth: req.query?.depth || 0
     });
 
   } else {
     accessToken = storeFirebaseAccessToken.docs[0].firbaseAccessToken;
   }
+
 
   // Now, accessToken is accessible here
 

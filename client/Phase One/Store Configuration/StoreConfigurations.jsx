@@ -84,7 +84,7 @@ const StoreConfigurations = () => {
 
     const [responseFromServer, publishChanges] = useDataFetcher(
         "",
-        "apps/api/store/social-media",
+        "/apps/api/store/social-media",
         postOptions
     );
 

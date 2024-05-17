@@ -135,6 +135,7 @@ const Home = () => {
 
   useEffect(()=>{
     if(!details?.data?.themeId && details!==null){
+      console.log("Theme Id called", details)
       setThemeId()
     }
     },[details])

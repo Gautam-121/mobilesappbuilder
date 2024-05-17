@@ -83,6 +83,14 @@ let actionUrl=""
           shopify.toast.show("Notication not sent",{
             duration:5000
           })
+          if(result.message==="customer not found"){
+            setAlertMessage("No customers found in the database")
+            setIsAuthErrorVisible(true)
+          }
+          else if(result.message==="No one exist with firebase token"){
+            setAlertMessage("No customers found in the database with valid firebase token")
+            setIsAuthErrorVisible(true)
+          }
         }
         setLoading(false);
       }
@@ -174,6 +182,7 @@ let actionUrl=""
         body: message,
         // segments: result,
         click_action: actionUrl,
+        type:type
       });
     }
   };
@@ -199,8 +208,8 @@ let actionUrl=""
       <Frame>
         {isAuthErrorVisible && (
           <AlertBanner
-            alertMessage="Please enter a valid Firebase Server Key."
-            alertTitle="Authentication Error!"
+            alertMessage={alertMessage}
+            alertTitle="Error!"
           />
         )}
         <Button

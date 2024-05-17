@@ -101,7 +101,7 @@ export default function HorizontalCollectionGrid({
 
   return (
     <div
-    onClick={addComponents || handleEdit}
+    onClick={ handleEdit}
     draggable={draggable}
       ref={dragRef}
       onDragStart={draggable ? handleDragStart : undefined}
@@ -142,7 +142,7 @@ export default function HorizontalCollectionGrid({
                     width:'5rem',
                     height:'5rem',
           
-                  }} src={item?.imageUrl?.url||ImgIcon} alt="" />
+                  }} src={item?.imageUrl||ImgIcon} alt="" />
             <span >    {item.title}</span>
             </div>
  

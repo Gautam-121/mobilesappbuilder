@@ -6,13 +6,18 @@ import {
   collectionsAtom,
   componentListArrayAtom,
   productsAtom,
+  isAuthErrorVisibleAtom
 } from "../../recoil/store";
 import { Button, RadioButton, Text, TextField , Scrollable} from "@shopify/polaris";
 import useFetch from "../../../../hooks/useFetch";
 import CollectionSelector from "./CollectionSelector";
 import { uid } from "uid";
+import AlertBanner from "../../../PushNotification/Components/alert/Alert";
 
 export default function BannerEdit({ data, handleDelete }) {
+  const [isAuthErrorVisible, setIsAuthErrorVisible] = useRecoilState(
+    isAuthErrorVisibleAtom
+  );
   const [isDeleteVisible, setIsDeleteVisible] = useState(false);
   const [selectedId, setSelectedId] = useState("");
   const [currentObject, setCurrentObject] = useState(data);
@@ -91,6 +96,7 @@ export default function BannerEdit({ data, handleDelete }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const collections = useRecoilValue(collectionsAtom);
   const products = useRecoilValue(productsAtom);
+  const [alertMessage, setAlertMessage] = useState("")
 
   useEffect(() => {
     console.log(products);
@@ -142,6 +148,12 @@ export default function BannerEdit({ data, handleDelete }) {
   };
 
   function updateComponentListArray() {
+   if(currentObject.data.data.length<1)
+   {
+    setAlertMessage("Please add atleast one image to the banner")
+    setIsAuthErrorVisible(true)
+   }
+   else{
     setComponentListArray((prevArray) => {
       const updatedArray = prevArray.map((item) =>
         item.id === currentObject.id ? currentObject : item
@@ -149,6 +161,7 @@ export default function BannerEdit({ data, handleDelete }) {
       return updatedArray;
     });
     setCurrentObject((prevObject) => ({ ...prevObject, isEditVisible: false }));
+   } 
   }
 
   useEffect(() => {
@@ -222,6 +235,12 @@ export default function BannerEdit({ data, handleDelete }) {
       style={data?.isEditVisible ? {} : { display: "none" }}
       className="editPopupContainer"
     >
+       {isAuthErrorVisible && (
+          <AlertBanner
+            alertMessage={alertMessage}
+            alertTitle="Error!"
+          />
+        )}
       <span className="editHeading">Edit Banner</span>
       <div
         onDragOver={handleDragOver}

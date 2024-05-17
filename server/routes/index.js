@@ -72,7 +72,7 @@ const router = Router();
 
 router.get("/api/storeDetail/:shopId", getStoreDetail);
 
-router.get("/api/shop/detail" , getStoreDetailByWeb);
+router.get("/api/shop/detail" , verifyRequest, getStoreDetailByWeb);
 
 router.put("/api/store/appDesign/theme" , verifyRequest ,  updateStoreAppDesignDetail);
 
@@ -97,34 +97,34 @@ router.get(
 
 router.get("/api/shopify/segment", verifyRequest , getAllSegment)
 
-router.get("/api/shopify/shop-policies" ,  getShopPolicies)
+router.get("/api/shopify/shop-policies" , verifyRequest ,  getShopPolicies)
 
-router.put("/api/shopify/update-shop-policies" ,  updateShopPolicies)
+router.put("/api/shopify/update-shop-policies" , verifyRequest ,  updateShopPolicies)
 
 
 /*----------------------------FirebaseRouting-------------------------------------------------*/
 
 router.post("/api/firebase/customerDetail/:shopId", createCustomer)
 
-router.get("/api/firebase/customer", getAllcustomer)
+router.get("/api/firebase/customer", verifyRequest ,  getAllcustomer)
 
-router.post("/api/firebase/token" , createFirebaseToken)
+router.post("/api/firebase/token" , verifyRequest , createFirebaseToken)
 
-router.post("/api/firebase/segment", createSegment)
+router.post("/api/firebase/segment", verifyRequest , createSegment)
 
-router.get("/api/firebase/segment" , getSegment)
+router.get("/api/firebase/segment" , verifyRequest , getSegment)
 
-router.get("/api/firebase/segment/:segmentId" , getSegmentById)
+router.get("/api/firebase/segment/:segmentId" , verifyRequest , getSegmentById)
 
-router.put("/api/firebase/segment/:segmentId" , updateSegment)
+router.put("/api/firebase/segment/:segmentId" , verifyRequest , updateSegment)
 
-router.delete("/api/firebase/segment/:segmentId" , deleteSegment)
+router.delete("/api/firebase/segment/:segmentId" , verifyRequest , deleteSegment)
 
-router.get("/api/firebase/firebase-access-token", getFirebaseAccessToken)
+router.get("/api/firebase/firebase-access-token", verifyRequest ,  getFirebaseAccessToken)
 
 // router.put("/api/firebase/server-key", verifyRequest , updateServerKey)
 
-router.post("/api/firebase/send-notification" , sendNotification)
+router.post("/api/firebase/send-notification"  ,   sendNotification)
 
 /*----------------------------HomePageRouter-------------------------------------------------- */
 

@@ -47,13 +47,27 @@ useEffect(()=>{
         },
       };
     } 
-    else if(item.featureType === "announcement"){
-      let newObj = {
+    else if(item.featureType === "announcement"||item.featureType === "productGroup"){
+      let newObj = {}
+      console.log("object before sending data", item)
+    if(item.isNew){
+      newObj = {
         isVisible: item.isVisible,
         featureType: item.featureType,
         layoutType: item.layoutType,
-        data:item.data
+        data:{...item.data, id:null},
+        
       }
+    }
+    else{
+     newObj = {
+        isVisible: item.isVisible,
+        featureType: item.featureType,
+        layoutType: item.layoutType,
+        data:{...item.data},
+        
+      }
+    }
       return newObj
     }
     
@@ -63,6 +77,7 @@ useEffect(()=>{
     }
   })
   setDataForBackend(modifiedArray)
+
 },[componentListArray])
 
 useEffect(()=>{
@@ -184,7 +199,7 @@ useEffect(()=>{
           shopify.toast.show("Changes Published",{
             duration:5000
           })
-  
+          fetchHomeData()
       } catch (error) {
         console.error("Error while fetching data:", error);
         // Handle error here, such as setting an error state or displaying a message to the user
@@ -200,6 +215,66 @@ useEffect(()=>{
     "",
     "/apps/api/updateHomePage/3E",
     postOptions
+  );
+  const getData = {
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    method: "GET",
+  };
+  const useDataFetcherToFetch = (initialState, url, options) => {
+    console.log("")
+    const [data, setData] = useState(initialState);
+    const fetch = useFetch();
+
+
+    const fetchData = async () => {
+      console.log("fetch data triggered")
+      setData("");
+      const result = await (await fetch(url, options)).json();
+      console.log("result", result.data);
+      let dataFromApi = result.data.homeData
+
+      const modifiedArray = dataFromApi.map((item) => {
+
+        if (item.featureType === "categories") {
+          // Modify the objects inside the data array
+          const modifiedData = item.data.data.map((dataItem) => ({
+            title: dataItem.title,
+            imageUrl: JSON.parse(dataItem.imageUrl),
+            collection_id: dataItem.collection_id, // Change the field name
+          }));
+
+          // Return the modified object
+          return {
+            ...item,
+            data: {
+              ...item.data,
+              data: modifiedData,
+            },
+          };
+         
+        } 
+        else if(item.featureType ===''){
+            
+        }
+        else {
+          // Return the unchanged object for other feature types
+          return item;
+        }
+      });
+      console.log("modified array", modifiedArray)
+      if (modifiedArray)
+        setComponentListArray(modifiedArray)
+    };
+    return [data, fetchData];
+  };
+
+  const [responseData, fetchHomeData] = useDataFetcherToFetch(
+    "",
+    "/apps/api/getHomePageByShop/3E",
+    getData
   );
   function handlePublish(){
      
@@ -228,13 +303,13 @@ useEffect(()=>{
 
         <div className="appdesign-right-header-buttons">
           <div>
-            <Button
+            {/* <Button
               variant="tertiary"
               textAlign="center"
               icon={<HiQrCode className="appdesign-qr" />}
             >
               Preview on mobile
-            </Button>
+            </Button> */}
           </div>
           {/* <div className='appdesign-preview-btn'><HiQrCode className='appdesign-qr'/> Preview on mobile</div> */}
           <button onClick={handlePublish} className="appdesign-publish-btn">{loading?"Publishing":"Publish changes"}</button>

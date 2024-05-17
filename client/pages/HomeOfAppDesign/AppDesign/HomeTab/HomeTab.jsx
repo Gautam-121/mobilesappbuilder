@@ -10,6 +10,7 @@ import MobilePreview from '../../../UpdatedCode/mobilePreview/MobilePreview';
 import useFetch from '../../../../hooks/useFetch';
 import { useSetRecoilState, useRecoilState } from 'recoil';
 import { collectionsAtom, componentListArrayAtom, productsAtom } from '../../../UpdatedCode/recoil/store';
+import EditPopup from '../../../UpdatedCode/editPopup/EditPopup';
 
 
 const HomeTab = (props) => {
@@ -42,7 +43,7 @@ const HomeTab = (props) => {
           // Modify the objects inside the data array
           const modifiedData = item.data.data.map((dataItem) => ({
             title: dataItem.title,
-            imageUrl: JSON.parse(dataItem.imageUrl),
+            imageUrl: dataItem.imageUrl,
             collection_id: dataItem.collection_id, // Change the field name
           }));
 

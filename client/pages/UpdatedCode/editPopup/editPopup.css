@@ -1,14 +1,15 @@
 .editPopupContainer {
   position: absolute;
   top: 66px;
+  right: 0px !important;
   height:85vh ;
   width: 21rem;
- 
   background-color: white;
   padding: 20px;
   display: flex;
   flex-direction: column;
   overflow: scroll;
+
 }
 .editPopupContainer::-webkit-scrollbar{
   display: none;

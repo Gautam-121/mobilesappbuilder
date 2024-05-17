@@ -382,6 +382,8 @@ const updateSocialMediaOfStore = asyncHandler( async(req,res,next)=>{
    
   const socialMedia = req.body?.socialMedia
 
+  console.log(socialMedia)
+
   const store = await Payload.find({
     collection: 'Store',
     where: { 
