@@ -49,6 +49,10 @@ const getBrandingApp = asyncHandler(async (req, res, next) => {
     )
   }
 
+  if(!brandingData.docs[0].app_title_logo){
+    brandingData.docs[0].app_title_logo = null
+  }
+
   brandingData.docs[0].themeId = brandingData.docs[0].themeId.id;
 
   return res.status(200).json({
@@ -72,7 +76,7 @@ const getBrandingAppWeb = asyncHandler(async (req, res, next) => {
     const isSelectedTheme = await Payload.find({
       collection: 'Store',
       where: { 
-        shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
+        shopId: { equals: req.shop_id},
         isActive: { equals: true}
       },
       depth: req.query?.depth || 0
@@ -99,7 +103,7 @@ const getBrandingAppWeb = asyncHandler(async (req, res, next) => {
     const brandingData = await Payload.find({
       collection: "branding",
       where: {
-        shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
+        shopId: { equals: req.shop_id },
         themeId: { equals: req.params.themeId },
       },
       depth: req.query.depth || 1
@@ -112,6 +116,10 @@ const getBrandingAppWeb = asyncHandler(async (req, res, next) => {
            400
         )
       )
+    }
+
+    if(!brandingData.docs[0].app_title_logo){
+      brandingData.docs[0].app_title_logo = null
     }
 
     brandingData.docs[0].themeId = brandingData.docs[0].themeId.id;
@@ -141,6 +149,7 @@ const updateBrandingApp = asyncHandler(async (req, res, next) => {
       shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
       isActive: { equals: true }
     },
+    depth: 0
   })
 
   if(!isSelectedTheme.docs[0]){
@@ -164,9 +173,10 @@ const updateBrandingApp = asyncHandler(async (req, res, next) => {
   const isExistbrandingData = await Payload.find({
     collection: "branding",
     where: {
-      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
+      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454"  },
       themeId: { equals: req.params.themeId },
     },
+    depth:0
   });
 
   if (isExistbrandingData.docs.length === 0) {
@@ -191,7 +201,6 @@ const updateBrandingApp = asyncHandler(async (req, res, next) => {
     success: true,
     message: "BrandingData Update Successfully",
   });
-  
 })
 
 

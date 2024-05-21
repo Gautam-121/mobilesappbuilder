@@ -10,6 +10,7 @@ const getAllTheme = asyncHandler( async (req, res, next) => {
       shopId: { equals: req.shop_id },
       isActive: { equals : true}
     },
+    depth:0
   })
 
   if(!store.docs[0]){
@@ -23,12 +24,15 @@ const getAllTheme = asyncHandler( async (req, res, next) => {
 
   const theme = await Payload.find({
     collection: "theme",
+    page: req.query?.page || 1,
+    limit: req.query?.limit || 6,
+    pagination: true,
   });
 
   return res.status(200).json({
       success: true,
       message: "Data Send Successfully",
-      data: theme.docs,
+      data: theme,
   });
 })
 
@@ -49,6 +53,7 @@ const getThemeById = asyncHandler( async (req, res, next) => {
       shopId: { equals: req.shop_id },
       isActive: { equals : true}
     },
+    depth:0
   })
 
   if(!store.docs[0]){

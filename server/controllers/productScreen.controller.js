@@ -3,7 +3,7 @@ const {otherScreen} = require("../constant.js")
 const ApiError = require("../utils/ApiError.js");
 const asyncHandler = require("../utils/asyncHandler.js");
 
-const updateProductDetail = asyncHandler( async (req, res, next) => {
+const updateProductScreenDetail = asyncHandler( async (req, res, next) => {
 
   const data = req.body?.data;
 
@@ -28,9 +28,10 @@ const updateProductDetail = asyncHandler( async (req, res, next) => {
   const isSelectedTheme = await Payload.find({
     collection: 'Store',
     where: { 
-      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
+      shopId: { equals: req.shop_id  },
       isActive: { equals: true}
     },
+    depth: 0
   })
 
   if(!isSelectedTheme.docs[0]){
@@ -54,7 +55,7 @@ const updateProductDetail = asyncHandler( async (req, res, next) => {
   const isProductDetailForThemeExist = await Payload.find({
     collection: "productDetailScreen",
     where:{
-      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
+      shopId: { equals: req.shop_id  },
       themeId: { equals: req.params.themeId },
     }
   })
@@ -71,7 +72,7 @@ const updateProductDetail = asyncHandler( async (req, res, next) => {
   await Payload.update({
     collection: "productDetailScreen",
     where: {
-      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
+      shopId: { equals: req.shop_id  },
       themeId: { equals: req.params.themeId },
     },
     data: data,
@@ -84,7 +85,7 @@ const updateProductDetail = asyncHandler( async (req, res, next) => {
 
 })
 
-const getProductDetails = asyncHandler( async(req , res , next)=> {
+const getProductScreenDetails = asyncHandler( async(req , res , next)=> {
 
   if (!req.params.shopId) {
     return next(
@@ -101,6 +102,7 @@ const getProductDetails = asyncHandler( async(req , res , next)=> {
       shopId: { equals: `gid://shopify/Shop/${req.params.shopId}` },
       isActive : { equals: true }
     },
+    depth: 0
   })
 
   if(!store.docs[0]){
@@ -118,10 +120,16 @@ const getProductDetails = asyncHandler( async(req , res , next)=> {
       shopId: { equals: `gid://shopify/Shop/${req.params.shopId}` },
       themeId: { equals: store?.docs[0]?.themeId}
     },
+    depth: req.query?.depth || 0
   });
 
-  if(productDetail?.docs[0]){
-    productDetail.docs[0].themeId = productDetail.docs[0].themeId.id
+  if (productDetail.docs.length === 0) {
+    return next(
+      new ApiError(
+        `No data found with shopId: ${req.params.shopId}`,
+         400
+      )
+    )
   }
 
   return res.status(200).json({
@@ -129,6 +137,72 @@ const getProductDetails = asyncHandler( async(req , res , next)=> {
     message: "Data Send Successfully",
     productDetail: productDetail?.docs[0]
   })
+})
+
+const getProductScreenDetailByWeb = asyncHandler( async(req , res , next)=>{
+
+  if (!req.params.themeId) {
+    return next(
+      new ApiError(
+        "ThemeId is missing",
+         400
+      )
+    )
+  }
+  
+  const isSelectedTheme = await Payload.find({
+    collection: 'Store',
+    where: { 
+      shopId: { equals: req.shop_id  },
+      isActive: { equals: true}
+    },
+    depth: req.query?.depth || 0
+  })
+
+  if(!isSelectedTheme.docs[0]){
+    return next(
+      new ApiError(
+        `store not found with id: ${req.shop_id}`,
+         404
+      )
+    )
+  }
+
+ if(!isSelectedTheme.docs[0]?.themeId || isSelectedTheme.docs[0]?.themeId != req.params.themeId ){
+    return next(
+      new ApiError(
+        "Params is not matched with store themeId",
+         400
+      )
+    )
+ }
+
+ const productDetail = await Payload.find({
+  collection: "productDetailScreen",
+  where: { 
+    where: {
+      shopId: { equals: req.shop_id },
+      themeId: { equals: req.params.themeId },
+    },
+  },
+  depth: req.query?.depth || 0
+});
+
+  if (productDetail.docs.length === 0) {
+    return next(
+      new ApiError(
+        "No Document found",
+         400
+      )
+    )
+  }
+
+  return res.status(200).json({
+    success: true,
+    message: "Data Send Successfully",
+    data: productDetail.docs[0],
+  });
+
 })
 
 const getAccountScreen = asyncHandler( async(req , res , next)=> {
@@ -313,10 +387,11 @@ const createAccountDetailPage = asyncHandler( async (req, res, next) => {
 
 
 module.exports = {
-  updateProductDetail,
+  updateProductScreenDetail,
   createCartDetailPage,
   createAccountDetailPage,
   getOtherScreenPageDetailByWeb,
-  getProductDetails,
-  getAccountScreen
+  getProductScreenDetails,
+  getAccountScreen,
+  getProductScreenDetailByWeb
 };

@@ -22,9 +22,10 @@ const getProduct = asyncHandler( async (req, res , next) => {
   const store = await Payload.find({
     collection: 'Store',
     where: { 
-      shopId: { equals: req.shop_id  },
+      shopId: { equals: req.shop_id},
       isActive: { equals : true}
     },
+    depth: 0
   })
 
   if(!store.docs[0]){
@@ -76,6 +77,7 @@ const getCollection = asyncHandler( async (req, res, next) => {
       shopId: { equals: req.shop_id  },
       isActive: { equals : true}
     },
+    depth:0
   })
 
   if(!store.docs[0]){
@@ -91,9 +93,9 @@ const getCollection = asyncHandler( async (req, res, next) => {
   const next_page = req.query.next_page || null
 
   const fetchCollections = await shopifyApiData(
-    shopifyGraphQLEndpoint(req?.shop),
+    shopifyGraphQLEndpoint(req?.shop ),
     graphqlQueryForCollections,
-    axiosShopifyConfig(req.accessToken),
+    axiosShopifyConfig(req.accessToken ),
     {first: per_page , after: next_page}
   );
 
@@ -138,6 +140,7 @@ const getProductByCollectionId = asyncHandler( async (req, res, next) => {
       shopId: { equals: req.shop_id  },
       isActive: { equals : true}
     },
+    depth: 0
   })
 
   if(!store.docs[0]){
@@ -153,9 +156,9 @@ const getProductByCollectionId = asyncHandler( async (req, res, next) => {
   const next_page = req.query.next_page || null
 
   const fetchCollectionsProducts = await shopifyApiData(
-    shopifyGraphQLEndpoint(req?.shop),
+    shopifyGraphQLEndpoint(req?.shop ),
     graphqlQueryForProductsByCollectionId,
-    axiosShopifyConfig(req.accessToken),
+    axiosShopifyConfig(req.accessToken ),
     { collectionId: req.query.collectionId, first: per_page, after: next_page }
   );
 

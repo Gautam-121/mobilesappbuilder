@@ -82,7 +82,7 @@ const getHomePageByWeb = asyncHandler(async (req, res, next) => {
   const isSelectedTheme = await Payload.find({
     collection: "Store",
     where: {
-      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
+      shopId: { equals: req.shop_id },
       isActive: { equals: true },
     },
     depth: req.query?.depth || 0
@@ -112,7 +112,7 @@ const getHomePageByWeb = asyncHandler(async (req, res, next) => {
   const homeData = await Payload.find({
     collection: "homeScreen",
     where: {
-      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
+      shopId: { equals: req.shop_id  },
       themeId: { equals: req.params.themeId },
     },
     depth: 2,
@@ -150,8 +150,6 @@ const updateHomePage = asyncHandler(async (req, res, next) => {
 
   const { datas } = req.body;
 
-  console.log("datas from line 149", datas);
-
   if (!req.params.themeId) {
     return next(
       new ApiError(
@@ -164,7 +162,7 @@ const updateHomePage = asyncHandler(async (req, res, next) => {
   const isSelectedTheme = await Payload.find({
     collection: "Store",
     where: {
-      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
+      shopId: { equals: req.shop_id },
       isActive: { equals: true },
     },
     depth: req.query?.depth || 0 
@@ -194,7 +192,7 @@ const updateHomePage = asyncHandler(async (req, res, next) => {
   const isExistHomeData = await Payload.find({
     collection: "homeScreen",
     where: {
-      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
+      shopId: { equals: req.shop_id },
       themeId: { equals: req.params.themeId },
     },
   });
@@ -214,8 +212,6 @@ const updateHomePage = asyncHandler(async (req, res, next) => {
         const isVisible = datas[index]?.data?.data.some(
           (val) => val.isVisible === true
         );
-
-        console.log(datas[index]?.data?.data)
 
         if (datas[index]?.data?.id) {
           const banner = await Payload.update({
@@ -430,7 +426,7 @@ const updateHomePage = asyncHandler(async (req, res, next) => {
   await Payload.update({
     collection: "homeScreen",
     where: {
-      shopId: { equals: req.shop_id },
+      shopId: { equals: req.shop_id  },
       themeId: { equals: req.params.themeId },
     },
     data: {
