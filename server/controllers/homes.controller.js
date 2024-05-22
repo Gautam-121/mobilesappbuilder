@@ -423,7 +423,7 @@ const updateHomePage = asyncHandler(async (req, res, next) => {
     return next(new ApiError(err, 500));
   }
 
-  await Payload.update({
+  const data = await Payload.update({
     collection: "homeScreen",
     where: {
       shopId: { equals: req.shop_id  },
@@ -437,6 +437,7 @@ const updateHomePage = asyncHandler(async (req, res, next) => {
   return res.status(201).json({
     success: true,
     message: "Data Updated Successfully",
+    data:data
   });
 });
 

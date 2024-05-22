@@ -108,12 +108,14 @@ export default function VerticalProductgridEdit(props) {
     >
       {isAuthErrorVisible && <AlertBanner alertMessage={alertMessage}/>}
       <span className="editHeading">Edit Product Grid</span>
-      <span>Edit Title</span>
+  <div className={styles.head}>
+  <span>Edit Title</span>
       <TextField
         value={currentObject.data.title}
         onChange={handleTitleChange}
       />
-      <span>Select Collections</span>
+  </div>
+      <span className={styles.bodyHeader}>Select Collections</span>
       {collections &&
         collections.map((item) => (
           <div className={styles.collectionDiv} key={item.id}>

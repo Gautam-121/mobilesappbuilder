@@ -1,3 +1,7 @@
+.wrapper{
+  display: flex;
+  justify-content: center;
+}
 .container {
   display: inline-flex;
   flex-direction: column;
@@ -6,6 +10,9 @@
   min-height: 30rem;
   border-radius: 10px;
   box-sizing: border-box;
+  position: relative;
+  top: -3.2rem;
+
 }
 .head {
   border: 1px solid #d1d1d1;
@@ -30,6 +37,7 @@
   justify-content: center;
   align-items: center;
   padding-top: 10px;
+  font-family: "Figtree", sans-serif;
 }
 .notifyPic {
   width: 1.5rem;
@@ -48,7 +56,7 @@
   color: blue;
 }
 #sendBtn {
-  background-color: #4d3f87;
+  background-color:  rgb(73, 134, 247);
   text-transform: none;
   width: 6rem;
 }
@@ -123,7 +131,8 @@ textarea::-webkit-scrollbar {
   border-radius: 5px;
 }
 #settingsBtn {
-  background-color: #4d3f87;
+  background-color:  white;
+  color:  rgb(73, 134, 247);
   text-transform: none;
   width: 4rem;
   position: absolute;

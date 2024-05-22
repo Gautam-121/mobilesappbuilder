@@ -25,7 +25,7 @@ const routes = {
   "/banners": () => <Banners />,
   "/store-configuration": () => <StoreConfigurations />,
   "/support": () => <ChatSupport />,
-  "/app-design/customize": () => <AppDesign />,
+  "/app-design/customize/:themeId": ({themeId}) => <AppDesign themeId={themeId} />,
   "/exitframe": () => <ExitFrame />,
   "/exitframe/:shop": ({ shop }) => <ExitFrame shop={shop} />,
   //Debug Cards

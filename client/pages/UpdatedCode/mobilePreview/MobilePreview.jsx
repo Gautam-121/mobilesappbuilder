@@ -19,7 +19,7 @@ import { setEditingStatus } from "../../../store/editStatusSlice";
 import { Box, Icon, InlineStack, Spinner, Tooltip } from "@shopify/polaris";
 import { DeleteIcon, EditIcon } from "@shopify/polaris-icons";
 
-export default function MobilePreview() {
+export default function MobilePreview({isLoading}) {
   const dispatch = useDispatch();
   const [isEditing, setIsEditing] = useState(false);
   const [currentIndex, setCurrentIndex] = useRecoilState(currentIndexAtom)
@@ -273,8 +273,9 @@ console.log("index from", index)
           </div>)
        :  ( <div 
         className="the-spinner">
-           {/* <Spinner accessibilityLabel="Spinner" size="large" /> */}
-           <span>Please add components here</span>
+          {isLoading?(           <Spinner accessibilityLabel="Spinner" size="large" />
+):(<span className="placeholder-text">Drop components here</span>)}
+           
          </div>)}
         </div>
 

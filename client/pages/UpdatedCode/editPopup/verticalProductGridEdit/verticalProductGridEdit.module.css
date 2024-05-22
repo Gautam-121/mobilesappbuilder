@@ -19,3 +19,16 @@
     box-sizing: border-box;
     cursor: pointer;
 }
+.head{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-bottom: 10px;
+}
+.head span{
+    font-weight: bold;
+}
+.bodyHeader{
+    margin-bottom: 5px;
+    font-weight: bold;
+}
