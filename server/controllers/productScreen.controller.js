@@ -31,10 +31,11 @@ const updateProductScreenDetail = asyncHandler( async (req, res, next) => {
       shopId: { equals: req.shop_id  },
       isActive: { equals: true}
     },
+    limit: 1,
     depth: 0
   })
 
-  if(!isSelectedTheme.docs[0]){
+  if(isSelectedTheme.docs.length == 0){
     return next(
       new ApiError(
         `store not found with id: ${req.shop_id}`,
@@ -57,7 +58,8 @@ const updateProductScreenDetail = asyncHandler( async (req, res, next) => {
     where:{
       shopId: { equals: req.shop_id  },
       themeId: { equals: req.params.themeId },
-    }
+    },
+    limit: 1
   })
 
   if (isProductDetailForThemeExist.docs.length === 0) {
@@ -69,20 +71,32 @@ const updateProductScreenDetail = asyncHandler( async (req, res, next) => {
     )
   }
 
-  await Payload.update({
-    collection: "productDetailScreen",
-    where: {
-      shopId: { equals: req.shop_id  },
-      themeId: { equals: req.params.themeId },
-    },
-    data: data,
-  });
+  try {
 
-  return res.status(200).json({
-    success: true,
-    message: "Product detail updated successfully",
-  })
+    const data = await Payload.update({
+      collection: "productDetailScreen",
+      id:isProductDetailForThemeExist.docs[0].id,
+      data: data,
+    })
 
+    if(!data){
+      return res.status(500).json({
+        success: false,
+        message: "Something went wrong while updating the product screen detail"
+      })
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Product detail updated successfully",
+    })
+
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message || "Something went wrong while updating product screen detail"
+    })
+  }
 })
 
 const getProductScreenDetails = asyncHandler( async(req , res , next)=> {
@@ -102,10 +116,11 @@ const getProductScreenDetails = asyncHandler( async(req , res , next)=> {
       shopId: { equals: `gid://shopify/Shop/${req.params.shopId}` },
       isActive : { equals: true }
     },
+    limit: 1,
     depth: 0
   })
 
-  if(!store.docs[0]){
+  if(store.docs.length == 0){
     return next(
       new ApiError(
         `Shop not found with id: ${req.params.shopId}`,
@@ -120,6 +135,7 @@ const getProductScreenDetails = asyncHandler( async(req , res , next)=> {
       shopId: { equals: `gid://shopify/Shop/${req.params.shopId}` },
       themeId: { equals: store?.docs[0]?.themeId}
     },
+    limit: 1,
     depth: req.query?.depth || 0
   });
 
@@ -156,10 +172,11 @@ const getProductScreenDetailByWeb = asyncHandler( async(req , res , next)=>{
       shopId: { equals: req.shop_id  },
       isActive: { equals: true}
     },
+    limit: 1,
     depth: req.query?.depth || 0
   })
 
-  if(!isSelectedTheme.docs[0]){
+  if(isSelectedTheme.docs.length == 0){
     return next(
       new ApiError(
         `store not found with id: ${req.shop_id}`,
@@ -185,6 +202,7 @@ const getProductScreenDetailByWeb = asyncHandler( async(req , res , next)=>{
       themeId: { equals: req.params.themeId },
     },
   },
+  limit: 1,
   depth: req.query?.depth || 0
 });
 

@@ -17,6 +17,7 @@ const {
   isValidYoutubeUrl
 } = require("../utils/validator.js")
 
+
 const updateStoreAppDesignDetail = asyncHandler(  async (req, res, next) => {
   
   const {themeId} = req.body
@@ -36,10 +37,11 @@ const updateStoreAppDesignDetail = asyncHandler(  async (req, res, next) => {
       shopId: { equals: req.shop_id },
       isActive: { equals : true }
     },
+    limit: 1,
     depth: req.query?.depth || 0
   });
 
-  if(!UserStoreData?.docs[0]){
+  if(UserStoreData?.docs.length == 0){
     return next(
       new ApiError(
         "Store not found",
@@ -65,24 +67,41 @@ const updateStoreAppDesignDetail = asyncHandler(  async (req, res, next) => {
         shopId: { equals: req.shop_id  },
         themeId: { equals: themeId },
       },
+      limit: 1,
       depth: req.query?.depth || 0
     });
 
     if (isDataByThemeExist.docs[0]?.themeId) {
-      UserStoreData = await Payload.update({
-        collection: "Store",
-        where: {
-          shopId: { equals: req.shop_id },
-        },
-        data: {
-          themeId: themeId
-        },
-      });
+      try {
 
-      return res.status(200).json({
-        success: true,
-        message: "UserStoreData Update Successfully",
-      });
+        UserStoreData = await Payload.update({
+          collection: "Store",
+          where: {
+            shopId: { equals: req.shop_id },
+          },
+          data: {
+            themeId: themeId
+          },
+        });
+
+        if(UserStoreData.docs.length == 0){
+          return res.status(500).json({
+            success: false,
+            message: "something went wrong while updating the theme"
+          })
+        }
+  
+        return res.status(200).json({
+          success: true,
+          message: "UserStoreData Update Successfully",
+        });
+
+      } catch (error) {
+        return res.status(500).json({
+          success: false,
+          message: error.message || "something went wrong while updating the theme"
+        })
+      }
     }
   }
 
@@ -102,6 +121,7 @@ const updateStoreAppDesignDetail = asyncHandler(  async (req, res, next) => {
       themeId: { equals: themeId },
       shopId: { equals: "Apprikart" },
     },
+    limit:1
   });
 
   const brandingData = await Payload.find({
@@ -110,6 +130,7 @@ const updateStoreAppDesignDetail = asyncHandler(  async (req, res, next) => {
       themeId: { equals: themeId },
       shopId: { equals: "Apprikart" },
     },
+    limit:1
   });
 
   const tabMenuData = await Payload.find({
@@ -118,6 +139,7 @@ const updateStoreAppDesignDetail = asyncHandler(  async (req, res, next) => {
       themeId: { equals: themeId },
       shopId: { equals: "Apprikart" },
     },
+    limit:1
   });
 
   const accountData = await Payload.find({
@@ -125,7 +147,8 @@ const updateStoreAppDesignDetail = asyncHandler(  async (req, res, next) => {
     where:{
       themeId: { equals: themeId},
       shopId: { equals: "Apprikart"}
-    }
+    },
+    limit: 1
   })
 
   const productData = await Payload.find({
@@ -133,185 +156,214 @@ const updateStoreAppDesignDetail = asyncHandler(  async (req, res, next) => {
     where:{
       themeId: { equals: themeId},
       shopId: { equals: "Apprikart"}
-    }
+    },
+    limit: 1
   })
 
-  for (val of homeData?.docs[0].homeData) {
+  // Start Transaction
+  const transactionID = await Payload.db.beginTransaction()
 
-    if (val.featureType === "banner") {
-      val?.data?.value?.data.forEach((element) => {
-        element.imageUrl = element.imageUrl.id;
-      });
+  try {
 
-      const banner = await Payload.create({
-        collection: "banner",
-        data: {
-          data: val?.data?.value?.data,
-        },
-      });
-
-      val.data = {
-        relationTo: "banner",
-        value: banner.id,
-      };
-    } 
-    else if (val.featureType === "announcement") {
-      const announcementBar = await Payload.create({
-        collection: "announcementBanner",
-        data: val?.data?.value,
-      });
-
-      val.data = {
-        relationTo: "announcementBanner",
-        value: announcementBar.id,
-      };
-    } 
-    else if (val.featureType === "productGroup") {
-      const productGroup = await Payload.create({
-        collection: "productGroup",
-        data: {
-          ...val?.data?.value,
-          productGroupId: collections?.id,
-        },
-      });
-
-      val.data = {
-        relationTo: "productGroup",
-        value: productGroup.id,
-      };
-    } 
-    else if (val.featureType === "categories") {
-      const categories = await Payload.create({
-        collection: "categories",
-        data: {
-          data: [
-            {
-              title: collections?.title,
-              imageUrl: collections?.image,
-              collection_id: collections?.id,
-            },
-          ],
-        },
-      });
-
-      val.data = {
-        relationTo: "categories",
-        value: categories.id,
-      };
-    } 
-    else if (val.featureType === "text_paragraph") {
-      const textParagraph = await Payload.create({
-        collection: "textParagraph",
-        data: val?.data?.value,
-      });
-
-      val.data = {
-        relationTo: "textParagraph",
-        value: textParagraph.id,
-      };
-    } 
-    else if (val.featureType === "countdown") {
-      const eventTimer = await Payload.create({
-        collection: "eventTimer",
-        data: val?.data?.value,
-      });
-
-      val.data = {
-        relationTo: "eventTimer",
-        value: eventTimer.id,
-      };
-    } 
-    else if (val.featureType === "social_channel") {
-      const socialMedia = await Payload.create({
-        collection: "socialMedia",
-        data: val?.data?.value,
-      });
-
-      val.data = {
-        relationTo: "socialMedia",
-        value: socialMedia.id,
-      };
-    } 
-    else if (val.featureType === "video") {
-      const video = await Payload.create({
-        collection: "video",
-        data: val?.data?.value,
-      });
-
-      val.data = {
-        relationTo: "video",
-        value: video.id,
-      };
+    for (val of homeData?.docs[0].homeData) {
+  
+      if (val.featureType === "banner") {
+        val?.data?.value?.data.forEach((element) => {
+          element.imageUrl = element.imageUrl.id;
+        });
+  
+        const banner = await Payload.create({
+          req: { transactionID },
+          collection: "banner",
+          data: {
+            data: val?.data?.value?.data,
+          },
+        });
+  
+        val.data = {
+          relationTo: "banner",
+          value: banner.id,
+        };
+      } 
+      else if (val.featureType === "announcement") {
+        const announcementBar = await Payload.create({
+          req: { transactionID },
+          collection: "announcementBanner",
+          data: val?.data?.value,
+        });
+  
+        val.data = {
+          relationTo: "announcementBanner",
+          value: announcementBar.id,
+        };
+      } 
+      else if (val.featureType === "productGroup") {
+        const productGroup = await Payload.create({
+          req: { transactionID },
+          collection: "productGroup",
+          data: {
+            ...val?.data?.value,
+            productGroupId: collections?.id,
+          },
+        });
+  
+        val.data = {
+          relationTo: "productGroup",
+          value: productGroup.id,
+        };
+      } 
+      else if (val.featureType === "categories") {
+        const categories = await Payload.create({
+          req: { transactionID },
+          collection: "categories",
+          data: {
+            data: [
+              {
+                title: collections?.title,
+                imageUrl: collections?.image,
+                collection_id: collections?.id,
+              },
+            ],
+          },
+        });
+  
+        val.data = {
+          relationTo: "categories",
+          value: categories.id,
+        };
+      } 
+      else if (val.featureType === "text_paragraph") {
+        const textParagraph = await Payload.create({
+          req: { transactionID },
+          collection: "textParagraph",
+          data: val?.data?.value,
+        });
+  
+        val.data = {
+          relationTo: "textParagraph",
+          value: textParagraph.id,
+        };
+      } 
+      else if (val.featureType === "countdown") {
+        const eventTimer = await Payload.create({
+          req: { transactionID },
+          collection: "eventTimer",
+          data: val?.data?.value,
+        });
+  
+        val.data = {
+          relationTo: "eventTimer",
+          value: eventTimer.id,
+        };
+      } 
+      else if (val.featureType === "social_channel") {
+        const socialMedia = await Payload.create({
+          req: { transactionID },
+          collection: "socialMedia",
+          data: val?.data?.value,
+        });
+  
+        val.data = {
+          relationTo: "socialMedia",
+          value: socialMedia.id,
+        };
+      } 
+      else if (val.featureType === "video") {
+        const video = await Payload.create({
+          req: { transactionID },
+          collection: "video",
+          data: val?.data?.value,
+        });
+  
+        val.data = {
+          relationTo: "video",
+          value: video.id,
+        };
+      }
     }
+  
+    await Payload.create({
+      req: { transactionID },
+      collection: "homeScreen",
+      data: {
+        shopId: req.shop_id ,
+        themeId: themeId,
+        homeData: homeData?.docs[0].homeData,
+      },
+    });
+  
+    await Payload.create({
+      req: { transactionID },
+      collection: "bottomMenuPannel",
+      data: {
+        setting: tabMenuData.docs[0]?.setting,
+        shopId: req.shop_id ,
+        themeId: themeId,
+      },
+    });
+  
+    await Payload.create({
+      req: { transactionID },
+      collection: "accountScreen",
+      data: {
+        main_section: accountData.docs[0]?.main_section,
+        footer_section: accountData.docs[0]?.footer_section,
+        shopId: req.shop_id ,
+        themeId: themeId,
+      },
+    });
+  
+  
+    brandingData.docs[0].app_title_text.app_name = UserStoreData?.docs[0]?.shopName;
+  
+    if(brandingData.docs[0]?.app_title_logo && brandingData.docs[0]?.app_title_logo?.id){
+      brandingData.docs[0].app_title_logo  = brandingData.docs[0]?.app_title_logo?.id
+    }
+  
+    await Payload.create({
+      req: { transactionID },
+      collection: "branding",
+      data: {
+        ...brandingData.docs[0],
+        shopId: req.shop_id ,
+        themeId: themeId,
+      },
+    });
+  
+    await Payload.create({
+      req: { transactionID },
+      collection: "productDetailScreen",
+      data: {
+        actions: productData.docs[0]?.actions,
+        faster_checkout: productData.docs[0]?.faster_checkout,
+        shopId: req.shop_id ,
+        themeId: themeId,
+      },
+    });
+  
+    UserStoreData = await Payload.update({
+      req: { transactionID },
+      collection: "Store",
+      id: UserStoreData.docs[0].id,
+      data: req.body,
+    });
+
+    // Commit the transaction if everything is successful
+    await Payload.db.commitTransaction(transactionID)
+
+    return res.status(200).json({
+      success: true,
+      message: "UserStoreData Update Successfully",
+    });
+
+  } catch (error) {
+     console.error('Oh no, something went wrong!');
+     await Payload.db.rollbackTransaction(transactionID);
+
+     res.status(500).send({
+      message: error.message
+    });
   }
-
-  await Payload.create({
-    collection: "homeScreen",
-    data: {
-      shopId: req.shop_id ,
-      themeId: themeId,
-      homeData: homeData?.docs[0].homeData,
-    },
-  });
-
-  await Payload.create({
-    collection: "bottomMenuPannel",
-    data: {
-      setting: tabMenuData.docs[0]?.setting,
-      shopId: req.shop_id ,
-      themeId: themeId,
-    },
-  });
-
-  await Payload.create({
-    collection: "accountScreen",
-    data: {
-      main_section: accountData.docs[0]?.main_section,
-      footer_section: accountData.docs[0]?.footer_section,
-      shopId: req.shop_id ,
-      themeId: themeId,
-    },
-  });
-
-
-  brandingData.docs[0].app_title_text.app_name = UserStoreData?.docs[0]?.shopName;
-
-  if(brandingData.docs[0]?.app_title_logo && brandingData.docs[0]?.app_title_logo?.id){
-    brandingData.docs[0].app_title_logo  = brandingData.docs[0]?.app_title_logo?.id
-  }
-
-  await Payload.create({
-    collection: "branding",
-    data: {
-      ...brandingData.docs[0],
-      shopId: req.shop_id ,
-      themeId: themeId,
-    },
-  });
-
-  await Payload.create({
-    collection: "productDetailScreen",
-    data: {
-      actions: productData.docs[0]?.actions,
-      faster_checkout: productData.docs[0]?.faster_checkout,
-      shopId: req.shop_id ,
-      themeId: themeId,
-    },
-  });
-
-  UserStoreData = await Payload.update({
-    collection: "Store",
-    where: {
-      shopId: { equals: req.shop_id },
-    },
-    data: req.body,
-  });
-
-  return res.status(200).json({
-    success: true,
-    message: "UserStoreData Update Successfully",
-  });
-
 })
 
 const getStoreDetail = asyncHandler( async(req,res,next)=> {
@@ -331,6 +383,7 @@ const getStoreDetail = asyncHandler( async(req,res,next)=> {
       shopId: { equals: `gid://shopify/Shop/${req.params.shopId}` },
       isActive: { equals: true }
     },
+    limit:1,
     depth: req.query?.depth || 0
   });
 
@@ -355,9 +408,10 @@ const getStoreDetailByWeb = asyncHandler( async(req,res,next)=>{
   const store = await Payload.find({
     collection: 'Store',
     where: { 
-      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454"},
+      shopId: { equals: req.shop_id },
       isActive: { equals : true }
     },
+    limit:1,
     depth: req.query?.depth || 0
   })
 
@@ -388,9 +442,10 @@ const updateSocialMediaOfStore = asyncHandler( async(req,res,next)=>{
       shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
       isActive: { equals: true}
     },
+    limit:1,
   })
 
-  if(!store.docs[0]){
+  if(store.docs.length == 0){
     return next(
       new ApiError(
         `store not found with id: ${req.shop_id}`,
@@ -474,21 +529,67 @@ const updateSocialMediaOfStore = asyncHandler( async(req,res,next)=>{
     }
   })
 
-   await Payload.update({
-    collection: "Store",
-    where: {
-      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454"},
-    },
-    data:{
-      socialMediaAccount: socialMedia
-    },
-  });
+   try {
+
+    const data = await Payload.update({
+     collection: "Store",
+     id: store.docs[0].id,
+     data:{
+       socialMediaAccount: socialMedia
+     },
+   })
+
+   if(!data){
+    return res.status(500).json({
+      success: false,
+      message: "Some error occur while updating the social media"
+    })
+   }
+   
+   } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message:error.message || "Some error occur while updating the social media"
+    })
+   }
 
   return res.status(200).json({
     success: true,
     message:"Data Updated Successfully"
   })
 })
+
+
+
+// const allOrNothingJob = async () => {
+
+//   console.log(Payload)
+
+//   const transactionID = await Payload.db.beginTransaction();
+
+//   try {
+//     await Payload.create({
+//       req: { transactionID },
+//       collection: 'my-collection',
+//       data: { /* your data */ }
+//     });
+
+//     await Payload.update({
+//       req: { transactionID },
+//       collection: 'another-collection',
+//       id: 'some-id',
+//       data: { /* your data */ }
+//     });
+
+//     await Payload.db.commitTransaction(transactionID);
+//     console.log('Everything done.');
+//   } catch (error) {
+//     console.error('Oh no, something went wrong!');
+//     await Payload.db.rollbackTransaction(transactionID);
+//   }
+// };
+
+// allOrNothingJob()
 
 module.exports = {
   updateStoreAppDesignDetail, 

@@ -133,7 +133,7 @@ router.get("/api/getHomePage/:shopId",  getHomePage);
 
 router.get("/api/getHomePageByShop/:themeId" , verifyRequest ,   getHomePageByWeb);
 
-router.put("/api/updateHomePage/:themeId" , verifyRequest , updateHomePage);
+router.put("/api/updateHomePage/:themeId"  , updateHomePage);
 
 /*--------------------------BrandingPageRouter--------------------------------------------------*/
 
@@ -147,7 +147,6 @@ router.get(
 
 router.put(
   "/api/branding/theme/:themeId",
-  verifyRequest,
   updateBrandingApp
 );
 

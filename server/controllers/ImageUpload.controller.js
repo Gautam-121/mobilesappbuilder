@@ -2,6 +2,7 @@ const dotenv = require("dotenv");
 const Payload = require("payload");
 const ApiError = require("../utils/ApiError.js");
 const asyncHandler = require("../utils/asyncHandler.js");
+const fs = require("fs")
 dotenv.config();
 
 const uploadImages = asyncHandler(async (req, res, next) => {
@@ -34,21 +35,40 @@ const uploadImages = asyncHandler(async (req, res, next) => {
     )
   }
 
-  const image = await Payload.create({
-    collection: "media",
-    file: {
-      data: file[0].buffer,
-      mimetype: file[0].mimetype,
-      name: file[0].originalname,
-      size: file[0].size,
-    }
-  });
+  try {
+    const image = await Payload.create({
+      collection: "media",
+      file: {
+        data: file[0].buffer,
+        mimetype: file[0].mimetype,
+        name: file[0].originalname,
+        size: file[0].size,
+      }
+    })
 
-  return res.status(200).json({
-    success: true,
-    message: "Upload Images SuccessFully",
-    data: image
-  });
+    if(!image){
+
+      fs.unlinkSync(file[0].path)
+      return res.status(500).json({
+        success: false,
+        message: "something went wrong while creating a media"
+      })
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Upload Images SuccessFully",
+      data: image
+    });
+
+  } catch (error) {
+
+    fs.unlinkSync(file[0].path)
+    return res.status(500).json({
+      success: false,
+      message: error.message || "something went wrong while creating a media"
+    })
+  }
 })
 
 

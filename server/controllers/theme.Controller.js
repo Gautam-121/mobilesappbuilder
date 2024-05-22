@@ -10,10 +10,11 @@ const getAllTheme = asyncHandler( async (req, res, next) => {
       shopId: { equals: req.shop_id },
       isActive: { equals : true}
     },
+    limit: 1,
     depth:0
   })
 
-  if(!store.docs[0]){
+  if(store.docs.length == 0){
     return next(
       new ApiError(
         `store not found with id: ${req.shop_id}`,
@@ -53,10 +54,11 @@ const getThemeById = asyncHandler( async (req, res, next) => {
       shopId: { equals: req.shop_id },
       isActive: { equals : true}
     },
+    limit: 1,
     depth:0
   })
 
-  if(!store.docs[0]){
+  if(store.docs.length == 0){
     return next(
       new ApiError(
         `store not found with id: ${req.shop_id}`,

@@ -19,11 +19,12 @@ const getHomePage = asyncHandler(async (req, res, next) => {
       shopId: { equals: `gid://shopify/Shop/${req.params.shopId}` },
       isActive: { equals: true },
     },
+    limit: 1,
     depth: req.query?.depth || 0
   });
 
 
-  if (!store.docs[0]) {
+  if (store.docs.length == 0) {
     return next(
       new ApiError(
         `Shop not found with id: ${req.params.shopId}`, 
@@ -38,6 +39,7 @@ const getHomePage = asyncHandler(async (req, res, next) => {
       shopId: { equals: `gid://shopify/Shop/${req.params.shopId}` },
       themeId: { equals: store.docs[0]?.themeId },
     },
+    limit:1
   });
 
   if (homeData.docs.length === 0) {
@@ -85,6 +87,7 @@ const getHomePageByWeb = asyncHandler(async (req, res, next) => {
       shopId: { equals: req.shop_id },
       isActive: { equals: true },
     },
+    limit: 1,
     depth: req.query?.depth || 0
   });
 
@@ -115,6 +118,7 @@ const getHomePageByWeb = asyncHandler(async (req, res, next) => {
       shopId: { equals: req.shop_id  },
       themeId: { equals: req.params.themeId },
     },
+    limit: 1,
     depth: 2,
   });
 
@@ -162,9 +166,10 @@ const updateHomePage = asyncHandler(async (req, res, next) => {
   const isSelectedTheme = await Payload.find({
     collection: "Store",
     where: {
-      shopId: { equals: req.shop_id },
+      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454"},
       isActive: { equals: true },
     },
+    limit: 1,
     depth: req.query?.depth || 0 
   });
 
@@ -192,9 +197,10 @@ const updateHomePage = asyncHandler(async (req, res, next) => {
   const isExistHomeData = await Payload.find({
     collection: "homeScreen",
     where: {
-      shopId: { equals: req.shop_id },
+      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454"},
       themeId: { equals: req.params.themeId },
     },
+    limit:1
   });
 
   if (isExistHomeData.docs.length === 0) {
@@ -206,7 +212,13 @@ const updateHomePage = asyncHandler(async (req, res, next) => {
     );
   }
 
+  // Start Transcation
+  const transactionID = await Payload.db.beginTransaction()
+
+  console.log("transactionID" , transactionID)
+
   try {
+
     for (let index in datas) {
       if (datas[index].featureType === "banner") {
         const isVisible = datas[index]?.data?.data.some(
@@ -215,6 +227,7 @@ const updateHomePage = asyncHandler(async (req, res, next) => {
 
         if (datas[index]?.data?.id) {
           const banner = await Payload.update({
+            req:{transactionID},
             collection: "banner",
             id: datas[index].data.id,
             data: {
@@ -231,6 +244,7 @@ const updateHomePage = asyncHandler(async (req, res, next) => {
         } else {
           console.log(datas[index].data?.data);
           const banner = await Payload.create({
+            req:{transactionID},
             collection: "banner",
             data: {
               data: datas[index].data?.data,
@@ -247,6 +261,7 @@ const updateHomePage = asyncHandler(async (req, res, next) => {
       } else if (datas[index].featureType === "announcement") {
         if (datas[index]?.data?.id) {
           const announcementBar = await Payload.update({
+            req:{transactionID},
             collection: "announcementBanner",
             id: datas[index]?.data?.id,
             data: datas[index]?.data,
@@ -258,6 +273,7 @@ const updateHomePage = asyncHandler(async (req, res, next) => {
           };
         } else {
           const announcementBar = await Payload.create({
+            req:{transactionID},
             collection: "announcementBanner",
             data: datas[index]?.data,
           });
@@ -270,6 +286,7 @@ const updateHomePage = asyncHandler(async (req, res, next) => {
       } else if (datas[index].featureType === "productGroup") {
         if (datas[index]?.data?.id) {
           const productGroup = await Payload.update({
+            req:{transactionID},
             collection: "productGroup",
             id: datas[index]?.data?.id,
             data: datas[index]?.data,
@@ -281,6 +298,7 @@ const updateHomePage = asyncHandler(async (req, res, next) => {
           };
         } else {
           const productGroup = await Payload.create({
+            req:{transactionID},
             collection: "productGroup",
             data: datas[index]?.data,
           });
@@ -293,6 +311,7 @@ const updateHomePage = asyncHandler(async (req, res, next) => {
       } else if (datas[index].featureType === "categories") {
         if (datas[index]?.data?.id) {
           const categories = await Payload.update({
+            req:{transactionID},
             collection: "categories",
             id: datas[index].data.id,
             data: {
@@ -306,6 +325,7 @@ const updateHomePage = asyncHandler(async (req, res, next) => {
           };
         } else {
           const categories = await Payload.create({
+            req:{transactionID},
             collection: "categories",
             data: {
               data: datas[index]?.data?.data,
@@ -320,6 +340,7 @@ const updateHomePage = asyncHandler(async (req, res, next) => {
       } else if (datas[index].featureType === "text_paragraph") {
         if (datas[index]?.data?.id) {
           const textParagraph = await Payload.update({
+            req:{transactionID},
             collection: "textParagraph",
             id: datas[index].data.id,
             data: datas[index]?.data,
@@ -331,6 +352,7 @@ const updateHomePage = asyncHandler(async (req, res, next) => {
           };
         } else {
           const textParagraph = await Payload.create({
+            req:{transactionID},
             collection: "textParagraph",
             data: {
               data: datas[index]?.data,
@@ -345,6 +367,7 @@ const updateHomePage = asyncHandler(async (req, res, next) => {
       } else if (datas[index].featureType === "countdown") {
         if (datas[index]?.data?.id) {
           const eventTimer = await Payload.update({
+            req:{transactionID},
             collection: "eventTimer",
             id: datas[index].data.id,
             data: datas[index]?.data,
@@ -356,6 +379,7 @@ const updateHomePage = asyncHandler(async (req, res, next) => {
           };
         } else {
           const eventTimer = await Payload.create({
+            req:{transactionID},
             collection: "eventTimer",
             data: {
               data: datas[index]?.data,
@@ -370,6 +394,7 @@ const updateHomePage = asyncHandler(async (req, res, next) => {
       } else if (datas[index].featureType === "social_channel") {
         if (datas[index]?.data?.id) {
           const socialMedia = await Payload.update({
+            req:{transactionID},
             collection: "socialMedia",
             id: datas[index].data.id,
             data: datas[index]?.data,
@@ -381,6 +406,7 @@ const updateHomePage = asyncHandler(async (req, res, next) => {
           };
         } else {
           const socialMedia = await Payload.create({
+            req:{transactionID},
             collection: "socialMedia",
             data: {
               data: datas[index]?.data,
@@ -395,6 +421,7 @@ const updateHomePage = asyncHandler(async (req, res, next) => {
       } else if (datas[index].featureType === "video") {
         if (datas[index]?.data?.id) {
           const video = await Payload.update({
+            req:{transactionID},
             collection: "video",
             id: datas[index].data.id,
             data:  datas[index]?.data,
@@ -406,6 +433,7 @@ const updateHomePage = asyncHandler(async (req, res, next) => {
           };
         } else {
           const video = await Payload.create({
+            req:{transactionID},
             collection: "video",
             data: {
               data: datas[index]?.data,
@@ -419,25 +447,35 @@ const updateHomePage = asyncHandler(async (req, res, next) => {
         }
       }
     }
-  } catch (err) {
-    return next(new ApiError(err, 500));
+
+    await Payload.update({
+      req:{transactionID},
+      collection: "homeScreen",
+      id:isExistHomeData.docs[0].id,
+      data: {
+        homeData: datas,
+      },
+    })
+
+    //Commit the transaction if everything is successful
+    await Payload.db.commitTransaction(transactionID);
+
+    return res.status(201).json({
+      success: true,
+      message: "Data Updated Successfully",
+    });
+
+  } catch (error) {
+
+     console.error('Oh no, something went wrong!');
+     await Payload.db.rollbackTransaction(transactionID);
+
+     res.status(500).send({
+      success: false,
+      message: error.message
+    });
+
   }
-
-  await Payload.update({
-    collection: "homeScreen",
-    where: {
-      shopId: { equals: req.shop_id  },
-      themeId: { equals: req.params.themeId },
-    },
-    data: {
-      homeData: datas,
-    },
-  });
-
-  return res.status(201).json({
-    success: true,
-    message: "Data Updated Successfully",
-  });
 });
 
 module.exports = {

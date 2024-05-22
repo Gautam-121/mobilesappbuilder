@@ -24,6 +24,7 @@ const webhookRegistrar = require("./webhooks/index.js");
 const errorMiddleware = require("./middleware/error.middleware.js");
 require("events").EventEmitter.prototype._maxListeners = 70;
 dotenv.config();
+
 // Run a check to ensure everything is setup properly
 setupCheck();
 

@@ -79,21 +79,36 @@ const createCart = asyncHandler(async(req , res , next)=>{
         )
     }
 
-    // Create a new cart
-    const newCart = await Payload.create({
-        collection: "cutomerCart",
-        data:{
-            customerId: `gid://shopify/Customer/${customerId}`,
-            customerCartId: customerCartId
-        },
-        depth: 0
-    });
+    try {
+      // Create a new cart
+      const newCart = await Payload.create({
+          collection: "cutomerCart",
+          data:{
+              customerId: `gid://shopify/Customer/${customerId}`,
+              customerCartId: customerCartId
+          },
+          depth: 0
+      });
 
-    return res.status(201).json({
+      if(!newCart){
+        return res.status(500).json({
+          success: false,
+          message: "Something went wrong while creating customer cart"
+        })
+      }
+
+      return res.status(201).json({
         success: true,
         message: "cart created succssfully",
         data: newCart
     })  
+
+    } catch (error) {
+      return res.status(500).json({
+        success: false,
+        message: error.message || "Something went wrong while creating customer cart "
+      })
+    }
 })
 
 const getCartByCustomerId = asyncHandler( async(req , res , next)=>{
@@ -267,13 +282,29 @@ const updateCartOfCustomer = asyncHandler(async (req, res, next) => {
     )
   }
 
-    await Payload.update({
-        collection: "cutomerCart",
-        id: cart.docs[0].id,
-        data:{
-            customerCartId: customerCartId
-        }
-    })
+    try {
+
+      const data = await Payload.update({
+          collection: "cutomerCart",
+          id: cart.docs[0].id,
+          data:{
+              customerCartId: customerCartId
+          }
+      })
+
+      if(!data){
+        return res.status(500).json({
+          success: false,
+          message: "Something went wrong while updating customer cart"
+        })
+      }
+
+    } catch (error) {
+      return res.status(500).json({
+        success: false,
+        message: "Something went wrong while updating customer cart"
+      })
+    }
 
   return res.status(200).json({
     success: true,

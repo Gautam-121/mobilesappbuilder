@@ -42,9 +42,10 @@ const createCustomer = asyncHandler(async (req, res, next) => {
         shopId: { equals: `gid://shopify/Shop/${req.params.shopId}` },
         isActive: { equals: true }
       },
+      limit:1
     });
 
-    if (!store.docs[0]) {
+    if (store.docs.length == 0) {
       return next(
         new ApiError(
           `Shop not found with id: ${req.params.shopId}`,
@@ -150,18 +151,16 @@ const createFirebaseToken = async (req, res, next) => {
 
     const { serviceAccount } = req.body;
 
-    console.log(req.body)
-    console.log(serviceAccount)
-
     const store = await Payload.find({
       collection: 'Store',
       where: {
         shopId: { equals: req.shop_id},
         isActive: { equals: true }
       },
+      limit: 1
     });
 
-    if (!store.docs[0]) {
+    if (store.docs.length == 0) {
       return next(
         new ApiError(
           `Shop not found with id: ${req.shop_id}`,
@@ -307,7 +306,7 @@ const createFirebaseToken = async (req, res, next) => {
     } catch (err) {
       return next(
         new Error(
-          'Invalid service account credentials',
+          err.message || 'Invalid service account credentials',
           400
         )
       )
@@ -316,7 +315,7 @@ const createFirebaseToken = async (req, res, next) => {
     console.error('Error creating access token:', err);
     return next(
       new ApiError(
-        'Failed to create access token',
+        err.message || 'Failed to create access token',
         500
       )
     )
@@ -331,9 +330,10 @@ const getFirebaseAccessToken = asyncHandler(async (req, res,next) => {
       shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
       isActive: { equals: true }
     },
+    limit: 1
   })
 
-  if (!store.docs[0]) {
+  if (store.docs.length == 0) {
     return next(
       new ApiError(
         `store not found with id: ${req.shop_id}`,
@@ -374,9 +374,10 @@ const sendNotification = asyncHandler(async (req, res, next) => {
       shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454"  },
       isActive: { equals: true }
     },
+    limit: 1
   });
 
-  if (!store.docs[0]) {
+  if (store.docs.length == 0) {
     return next(
       new ApiError(
         `store not found with id: ${req.shop_id}`,
@@ -461,17 +462,24 @@ const sendNotification = asyncHandler(async (req, res, next) => {
     console.log(storeFirebaseAccessToken.docs[0].id)
     console.log(store.docs[0].id)
 
-    await Payload.update({
-      collection: "firebaseServiceAccount",
-      where: {
-        shopId: { equals: store.docs[0].id  },
-        id: { equals: storeFirebaseAccessToken.docs[0].id }
-      },
-      data: {
-        firbaseAccessToken: accessToken,
-        tokenExpiry: newTokenExpiry,
-      },
-    });
+    try {
+      await Payload.update({
+        collection: "firebaseServiceAccount",
+        where: {
+          shopId: { equals: store.docs[0].id  },
+          id: { equals: storeFirebaseAccessToken.docs[0].id }
+        },
+        data: {
+          firbaseAccessToken: accessToken,
+          tokenExpiry: newTokenExpiry,
+        },
+      })
+    } catch (error) {
+      return res.status(500).json({
+        success: false,
+        message: "Something went wrong while sending notification"
+      })
+    }
 
   } else {
     accessToken = storeFirebaseAccessToken.docs[0].firbaseAccessToken;
@@ -582,9 +590,10 @@ const getAllcustomer = asyncHandler(async (req, res, next) => {
       shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
       isActive: { equals: true }
     },
+    limit: 1
   })
 
-  if (!store.docs[0]) {
+  if (store.docs.length == 0) {
     return next(
       new ApiError(
         `store not found with id: ${req.shop_id}`,
@@ -622,9 +631,10 @@ const createSegment = asyncHandler(async (req, res, next) => {
       shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
       isActive: { equals: true }
     },
+    limit: 1
   })
 
-  if (!store.docs[0]) {
+  if (store.docs.length == 0) {
     return next(
       new ApiError(
         `store not found with id: ${req.shop_id}`,
@@ -705,9 +715,10 @@ const getSegment = asyncHandler(async (req, res, next) => {
       shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
       isActive: { equals: true }
     },
+    limit: 1
   })
 
-  if (!store.docs[0]) {
+  if (store.docs.length == 0) {
     return next(
       new ApiError(
         `store not found with id: ${req.shop_id}`,
@@ -743,9 +754,10 @@ const getSegmentById = asyncHandler(async (req, res, next) => {
       shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
       isActive: { equals: true }
     },
+    limit: 1
   })
 
-  if (!store.docs[0]) {
+  if (store.docs.length == 0) {
     return next(
       new ApiError(
         `store not found with id: ${req.shop_id}`,
@@ -772,7 +784,7 @@ const getSegmentById = asyncHandler(async (req, res, next) => {
     depth: req.query?.depth || 0
   })
 
-  if (!segmentExist.docs[0]) {
+  if (segmentExist.docs.length == 0) {
     return next(
       new ApiError(
         "Segment not found",
@@ -798,9 +810,10 @@ const updateSegment = asyncHandler(async (req, res, next) => {
       shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
       isActive: { equals: true }
     },
+    limit: 1
   })
 
-  if (!store.docs[0]) {
+  if (store.docs.length == 0) {
     return next(
       new ApiError(
         `store not found with id: ${req.shop_id}`,
@@ -835,7 +848,7 @@ const updateSegment = asyncHandler(async (req, res, next) => {
     }
   })
 
-  if (!segmentExist.docs[0]) {
+  if (segmentExist.docs.length == 0) {
     return next(
       new ApiError(
         "Segment not found",
@@ -856,7 +869,7 @@ const updateSegment = asyncHandler(async (req, res, next) => {
       depth: 0
     })
 
-    if (!segment.docs[0]) {
+    if (segment.docs.length == 0) {
       return next(
         new ApiError(
           "Something went wrong while updating the data",
@@ -884,9 +897,10 @@ const deleteSegment = asyncHandler(async (req, res, next) => {
       shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
       isActive: { equals: true }
     },
+    limit: 1
   })
 
-  if (!store.docs[0]) {
+  if (store.docs.length == 0) {
     return next(
       new ApiError(
         `store not found with id: ${req.shop_id}`,
@@ -912,7 +926,7 @@ const deleteSegment = asyncHandler(async (req, res, next) => {
     }
   })
 
-  if (!segmentExist.docs[0]) {
+  if (segmentExist.docs.length == 0) {
     return next(
       new ApiError(
         "Segment not found",
