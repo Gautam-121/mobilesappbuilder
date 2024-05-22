@@ -2,11 +2,11 @@
 import React from "react";
 import { useRef, useEffect, useState } from "react";
 import { uid } from "uid";
-import imgIcon from '../../../../images/imgIcon.jpg'
-import { Scrollable } from "@shopify/polaris";
-import './HorizontalProductGrid.css'
+import imgIcon from "../../../../images/imgIcon.jpg";
+import { Scrollable, Spinner } from "@shopify/polaris";
+import "./HorizontalProductGrid.css";
 import { useRecoilValue } from "recoil";
-import { componentListArrayAtom} from "../../recoil/store";
+import { componentListArrayAtom } from "../../recoil/store";
 import useFetch from "../../../../hooks/useFetch";
 export default function Horizontalproductgrid({
   gridItems,
@@ -15,36 +15,42 @@ export default function Horizontalproductgrid({
   handleEdit,
   draggable,
 }) {
-  const componentListArray = useRecoilValue(componentListArrayAtom)
+  const componentListArray = useRecoilValue(componentListArrayAtom);
+  const [isLoading, setIsLoading] = useState(false);
+  const [products, setProducts] = useState([]);
 
   const dragRef = useRef(null);
-  useEffect(()=>{fetchProducts()},[gridItems,componentListArray])
-  const [products, setProducts ] = useState([])
+  useEffect(() => {
+    if(products.length<1){
+      fetchProducts();
+    }
+  }, [gridItems, componentListArray]);
 
   const getProducts = {
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
     },
-    method: "GET",    
-  }
-  console.log("Grid items from HPG", gridItems)
+    method: "GET",
+  };
+  console.log("Grid items from HPG", gridItems);
 
   const useDataFetcherForShopifyData = (initialState, url, options) => {
     const [data, setData] = useState(initialState);
     const fetch = useFetch();
 
     const fetchData = async () => {
-      console.log("fetch data triggered");
+      setIsLoading(true);
       setData("");
       const result = await (await fetch(url, options))?.json();
       // console.log("result", result?.collections);
       console.log("result", result?.products);
       console.log("result", result);
       setData(result.data);
-      if(result.data.length>0){
-        setProducts(result.data)
+      if (result.data.length > 0) {
+        setProducts(result.data);
       }
+      setIsLoading(false);
     };
     return [data, fetchData];
   };
@@ -55,10 +61,8 @@ export default function Horizontalproductgrid({
     getProducts
   );
 
-
   // const products = useRecoilValue(productsByCollectionAtom)
   const handleDragStart = (e) => {
-
     console.log(gridItems);
     const newElement = { ...gridItems };
     newElement.id = uid();
@@ -113,13 +117,14 @@ export default function Horizontalproductgrid({
         }}
       >
         <div
-          style={{
-            // display: "grid",
-            // gridTemplateColumns: "repeat(2, 1fr)",
-            // gap: "4px",
-            // textAlign: "center",
-
-          }}
+          style={
+            {
+              // display: "grid",
+              // gridTemplateColumns: "repeat(2, 1fr)",
+              // gap: "4px",
+              // textAlign: "center",
+            }
+          }
         >
           {/* {gridItems.data.map((subItem, subIndex) => (
             <p
@@ -137,29 +142,37 @@ export default function Horizontalproductgrid({
               {subItem.title}
             </p>
           ))} */}
-          <span>{gridItems.data.title}</span>
-          {gridItems.data.productGroupId===null?(
-            <Scrollable scrollbarWidth="none"
-            className="ScrollableImgContainer">
-              <img className="demoImg" src={imgIcon} alt="" />
-              <img className="demoImg" src={imgIcon} alt="" />
-              <img className="demoImg" src={imgIcon} alt="" />
-              <img className="demoImg" src={imgIcon} alt="" />
-              <img className="demoImg" src={imgIcon} alt="" />
-      
-            
-            </Scrollable>
-          ):(
+          <strong>{gridItems.data.title}</strong>
+          {gridItems.data.productGroupId === null ? (
             <Scrollable
-            className="ScrollableImgContainer"
-            scrollbarWidth="none"
+              scrollbarWidth="none"
+              className="ScrollableImgContainer"
             >
-               { products.map((ele)=>(
-                  <div className="productsWrapper">
-                    <img src={ele?.featuredImage?.url} alt="" />
-                    <span>{ele.title}</span>
-                  </div>
-                ))}
+              <img className="demoImg" src={imgIcon} alt="" />
+              <img className="demoImg" src={imgIcon} alt="" />
+              <img className="demoImg" src={imgIcon} alt="" />
+              <img className="demoImg" src={imgIcon} alt="" />
+              <img className="demoImg" src={imgIcon} alt="" />
+            </Scrollable>
+          ) : isLoading ? (
+           <div>
+             <Spinner
+              size="small"
+              accessibilityLabel="Loading products"
+              hasFocusableParent={false}
+            />
+           </div>
+          ) : (
+            <Scrollable
+              className="ScrollableImgContainer"
+              scrollbarWidth="none"
+            >
+              {products.map((ele) => (
+                <div className="productsWrapper">
+                  <img src={ele?.featuredImage?.url} alt="" />
+                  <span>{ele.title}</span>
+                </div>
+              ))}
             </Scrollable>
           )}
         </div>

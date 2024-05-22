@@ -18,7 +18,7 @@ const SelectedTheme = (props) => {
     const dispatch = useDispatch();
 
     const theTheme = props?.selectedTheme;
-
+    console.log("the theme", theTheme)
     const app = useAppBridge();
 
     const fullscreen = Fullscreen.create(app);
@@ -28,7 +28,7 @@ const SelectedTheme = (props) => {
 
     const customize = () => {
 
-        window.location.href = '/app-design/customize'
+        window.location.href = `/app-design/customize/${theTheme?.id}`
 
         fullscreen.dispatch(Fullscreen.Action.ENTER);
 
@@ -50,8 +50,8 @@ const SelectedTheme = (props) => {
                     </div>
 
                     <div className='them-name-text'><span>{theTheme?.name}</span></div>
-                    {/* <div><p>Last saved: {props.themeUpdatedAt}</p></div> */}
-                    <div className='update-date'><span>Last saved: Feb 5, 2024 at 3:31 pm</span></div>
+                    <div><p>Last saved: {new Date(theTheme?.updatedAt).toLocaleString()}</p></div>
+                    {/* <div className='update-date'><span>Last saved: Feb 5, 2024 at 3:31 pm</span></div> */}
 
                 </div>
 
@@ -66,7 +66,7 @@ const SelectedTheme = (props) => {
 
             <div className='side-image-div'>
 
-                <ImageChecker src={theTheme?.images[0].ur} cardImageCss={'images'} />
+                <ImageChecker src={theTheme?.images[0]} cardImageCss={'images'} />
 
             </div>
 

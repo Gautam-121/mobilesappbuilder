@@ -171,3 +171,7 @@
 .editPopupContainer::-webkit-scrollbar {
   display: none;
 }
+.placeholder-text{
+  font-size: 16px;
+  font-weight: bold;
+}

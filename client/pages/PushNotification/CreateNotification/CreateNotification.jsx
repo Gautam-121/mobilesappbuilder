@@ -204,7 +204,16 @@ let actionUrl=""
     }
   }, [notificationMessage]);
   return (
-    <Page>
+    <Page
+    backAction={{content: 'Settings', url: '/push-notification/template'}}
+    primaryAction={   <Button
+      id="settingsBtn"
+      variant="contained"
+      onClick={() => navigate("/push-notification/settings")}
+    >
+      <SettingsIcon />
+    </Button>}
+    >
       <Frame>
         {isAuthErrorVisible && (
           <AlertBanner
@@ -212,14 +221,15 @@ let actionUrl=""
             alertTitle="Error!"
           />
         )}
-        <Button
+        {/* <Button
           id="settingsBtn"
           variant="contained"
           onClick={() => navigate("/push-notification/settings")}
         >
           <SettingsIcon />
-        </Button>
-        <div className="container">
+        </Button> */}
+     <div className="wrapper">
+     <div className="container">
           <div className="head">
             <Text variant="headingXl" id="Heading">
               {" "}
@@ -235,7 +245,7 @@ let actionUrl=""
             {type === "productNotification" && <ProductSelector />}
             {type === "categoryNotification" && <CategorySelection />}
             {/* <SegmentSelector onFilteredDataChange={handleFilteredDataChange} /> */}
-            {type === "marketingNotification" &&   <div className="titleSection">
+            {type === "basicNotification" &&   <div className="titleSection">
               <label htmlFor="">Action URL</label>
               <div className="inputWrapper">
                 <input
@@ -284,6 +294,7 @@ let actionUrl=""
             </div>
           </div>
         </div>
+     </div>
        
       </Frame>
     </Page>
