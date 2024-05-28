@@ -22,7 +22,7 @@ export default function App() {
             <a href="/push-notification">Push Notifications</a>
             {/* <a href="/banners">Banners</a> */}
             <a href="/store-configuration">Store Configuration</a>
-            <a href="/support">Support Queries</a>
+            {/* <a href="/support">Support Queries</a> */}
           </ui-nav-menu>
           {RouteComponents}
         </AppBridgeProvider>

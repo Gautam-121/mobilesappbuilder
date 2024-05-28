@@ -1,4 +1,4 @@
-.storeconfig-main-div{
+.storeconfig-main-div {
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -6,7 +6,7 @@
     height: 100vh;
 }
 
-.storeconfig-header-div{
+.storeconfig-header-div {
 
     display: flex;
     flex-direction: column;
@@ -14,15 +14,6 @@
 }
 
 
-.storeconfig-social-tab-btn{
-    cursor: pointer;
-    border: 1px solid rgb(236, 233, 233);
-    border-radius: 50px;
-    background-color: rgb(236, 233, 233);
-    color: black;
-    padding: 8px;
-
-}
 
 .storeconfig-social-tab-btn.active {
     border: 1px solid rgb(73, 134, 247);
@@ -32,7 +23,9 @@
 }
 
 
-.storeconfig-store-policy-tab-btn{
+.storeconfig-store-policy-tab-btn,
+.storeconfig-social-tab-btn,
+.storeconfig-branding-tab-btn {
     cursor: pointer;
     border: 1px solid rgb(236, 233, 233);
     border-radius: 50px;
@@ -42,7 +35,7 @@
 }
 
 
-.storeconfig-store-policy-tab-btn.active{
+.storeconfig-store-policy-tab-btn.active {
     border: 1px solid rgb(73, 134, 247);
     background-color: rgb(73, 134, 247);
     color: white;
@@ -50,52 +43,58 @@
 
 
 
+.storeconfig-branding-tab-btn.active {
+    border: 1px solid rgb(73, 134, 247);
+    background-color: rgb(73, 134, 247);
+    color: white;
+}
 
 
-.storeconfig-header-tabs-main-div{
+
+.storeconfig-header-tabs-main-div {
     display: flex;
     justify-content: flex-start;
     gap: 20px;
     padding: 20px;
 }
 
-.storeconfig-social-media-section-main-div{
+.storeconfig-social-media-section-main-div {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
-    
+
     gap: 40px;
     padding: 10px 20px 20px 20px;
     background-color: white;
 }
 
 @media screen and (max-width: 1920px) {
-    .storeconfig-social-media-section-main-div{
-        
+    .storeconfig-social-media-section-main-div {
+
         width: 50%;
     }
-    
+
 }
 
 
 @media screen and (max-width: 1024px) {
-    .storeconfig-social-media-section-main-div{
-        
+    .storeconfig-social-media-section-main-div {
+
         width: 100%;
     }
-    
+
 }
 
-.storeconfig-instagram-main-div{
+.storeconfig-instagram-main-div {
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    
+
     gap: 25px;
 }
 
 
-.storeconfig-social-icons{
+.storeconfig-social-icons {
     padding: 8px;
     border: 1px solid rgb(236, 233, 233);
     border-radius: 50px;
@@ -110,7 +109,7 @@
 
 
 
-.save-btn{
+.save-btn {
     border-radius: 4px;
     padding: 8px 20px 8px 20px;
     cursor: pointer;
@@ -119,7 +118,7 @@
     float: right;
 }
 
-.save-btn:hover{
+.save-btn:hover {
     background-color: rgb(73, 134, 247);
     border: 1px solid rgb(73, 134, 247);
     color: white;
@@ -127,7 +126,7 @@
 }
 
 
-.social-textfields{
+.social-textfields {
     border: none;
 }
 
@@ -136,7 +135,7 @@
 
 
 
-.store-policies-main-div{
+.store-policies-main-div {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
@@ -148,25 +147,29 @@
 
 
 @media screen and (max-width: 1920px) {
-    .policy-main-div, .policy-save-btn-div{
-        
+
+    .policy-main-div,
+    .policy-save-btn-div {
+
         width: 50%;
     }
-    
+
 }
 
 
 @media screen and (max-width: 1024px) {
-    .policy-main-div, .policy-save-btn-div{
-        
+
+    .policy-main-div,
+    .policy-save-btn-div {
+
         width: 100%;
     }
-    
+
 }
 
 
 
-.policy-main-div{
+.policy-main-div {
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -174,7 +177,7 @@
 
 
 
-.policy-save-btn{
+.policy-save-btn {
 
     border-radius: 4px;
     padding: 8px 20px 8px 20px;
@@ -184,7 +187,7 @@
     float: right;
 }
 
-.policy-save-btn:hover{
+.policy-save-btn:hover {
     background-color: rgb(73, 134, 247);
     border: 1px solid rgb(73, 134, 247);
     color: white;
@@ -201,7 +204,8 @@
 
 
 .text-inputs {
-    width: 100%; /* Full width */
+    width: 100%;
+    /* Full width */
 }
 
 
@@ -214,7 +218,7 @@
 /* Save button positioning */
 
 
-.button-and-success-message{
+.button-and-success-message {
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -226,20 +230,21 @@
     justify-content: flex-end;
 }
 
-.policy-save-btn-div{
+.policy-save-btn-div {
     display: flex;
     justify-content: flex-end;
 }
 
 
-.storeconfig-social-media-main-div{
+.storeconfig-social-media-main-div {
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    
+
     gap: 25px;
-    
+
 }
+
 /* .save-btn-div{
     padding: 10px 20px 20px 0px;
 } */
@@ -256,4 +261,126 @@
 
 
 
+/* Branding */
+.branding-main-div {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 10px 20px 20px 20px;
+    height: auto;
+    overflow: auto;
+}
 
+
+.branding-text{
+    font-size:17px
+}
+
+
+.branding-second-child-main-div{
+     display: flex;
+     flex-direction: row;
+     justify-content: flex-start;
+     gap:50px;
+
+}
+
+
+.branding-second-child-left-main-div{
+    display: flex;
+     flex-direction: column;
+      gap: 20px
+}
+
+
+
+.branding-second-child-inner-div{
+    display: flex;
+     flex-direction: row;
+      gap: 20px
+
+}
+
+
+.appname-app-name-text-div{
+
+    display: flex;
+    
+     gap: 20px 
+
+}
+
+.appname-div{
+    display: flex;
+     flex-direction: column;
+      gap: 6px;
+}
+
+
+
+.input-field{
+    width: auto;
+    border: 1px solid #f5f5f5;
+    padding: 8px;
+    border-radius: 4px;
+    background-color: #f5f5f5;
+    box-sizing: border-box; 
+    width: 222px; 
+}
+
+
+.input-container {
+    position: relative;
+     /* Adjust width as needed */
+  }
+  
+
+  
+  .color-picker-input-field {
+    border: 1px solid #f5f5f5;
+    padding: 8px;
+    border-radius: 4px;
+    background-color: #f5f5f5;
+    
+    width: auto;
+    padding-left: 35px; /* Add padding to the left to avoid overlap */
+    box-sizing: border-box; /* Ensure padding is included in the element's total width */
+  }
+  
+
+  .header-font-input-field{
+    border: 1px solid #f5f5f5;
+    padding: 8px;
+    border-radius: 4px;
+    background-color: #f5f5f5;
+    
+    width: auto;
+    width: 222px; /* Add padding to the left to avoid overlap */
+    box-sizing: border-box;
+  }
+
+
+  .overlay-button {
+    position: absolute;
+    left: 7px;
+    top: 7px;
+    bottom: 7px;
+    width: 20px; /* Adjust width as needed */
+    background-color: #D8D8D8;
+    border: 1px solid #D8D8D8;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  
+.appname-text-color-div{
+    display: flex;
+     flex-direction: row;
+      gap: 6px
+}
+
+.upload-logo-div{
+    display: flex;
+     flex-direction: column;
+      gap: 6px
+}

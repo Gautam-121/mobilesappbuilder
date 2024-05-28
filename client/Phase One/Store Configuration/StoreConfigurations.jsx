@@ -1,13 +1,18 @@
-import React, { useEffect } from 'react';
-import { Button, Divider, TextField } from '@shopify/polaris';
+import React from 'react';
+import { Button, Divider, TextField, DropZone, Thumbnail, Text, Icon } from '@shopify/polaris';
 import { useState, useCallback } from 'react';
 import "./StoreConfigurations.css";
-import { Icon } from '@shopify/polaris';
+
+import ColorPickerInput from '../ColorPickerInput/ColorPickerInput';
+
+
+
 import {
     LogoFacebookIcon,
     LogoInstagramIcon,
     LogoXIcon,
-    LogoYoutubeIcon
+    LogoYoutubeIcon,
+    XCircleIcon
 } from '@shopify/polaris-icons';
 
 import axios from "axios";
@@ -261,6 +266,97 @@ const StoreConfigurations = () => {
     }
 
 
+    //fil upload
+
+    const [file, setFile] = useState(null);
+    const [error, setError] = useState('');
+
+    const validImageTypes = ['image/jpeg', 'image/png'];
+
+    const handleDrop = useCallback((acceptedFiles, rejectedFiles) => {
+        console.log('Accepted files:', acceptedFiles);
+        console.log('Rejected files:', rejectedFiles);
+
+        if (acceptedFiles.length > 0) {
+            const currentFile = acceptedFiles[0];
+            const fileExtension = currentFile.name.split('.').pop().toLowerCase();
+            console.log('Current file extension:', fileExtension);
+            if (fileExtension == 'jpg' || fileExtension == 'jpeg' || fileExtension == 'png') {
+                setFile(currentFile);
+                setError(''); // Clear any existing error messages
+            } else {
+                setError('Invalid file type. Please upload a .jpg, .jpeg, or .png file.');
+            }
+        }
+
+        if (rejectedFiles.length > 0) {
+            setError('Invalid file type. Please upload a .jpg, .jpeg, or .png file.');
+        }
+    }, []);
+
+
+
+    const handleRemoveFile = () => {
+        setFile(null);
+    };
+
+
+
+    const fileUpload = !file && (
+        <DropZone.FileUpload actionHint="Accepts .jpg, .jpeg, .png files" />
+    );
+
+    const uploadedFile = file && (
+        <div style={{ textAlign: 'center', position: 'relative' }}>
+            <Thumbnail
+                size="large"
+                alt={file.name}
+                source={window.URL.createObjectURL(file)}
+            />
+            <div style={{ marginTop: '10px' }}>
+                <Text as="p" variant="bodyMd">
+                    {file.name}
+                </Text>
+            </div>
+            <div
+                style={{
+                    position: 'absolute',
+                    top: '5px',
+                    right: '5px',
+                    cursor: 'pointer',
+                    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                    borderRadius: '50%',
+                    padding: '5px',
+                    display: 'none',
+                }}
+                className="delete-icon"
+                onClick={handleRemoveFile}
+            >
+                <Icon source={XCircleIcon} color="base" />
+            </div>
+        </div>
+    );
+
+
+
+    //color picker
+
+    const [colors, setColors] = useState({
+        selectColor: '#ffffff',
+        buttonBackground: '#ffffff',
+        buttonTextColor: '#ffffff',
+        headerFontColor: '#ffffff',
+        splashScreenBackground: '#ffffff',
+        headerFooterBackground: '#ffffff',
+        headerFooterIcon: '#ffffff',
+        appBodyBackground: '#ffffff',
+    });
+
+    const handleColorChange = (field, color) => {
+        setColors({ ...colors, [field]: color });
+    };
+
+
 
 
     return (
@@ -269,6 +365,7 @@ const StoreConfigurations = () => {
                 <div className='storeconfig-header-tabs-main-div'>
                     <button className={`storeconfig-social-tab-btn ${selectedTab === 'social' ? 'active' : ''}`} onClick={() => handleTabClick('social')}>Social Media Accounts</button>
                     <button className={`storeconfig-store-policy-tab-btn ${selectedTab === 'policy' ? 'active' : ''}`} onClick={() => handleTabClick('policy')}>Store Policies</button>
+                    <button className={`storeconfig-branding-tab-btn ${selectedTab === 'branding' ? 'active' : ''}`} onClick={() => handleTabClick('branding')}>Branding</button>
 
                 </div>
                 <Divider borderColor="border" />
@@ -326,31 +423,212 @@ const StoreConfigurations = () => {
                         </div>
                     </div>
 
-                    :
 
-                    (<div className='store-policies-main-div'>
-                        {policies.shopPolicies.map((policy, index) => (
-                            <div className='policy-main-div' key={index}>
-                                <h2>{policy.type.split("_").join(" ")}</h2>
-                                <div className='text-inputs'>
-                                    <TextField
-                                        multiline={4}
-                                        clearButton
-                                        autoSize
-                                        value={policy.body}
-                                        onChange={(newValue) => handleTextFieldChange(index, newValue)}
-                                        error={errors[index]}
-                                        autoComplete="off"
-                                        placeholder={`Add your ${policy.type.split("_").join(" ").toLowerCase()} here`}
-                                    />
+                    : selectedTab === 'policy' ?
+
+                        (<div className='store-policies-main-div'>
+                            {policies.shopPolicies.map((policy, index) => (
+                                <div className='policy-main-div' key={index}>
+                                    <h2>{policy.type.split("_").join(" ")}</h2>
+                                    <div className='text-inputs'>
+                                        <TextField
+                                            multiline={4}
+                                            clearButton
+                                            autoSize
+                                            value={policy.body}
+                                            onChange={(newValue) => handleTextFieldChange(index, newValue)}
+                                            error={errors[index]}
+                                            autoComplete="off"
+                                            placeholder={`Add your ${policy.type.split("_").join(" ").toLowerCase()} here`}
+                                        />
+                                    </div>
+                                </div>
+                            ))}
+
+                            <div className='policy-save-btn-div'>
+                                <button className='policy-save-btn' size='small' onClick={handlePolicySaveButtonClick}>Save</button>
+                            </div>
+                        </div>)
+
+                        :
+
+                        <div className='branding-main-div'>
+                            <strong className='branding-text'>Branding</strong>
+
+                            <div className='branding-second-child-main-div'>
+                                <div className='branding-second-child-left-main-div'>
+                                    <div className='branding-second-child-inner-div'>
+                                        <div className='appname-div'>
+                                            <label>App name</label>
+                                            <div className="input-container">
+                                                <input type='text' className='input-field' placeholder='Type your App name here...' />
+                                            </div>
+                                        </div>
+
+                                        <div className='appname-div'>
+                                            <label>Select color</label>
+                                            <div className="input-container">
+                                                <ColorPickerInput
+                                                    placeholder='Choose a color'
+                                                    color={colors.selectColor}
+                                                    onChange={(color) => handleColorChange('selectColor', color)}
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className='branding-second-child-inner-div'>
+                                        <div className='appname-div'>
+                                            <label>Upload app logo</label>
+                                            <DropZone
+                                                onDrop={handleDrop}
+                                                allowMultiple={false}
+                                                accept=".jpg, .jpeg, .png"
+                                                overlayText="Drop file to upload"
+                                                outline
+                                                style={{
+                                                    display: 'flex',
+                                                    justifyContent: 'center',
+                                                    alignItems: 'center',
+                                                    height: '200px',
+                                                    border: '2px dashed #dfe3e8',
+                                                    borderRadius: '4px',
+                                                    textAlign: 'center',
+                                                    position: 'relative',
+                                                }}
+                                            >
+                                                {uploadedFile}
+                                                {fileUpload}
+                                            </DropZone>
+                                        </div>
+                                    </div>
+
+                                    <strong className='branding-text'>Button</strong>
+                                    <div className='branding-second-child-inner-div'>
+                                        <div className='appname-div'>
+                                            <label>Button background</label>
+                                            <div className="input-container">
+                                                <ColorPickerInput
+                                                    placeholder='Choose a color'
+                                                    color={colors.buttonBackground}
+                                                    onChange={(color) => handleColorChange('buttonBackground', color)}
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <div className='appname-div'>
+                                            <label>Button text color</label>
+                                            <div className="input-container">
+                                                <ColorPickerInput
+                                                    placeholder='Choose a color'
+                                                    color={colors.buttonTextColor}
+                                                    onChange={(color) => handleColorChange('buttonTextColor', color)}
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <strong className='branding-text'>Font</strong>
+                                    <div className='branding-second-child-inner-div'>
+                                        <div className='appname-div'>
+                                            <label>Header font color</label>
+                                            <div className="input-container">
+                                                <ColorPickerInput
+                                                    placeholder='Choose a color'
+                                                    color={colors.headerFontColor}
+                                                    onChange={(color) => handleColorChange('headerFontColor', color)}
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <div className='appname-div'>
+                                            <label>Header font size</label>
+                                            <div className="input-container">
+                                                <input type='text' className='header-font-input-field' placeholder='Font size' />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* ------------------ right side column ----------------- */}
+
+
+                                <div className='branding-second-child-left-main-div'>
+                                    <strong className='branding-text'>Splash Screen</strong>
+                                    <div className='branding-second-child-inner-div'>
+                                        <div className='appname-div'>
+                                            <label>Splash screen background color</label>
+                                            <div className="input-container">
+                                                <ColorPickerInput
+                                                    placeholder='Pick a color'
+                                                    color={colors.splashScreenBackground}
+                                                    onChange={(color) => handleColorChange('splashScreenBackground', color)}
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <strong className='branding-text'>Header/Footer</strong>
+
+                                    <div className='branding-second-child-inner-div'>
+                                        <div className='appname-div'>
+                                            <label>Header/Footer background color</label>
+                                            <div className="input-container">
+                                                <ColorPickerInput
+                                                    placeholder='Choose a color'
+                                                    color={colors.headerFooterBackground}
+                                                    onChange={(color) => handleColorChange('headerFooterBackground', color)}
+                                                />
+
+
+                                            </div>
+                                        </div>
+
+                                        <div className='appname-div'>
+
+                                            <label>Header/Footer icon color</label>
+                                            <div className="input-container">
+                                                <ColorPickerInput
+                                                    placeholder='Choose a color'
+                                                    color={colors.headerFooterIcon}
+                                                    onChange={(color) => handleColorChange('headerFooterIcon', color)}
+                                                />
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+
+
+
+                                    <div className='branding-second-child-inner-div'>
+                                        <div className='appname-div'>
+                                            <label>Header/Footer icons size</label>
+                                            <div className="input-container reduced-width">
+                                                <input type='text' className='header-font-input-field' placeholder='Icon size' />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className='branding-second-child-inner-div'>
+                                        <div className='appname-div'>
+                                            <label>App-body background color</label>
+                                            <div className="input-container">
+                                                <ColorPickerInput
+                                                    placeholder='Choose a color'
+                                                    color={colors.appBodyBackground}
+                                                    onChange={(color) => handleColorChange('appBodyBackground', color)}
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <Button variant="primary" onClick={() => window.alert("clicked")}>Save</Button>
+                                    </div>
                                 </div>
                             </div>
-                        ))}
-
-                        <div className='policy-save-btn-div'>
-                            <button className='policy-save-btn' size='small' onClick={handlePolicySaveButtonClick}>Save</button>
                         </div>
-                    </div>)
 
             }
         </div>
