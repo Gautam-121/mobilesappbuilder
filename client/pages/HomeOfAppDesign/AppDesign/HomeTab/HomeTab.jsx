@@ -13,7 +13,8 @@ import { collectionsAtom, componentListArrayAtom, productsAtom } from '../../../
 import EditPopup from '../../../UpdatedCode/editPopup/EditPopup';
 
 
-const HomeTab = (props) => {
+const HomeTab = ({themeId}) => {
+  const[isLoading, setIsLoading] = useState(false)
   const setComponentListArray = useSetRecoilState(componentListArrayAtom)
   const [collections, setCollections] = useRecoilState(collectionsAtom)
   const setProducts = useSetRecoilState(productsAtom)
@@ -32,6 +33,7 @@ const HomeTab = (props) => {
 
     const fetchData = async () => {
       console.log("fetch data triggered")
+      setIsLoading(true)
       setData("");
       const result = await (await fetch(url, options)).json();
       console.log("result", result.data);
@@ -43,7 +45,7 @@ const HomeTab = (props) => {
           // Modify the objects inside the data array
           const modifiedData = item.data.data.map((dataItem) => ({
             title: dataItem.title,
-            imageUrl: JSON.parse(dataItem.imageUrl),
+            imageUrl: dataItem.imageUrl,
             collection_id: dataItem.collection_id, // Change the field name
           }));
 
@@ -66,6 +68,7 @@ const HomeTab = (props) => {
         }
       });
       console.log("modified array", modifiedArray)
+      setIsLoading(false)
       if (modifiedArray)
         setComponentListArray(modifiedArray)
     };
@@ -74,7 +77,7 @@ const HomeTab = (props) => {
 
   const [responseData, fetchData] = useDataFetcher(
     "",
-    "/apps/api/getHomePageByShop/3E",
+    `/apps/api/getHomePageByShop/${themeId}`,
     getData
   );
   useEffect(() => {
@@ -153,7 +156,7 @@ const HomeTab = (props) => {
               {/* <DragAndDrop /> */}
               <ComponentsList />
               <div className='scrollable-mobile-preview-div'>
-                <MobilePreview />
+                <MobilePreview isLoading={isLoading}/>
               </div>
 
 

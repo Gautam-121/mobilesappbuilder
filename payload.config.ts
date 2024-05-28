@@ -30,6 +30,7 @@ const Theme = require("./server/models/theme.models.js");
 const Media = require("./server/models/media.models.js");
 const Customer =require( "./server/models/customerDetail");
 const FirebaseServiceAccount =require("./server/models/firebaseServiceAccount.model");
+const CustomerCart = require("./server/models/customerCart.models.js")
 
 module.exports = buildConfig({
   serverURL: process.env.PAYLOAD_PUBLIC_EXTERNAL_SERVER_URL,
@@ -67,6 +68,7 @@ module.exports = buildConfig({
     Categories,
     StoreSession,
     Store,
+    CustomerCart
   ],
   typescript: {
     outputFile: path.resolve(__dirname, "payload-types.ts"),

@@ -24,13 +24,14 @@ const {
   updateBrandingApp,
 } = require("../controllers/baranding.controller.js");
 const {
-  updateProductDetail,
+  updateProductScreenDetail,
   createCartDetailPage,
   createAccountDetailPage,
   getOtherScreenPageDetailByWeb,
-  getProductDetails,
-  getAccountScreen
-} = require("../controllers/otherScreen.controller.js");
+  getProductScreenDetails,
+  getAccountScreen,
+  getProductScreenDetailByWeb
+} = require("../controllers/productScreen.controller.js");
 const {
   updateStoreAppDesignDetail,
   getStoreDetail,
@@ -44,7 +45,7 @@ const {
 } = require("../controllers/tabNavigation.controller.js");
 const {
   getAllTheme,
-  getThemeById,
+  getThemeById
 } = require("../controllers/theme.Controller.js");
 const {
   getFirebaseAccessToken,
@@ -60,23 +61,29 @@ const {
   getAllcustomer
 } = require("../controllers/firebase.controller.js")
 
+const {
+  createCart,
+  getCartByCustomerId,
+  updateCartOfCustomer
+} = require("../controllers/customerCart.controller.js")
+
 const router = Router();
 
 /*---------------------------StoreDetail--------------------------------------------------- */
 
 router.get("/api/storeDetail/:shopId", getStoreDetail);
 
-router.get("/api/shop/detail" , verifyRequest, getStoreDetailByWeb);
+router.get("/api/shop/detail" , verifyRequest ,  getStoreDetailByWeb);
 
-router.put("/api/store/appDesign/theme" , verifyRequest ,  updateStoreAppDesignDetail);
+router.put("/api/store/appDesign/theme" , verifyRequest ,   updateStoreAppDesignDetail);
 
-router.put("/api/store/social-media", verifyRequest , updateSocialMediaOfStore)
+router.put("/api/store/social-media" , verifyRequest ,  updateSocialMediaOfStore)
 
 /*---------------------------ShopifyRouter-------------------------------------------------- */
 
-router.get("/api/getProduct", verifyRequest ,  getProduct);
+router.get("/api/getProduct" , verifyRequest ,  getProduct);
 
-router.get("/api/getCollection", verifyRequest, getCollection);
+router.get("/api/getCollection", verifyRequest , getCollection);
 
 router.get(
   "/api/shopify/product/collectionId",
@@ -118,15 +125,15 @@ router.get("/api/firebase/firebase-access-token", verifyRequest ,  getFirebaseAc
 
 // router.put("/api/firebase/server-key", verifyRequest , updateServerKey)
 
-router.post("/api/firebase/send-notification"  ,   sendNotification)
+router.post("/api/firebase/send-notification"  , verifyRequest ,   sendNotification)
 
 /*----------------------------HomePageRouter-------------------------------------------------- */
 
 router.get("/api/getHomePage/:shopId",  getHomePage);
 
-router.get("/api/getHomePageByShop/:themeId", verifyRequest ,  getHomePageByWeb);
+router.get("/api/getHomePageByShop/:themeId" , verifyRequest ,   getHomePageByWeb);
 
-router.put("/api/updateHomePage/:themeId", verifyRequest , updateHomePage);
+router.put("/api/updateHomePage/:themeId"  , verifyRequest ,  updateHomePage);
 
 /*--------------------------BrandingPageRouter--------------------------------------------------*/
 
@@ -146,15 +153,17 @@ router.put(
 
 /*--------------------------themeRouting---------------------------------------*/
 
-router.get("/api/getAllTheme", verifyRequest ,  getAllTheme);
+router.get("/api/theme" , verifyRequest,  getAllTheme);
 
-router.get("/api/geThemeById/:themeId", verifyRequest , getThemeById);
+router.get("/api/theme/:themeId" , verifyRequest ,  getThemeById);
 
 /*-------------------------ProductDetailScreen---------------------------------------*/
 
-router.get("/api/productDetail/:shopId", getProductDetails)
+router.get("/api/productDetail/:shopId", getProductScreenDetails)
 
-router.put("/api/product/detail/:themeId" ,verifyRequest , updateProductDetail);
+router.get("/api/product/screen/:themeId"  , verifyRequest ,  getProductScreenDetailByWeb)
+
+router.put("/api/product/screen/:themeId"  , verifyRequest ,  updateProductScreenDetail);
 
 /*-------------------------AccountScreen---------------------------------------*/
 
@@ -172,15 +181,11 @@ router.post("/api/createAccountDetail", createAccountDetailPage);
 
 /*--------------------------TabMenuRouting--------------------------------------------*/
 
-router.get(
-  "/api/bottom/theme/:themeId",
-  verifyRequest ,
-  getTabMenuDataByWeb
-);
-
 router.get("/api/bottom/menu/:shopId", getTabMenu);
 
-router.put("/api/bottom/theme/:themeId", verifyRequest , updateTabMenu)
+router.get("/api/bottom/nav/:themeId" , verifyRequest ,  getTabMenuDataByWeb)
+
+router.put("/api/bottom/nav/:themeId" , verifyRequest ,  updateTabMenu)
 
 /*--------------------------UploadImages-----------------------------------------------*/
 
@@ -190,5 +195,13 @@ router.get("/api/getData", (req, res) => {
   const sendData = { text: "This is coming from /apps/api route." };
   return res.status(200).json(sendData);
 });
+
+/*------------------------------CustomerCart---------------------------------------------------------- */
+
+router.post("/api/customer/cart/:shopId", createCart)
+
+router.get("/api/customer/:customerId/cart/:shopId" , getCartByCustomerId)
+
+router.put("/api/customer/:customerId/cart/:shopId" , updateCartOfCustomer)
 
 module.exports = router;

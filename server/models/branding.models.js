@@ -85,17 +85,17 @@ const Branding = {
       defaultValue: "#FFFFFF",
     },
     {
-      name: "label_bg_color",
-      label:"Label Background Color",
-      type: "text",
+      name: 'secondary_btn_bg_color',
+      label: 'Secondary Button Background Color',
+      type: 'text',
       defaultValue: "#323470",
     },
     {
-      name: "label_text_color",
-      label:"Label Text Color",
-      type: "text",
-      defaultValue: "#323470",
-    }
+      name: 'secondary_btn_text_color',
+      label: 'Secondary Button Text Color',
+      type: 'text',
+      defaultValue: "#FFFFFF",
+    },
   ],
 };
 

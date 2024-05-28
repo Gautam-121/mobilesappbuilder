@@ -20,7 +20,7 @@ import useFetch from "../../hooks/useFetch";
 import { componentListArrayAtom } from "../UpdatedCode/recoil/store";
 import { duration } from "@mui/material";
 
-const AppDesign = (props) => {
+const AppDesign = ({themeId}) => {
 const [componentListArray, setComponentListArray] = useRecoilState(componentListArrayAtom)
 const [dataForBackend, setDataForBackend] = useState([])
 const [loading, setLoading] = useState(false)
@@ -213,7 +213,7 @@ useEffect(()=>{
 
   const [responseFromServer, publishChanges] = useDataFetcher(
     "",
-    "/apps/api/updateHomePage/3E",
+    `/apps/api/updateHomePage/${themeId}`,
     postOptions
   );
   const getData = {
@@ -273,7 +273,7 @@ useEffect(()=>{
 
   const [responseData, fetchHomeData] = useDataFetcherToFetch(
     "",
-    "/apps/api/getHomePageByShop/3E",
+    `/apps/api/getHomePageByShop/${themeId}`,
     getData
   );
   function handlePublish(){
@@ -526,7 +526,7 @@ useEffect(()=>{
         </div> */}
        <div>
             {activeIndex === 0 ? (
-              <HomeTab />
+              <HomeTab themeId={themeId} />
             ) : activeIndex === 1 ? (
               "Product page"
             ) : activeIndex === 2 ? (

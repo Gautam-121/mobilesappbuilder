@@ -22,12 +22,14 @@ const getProduct = asyncHandler( async (req, res , next) => {
   const store = await Payload.find({
     collection: 'Store',
     where: { 
-      shopId: { equals: req.shop_id  },
+      shopId: { equals: req.shop_id},
       isActive: { equals : true}
     },
+    limit: 1,
+    depth: 0
   })
 
-  if(!store.docs[0]){
+  if(store.docs.length == 0){
     return next(
       new ApiError(
         `store not found with id: ${req.shop_id}`,
@@ -76,9 +78,11 @@ const getCollection = asyncHandler( async (req, res, next) => {
       shopId: { equals: req.shop_id  },
       isActive: { equals : true}
     },
+    limit: 1,
+    depth:0
   })
 
-  if(!store.docs[0]){
+  if(store.docs.length == 0){
     return next(
       new ApiError(
         `store not found with id: ${req.shop_id}`,
@@ -91,9 +95,9 @@ const getCollection = asyncHandler( async (req, res, next) => {
   const next_page = req.query.next_page || null
 
   const fetchCollections = await shopifyApiData(
-    shopifyGraphQLEndpoint(req?.shop),
+    shopifyGraphQLEndpoint(req?.shop ),
     graphqlQueryForCollections,
-    axiosShopifyConfig(req.accessToken),
+    axiosShopifyConfig(req.accessToken ),
     {first: per_page , after: next_page}
   );
 
@@ -138,9 +142,11 @@ const getProductByCollectionId = asyncHandler( async (req, res, next) => {
       shopId: { equals: req.shop_id  },
       isActive: { equals : true}
     },
+    limit: 1,
+    depth: 0
   })
 
-  if(!store.docs[0]){
+  if(store.docs.length == 0){
     return next(
       new ApiError(
         `store not found with id: ${req.shop_id}`,
@@ -153,9 +159,9 @@ const getProductByCollectionId = asyncHandler( async (req, res, next) => {
   const next_page = req.query.next_page || null
 
   const fetchCollectionsProducts = await shopifyApiData(
-    shopifyGraphQLEndpoint(req?.shop),
+    shopifyGraphQLEndpoint(req?.shop ),
     graphqlQueryForProductsByCollectionId,
-    axiosShopifyConfig(req.accessToken),
+    axiosShopifyConfig(req.accessToken ),
     { collectionId: req.query.collectionId, first: per_page, after: next_page }
   );
 
@@ -191,9 +197,10 @@ const updateShopPolicies = asyncHandler(async (req, res , next) => {
       shopId: { equals: req.shop_id },
       isActive: { equals: true}
     },
+    limit:1
   })
 
-  if(!store.docs[0]){
+  if(store.docs.length == 0){
     return next(
       new ApiError(
         `store not found with id: ${req.shop_id}`,
@@ -234,15 +241,27 @@ const updateShopPolicies = asyncHandler(async (req, res , next) => {
     )
   }
 
-  await Payload.update({
-    collection: "Store",
-    where: {
-      shopId: { equals: req.shop_id },
-    },
-    data:{
-      policies: shopPolicies
-    },
-  });
+ try {
+   const data = await Payload.update({
+     collection: "Store",
+     id: store.docs[0].id,
+     data:{
+       policies: shopPolicies
+     },
+   })
+
+   if(!data){
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrgong while updating shop policies"
+    })
+   }
+ } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message || "Something went wrgong while updating shop policies"
+    })
+ }
 
   return res.status(200).json({
       success: true,

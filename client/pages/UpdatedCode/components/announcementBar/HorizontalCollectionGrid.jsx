@@ -142,7 +142,7 @@ export default function HorizontalCollectionGrid({
                     width:'5rem',
                     height:'5rem',
           
-                  }} src={item?.imageUrl?.url||ImgIcon} alt="" />
+                  }} src={item?.imageUrl||ImgIcon} alt="" />
             <span >    {item.title}</span>
             </div>
  

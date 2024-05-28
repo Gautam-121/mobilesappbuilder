@@ -36,9 +36,9 @@ const helperTextProduct =
 const helperTextCategory = ""
   export const templates = [
     {
-      type:'marketingNotification',
-      title:" Marketing Notification",
-      helperText:"Engage users with targeted marketing messages using the 'Marketing Notification'. When clicked, this notification redirects users to an external URL of your choice. Explore exclusive offers and promotions to enhance customer experience and drive conversions."
+      type:'basicNotification',
+      title:" Basic Notification",
+      helperText:"Engage users with important updates and messages using the 'Basic Notification'. When clicked, this notification redirects users to an external URL of your choice. Stay informed with timely alerts to enhance user experience and ensure smooth communication."
     },
     {
       type:'productNotification',

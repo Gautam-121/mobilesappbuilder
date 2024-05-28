@@ -10,9 +10,11 @@ const getAllTheme = asyncHandler( async (req, res, next) => {
       shopId: { equals: req.shop_id },
       isActive: { equals : true}
     },
+    limit: 1,
+    depth:0
   })
 
-  if(!store.docs[0]){
+  if(store.docs.length == 0){
     return next(
       new ApiError(
         `store not found with id: ${req.shop_id}`,
@@ -23,12 +25,15 @@ const getAllTheme = asyncHandler( async (req, res, next) => {
 
   const theme = await Payload.find({
     collection: "theme",
+    page: req.query?.page || 1,
+    limit: req.query?.limit || 6,
+    pagination: true,
   });
 
   return res.status(200).json({
       success: true,
       message: "Data Send Successfully",
-      data: theme.docs,
+      data: theme,
   });
 })
 
@@ -49,9 +54,11 @@ const getThemeById = asyncHandler( async (req, res, next) => {
       shopId: { equals: req.shop_id },
       isActive: { equals : true}
     },
+    limit: 1,
+    depth:0
   })
 
-  if(!store.docs[0]){
+  if(store.docs.length == 0){
     return next(
       new ApiError(
         `store not found with id: ${req.shop_id}`,

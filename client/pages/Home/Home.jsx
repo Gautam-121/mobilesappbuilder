@@ -22,6 +22,8 @@ import axios from "axios";
 const Home = () => {
   //if appDesignPageRefreshedState then enter fullsccreen
   const [details, setDetails] = useState(null)
+  const [selectedThemeId, setSelectedThemeId] = useState("")
+  const [updatedAt, setUpdatedAt] = useState("")
   const isAppDesignPageRefreshed = useSelector(
     (state) => state.appDesignPageRefreshedSlice
   );
@@ -53,16 +55,13 @@ const Home = () => {
 
   const [selectedTheme, setSelectedTheme] = useState();
 
-  const fetchAllThemeApi = "https://appbuilder.xircular.io/apps/api/getAllTheme";
-
-
   const postOptions = {
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
     },
     method: "PUT",
-    body: JSON.stringify({themeId:"3E"}),
+    body: JSON.stringify({themeId:selectedThemeId}),
   };
   const getOptions = {
     headers: {
@@ -70,7 +69,6 @@ const Home = () => {
       "Content-Type": "application/json",
     },
     method: "GET",
-    
   };
 
   const useDataFetcherForShopDetails = (initialState, url, options) => {
@@ -82,7 +80,17 @@ const Home = () => {
       try {
         const result = await (await fetch(url, options)).json();
         console.log("shop details", result);
+        console.log("all themes", result);
         setDetails(result)
+        if(result.data.themeId){
+          setSelectedThemeId(result.data.themeId)
+          setUpdatedAt(result.data.updatedAt)
+          const date = new Date(result.data.updatedAt)
+          console.log("date", date.toLocaleString())
+        }
+        if(result.data.docs){
+          setThemeData(result.data.docs)
+        }
   
       } catch (error) {
         console.error("Error while fetching data:", error);
@@ -91,11 +99,15 @@ const Home = () => {
         
       }
     };
-    // if(!result?.data?.themeId){
-    //   setThemeId
-    // }
     return [data, fetchData];
   };
+  useEffect(()=>{
+    const currentTheme = themeData?.find((ele)=>ele.id===selectedThemeId)
+    console.log("currentTheme", currentTheme, themeData)
+    setSelectedTheme(currentTheme)
+  },[selectedThemeId, themeData])
+
+
   const useDataFetcherForThemeId = (initialState, url, options) => {
     const [data, setData] = useState(initialState);
     const fetch = useFetch();
@@ -113,9 +125,6 @@ const Home = () => {
         
       }
     };
-    // if(!result?.data?.themeId){
-    //   setThemeId
-    // }
     return [data, fetchData];
   };
 
@@ -132,38 +141,24 @@ const Home = () => {
     "/apps/api/store/appDesign/theme",
     postOptions
   );
+  const [responseThemes, getAllThemes] = useDataFetcherForShopDetails(
+    "",
+    "/apps/api/theme",
+    getOptions
+  )
 
   useEffect(()=>{
-    if(!details?.data?.themeId && details!==null){
-      console.log("Theme Id called", details)
+
+    if(selectedThemeId){
+      console.log("setThemeId called", selectedThemeId)
       setThemeId()
     }
-    },[details])
+    },[selectedThemeId])
+  
 
   useEffect(() => {
-    // async function fetchData() {
-    //     const res = await fetch("/api/getAllTheme"); //fetch instance of useFetch()
-    //     const data = await res.json();
-    //     console.log("theThemeData: ", data);
-
-    //     setThemeData(data?.data);
-    //     setSelectedTheme(data?.data[0]);
-    // }
-
-    // fetchData();
-
-    // axios
-    //   .get(fetchAllThemeApi)
-    //   .then((res) => {
-    //     console.log("theme daata: ", res);
-    //     setThemeData(res?.data?.data);
-    //     setSelectedTheme(res?.data?.data[0]);
-    //   })
-    //   .catch((error) => console.log("error while fetching themes: ", error));
-
-
     getShopDetails()
-  
+    getAllThemes()
   }, []);
 
   const cards = [
@@ -268,7 +263,7 @@ const Home = () => {
                   <div className="name-category-div">
                     <div className="name-and-desc">
                       <span className="theme-name">{res?.name}</span>
-                      <span className="category-name">{res?.plan}</span>
+                      <span className="category-name">{res?.industry}</span>
                     </div>
 
                     <span>
@@ -280,13 +275,13 @@ const Home = () => {
                   {res?.type.toLocaleLowerCase() === "free" ? (
                     <div className="buttons-price-div">
                       <div className="buttons-div">
-                        <button
+                        {/* <button
                           className="card-buttons"
                           onClick={() => selectTheTheme(res)}
                         >
                           Publish
-                        </button>
-                        <button className="card-buttons">Customize</button>
+                        </button> */}
+                        <button className="card-buttons" onClick={()=>setSelectedThemeId(res?.id)}>Select Theme</button>
                       </div>
 
                       <span>

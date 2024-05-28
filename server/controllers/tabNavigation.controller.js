@@ -20,9 +20,11 @@ const getTabMenuDataByWeb = asyncHandler( async (req, res, next) => {
       shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
       isActive: { equals: true}
     },
+    limit:1,
+    depth:0
   })
 
-  if(!isSelectedTheme.docs[0]){
+  if(isSelectedTheme.docs.length == 0){
     return next(
       new ApiError(
         `store not found with id: ${req.shop_id}`,
@@ -46,6 +48,7 @@ const getTabMenuDataByWeb = asyncHandler( async (req, res, next) => {
       shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
       themeId: { equals: req.params.themeId },
     },
+    limit: 1,
     depth: req.query?.depth || 0,
   });
 
@@ -82,9 +85,11 @@ const getTabMenu = asyncHandler( async (req, res, next) => {
       shopId: { equals: `gid://shopify/Shop/${req.params.shopId}` },
       isActive: { equals: true}
     },
+    limit: 1,
+    depth: 0
   })
 
-  if(!store.docs[0]){
+  if(store.docs.length == 0){
     return next(
       new ApiError(
         `Shop not found with id: ${req.params.shopId}`,
@@ -95,7 +100,11 @@ const getTabMenu = asyncHandler( async (req, res, next) => {
 
   const tabData = await Payload.find({
     collection: "bottomMenuPannel",
-    where: { shopId: { equals: `gid://shopify/Shop/${req.params.shopId}` } },
+    where: { 
+      shopId: { equals: `gid://shopify/Shop/${req.params.shopId}` },
+      themeId: { equals: store.docs[0]?.themeId}
+    },
+    limit:1,
     depth: 0,
   });
 
@@ -152,12 +161,14 @@ const updateTabMenu = asyncHandler( async(req , res , next) => {
   const isSelectedTheme = await Payload.find({
     collection: 'Store',
     where: { 
-      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
+      shopId: { equals: req.shop_id },
       isActive: { equals: true}
     },
+    limit: 1,
+    depth: 0
   })
 
-  if(!isSelectedTheme.docs[0]){
+  if(isSelectedTheme.docs.length == 0){
     return next(
       new ApiError(
         `store not found with id: ${req.shop_id}`,
@@ -178,9 +189,11 @@ const updateTabMenu = asyncHandler( async(req , res , next) => {
   const isExistTabMenu = await Payload.find({
     collection: "bottomMenuPannel",
     where: {
-      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
+      shopId: { equals: req.shop_id  },
       themeId: { equals: req.params.themeId },
     },
+    limit:1,
+    depth:0
   });
 
   if (isExistTabMenu.docs.length === 0) {
@@ -192,16 +205,28 @@ const updateTabMenu = asyncHandler( async(req , res , next) => {
     )
   }
 
-  await Payload.update({
-    collection: "bottomMenuPannel",
-    where: {
-      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
-      themeId: { equals: req.params.themeId },
-    },
-    data: {
-      setting: setting,
-    },
-  });
+  try {
+
+    const data = await Payload.update({
+      collection: "bottomMenuPannel",
+      id: isExistTabMenu.docs[0].id,
+      data: {
+        setting: setting,
+      },
+    })
+
+    if(!data){
+      return res.status(500).json({
+        success: false,
+        message: "Something went wrong while updating bottom tab menu"
+      })
+    }
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message || "Something went wrong while updating bottom tab menu"
+    })
+  }
 
   return res.status(201).json({
     success: true,

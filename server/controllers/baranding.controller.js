@@ -19,6 +19,7 @@ const getBrandingApp = asyncHandler(async (req, res, next) => {
       shopId: { equals: `gid://shopify/Shop/${req.params.shopId}` },
       isActive : { equals: true }
     },
+    limit:1,
     depth: req.query?.depth || 0
   })
 
@@ -37,6 +38,7 @@ const getBrandingApp = asyncHandler(async (req, res, next) => {
       shopId: { equals: `gid://shopify/Shop/${req.params.shopId}` },
       themeId: { equals: store.docs[0]?.themeId}
     },
+    limit:1,
     depth: req.query.depth || 1,
   });
 
@@ -47,6 +49,10 @@ const getBrandingApp = asyncHandler(async (req, res, next) => {
          400
       )
     )
+  }
+
+  if(!brandingData.docs[0].app_title_logo){
+    brandingData.docs[0].app_title_logo = null
   }
 
   brandingData.docs[0].themeId = brandingData.docs[0].themeId.id;
@@ -72,9 +78,10 @@ const getBrandingAppWeb = asyncHandler(async (req, res, next) => {
     const isSelectedTheme = await Payload.find({
       collection: 'Store',
       where: { 
-        shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
+        shopId: { equals: req.shop_id},
         isActive: { equals: true}
       },
+      limit:1,
       depth: req.query?.depth || 0
     })
   
@@ -99,9 +106,10 @@ const getBrandingAppWeb = asyncHandler(async (req, res, next) => {
     const brandingData = await Payload.find({
       collection: "branding",
       where: {
-        shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
+        shopId: { equals: req.shop_id },
         themeId: { equals: req.params.themeId },
       },
+      limit: 1,
       depth: req.query.depth || 1
     });
 
@@ -112,6 +120,10 @@ const getBrandingAppWeb = asyncHandler(async (req, res, next) => {
            400
         )
       )
+    }
+
+    if(!brandingData.docs[0].app_title_logo){
+      brandingData.docs[0].app_title_logo = null
     }
 
     brandingData.docs[0].themeId = brandingData.docs[0].themeId.id;
@@ -141,6 +153,8 @@ const updateBrandingApp = asyncHandler(async (req, res, next) => {
       shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
       isActive: { equals: true }
     },
+    limit: 1,
+    depth: 0
   })
 
   if(!isSelectedTheme.docs[0]){
@@ -164,9 +178,11 @@ const updateBrandingApp = asyncHandler(async (req, res, next) => {
   const isExistbrandingData = await Payload.find({
     collection: "branding",
     where: {
-      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
+      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454"  },
       themeId: { equals: req.params.themeId },
     },
+    limit: 1,
+    depth:0
   });
 
   if (isExistbrandingData.docs.length === 0) {
@@ -178,20 +194,30 @@ const updateBrandingApp = asyncHandler(async (req, res, next) => {
     )
   }
 
-  await Payload.update({
-    collection: "branding",
-    where: {
-      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
-      themeId: { equals: req.params.themeId },
-    },
-    data: req.body,
-  });
+ try {
+   const data = await Payload.update({
+     collection: "branding",
+     id: isExistbrandingData.docs[0].id,
+     data: req.body,
+   })
+
+   if(!data){
+    return res.status(500).json({
+      success: false,
+      message:"something went wrong while updating the branding"
+    })
+   }
+ } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message || "something went wrong while updating the branding"
+    })
+ }
 
   return res.status(200).json({
     success: true,
     message: "BrandingData Update Successfully",
   });
-  
 })
 
 
