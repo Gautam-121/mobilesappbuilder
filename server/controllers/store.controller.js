@@ -142,23 +142,23 @@ const updateStoreAppDesignDetail = asyncHandler(  async (req, res, next) => {
     limit:1
   });
 
-  const accountData = await Payload.find({
-    collection: "accountScreen",
-    where:{
-      themeId: { equals: themeId},
-      shopId: { equals: "Apprikart"}
-    },
-    limit: 1
-  })
+  // const accountData = await Payload.find({
+  //   collection: "accountScreen",
+  //   where:{
+  //     themeId: { equals: themeId},
+  //     shopId: { equals: "Apprikart"}
+  //   },
+  //   limit: 1
+  // })
 
-  const productData = await Payload.find({
-    collection: "productDetailScreen",
-    where:{
-      themeId: { equals: themeId},
-      shopId: { equals: "Apprikart"}
-    },
-    limit: 1
-  })
+  // const productData = await Payload.find({
+  //   collection: "productDetailScreen",
+  //   where:{
+  //     themeId: { equals: themeId},
+  //     shopId: { equals: "Apprikart"}
+  //   },
+  //   limit: 1
+  // })
 
   // Start Transaction
   const transactionID = await Payload.db.beginTransaction()
@@ -302,16 +302,16 @@ const updateStoreAppDesignDetail = asyncHandler(  async (req, res, next) => {
       },
     });
   
-    await Payload.create({
-      req: { transactionID },
-      collection: "accountScreen",
-      data: {
-        main_section: accountData.docs[0]?.main_section,
-        footer_section: accountData.docs[0]?.footer_section,
-        shopId: req.shop_id ,
-        themeId: themeId,
-      },
-    });
+    // await Payload.create({
+    //   req: { transactionID },
+    //   collection: "accountScreen",
+    //   data: {
+    //     main_section: accountData.docs[0]?.main_section,
+    //     footer_section: accountData.docs[0]?.footer_section,
+    //     shopId: req.shop_id ,
+    //     themeId: themeId,
+    //   },
+    // });
   
   
     brandingData.docs[0].app_title_text.app_name = UserStoreData?.docs[0]?.shopName;
@@ -330,16 +330,16 @@ const updateStoreAppDesignDetail = asyncHandler(  async (req, res, next) => {
       },
     });
   
-    await Payload.create({
-      req: { transactionID },
-      collection: "productDetailScreen",
-      data: {
-        actions: productData.docs[0]?.actions,
-        faster_checkout: productData.docs[0]?.faster_checkout,
-        shopId: req.shop_id ,
-        themeId: themeId,
-      },
-    });
+    // await Payload.create({
+    //   req: { transactionID },
+    //   collection: "productDetailScreen",
+    //   data: {
+    //     actions: productData.docs[0]?.actions,
+    //     faster_checkout: productData.docs[0]?.faster_checkout,
+    //     shopId: req.shop_id ,
+    //     themeId: themeId,
+    //   },
+    // });
   
     UserStoreData = await Payload.update({
       req: { transactionID },
@@ -559,37 +559,6 @@ const updateSocialMediaOfStore = asyncHandler( async(req,res,next)=>{
   })
 })
 
-
-
-// const allOrNothingJob = async () => {
-
-//   console.log(Payload)
-
-//   const transactionID = await Payload.db.beginTransaction();
-
-//   try {
-//     await Payload.create({
-//       req: { transactionID },
-//       collection: 'my-collection',
-//       data: { /* your data */ }
-//     });
-
-//     await Payload.update({
-//       req: { transactionID },
-//       collection: 'another-collection',
-//       id: 'some-id',
-//       data: { /* your data */ }
-//     });
-
-//     await Payload.db.commitTransaction(transactionID);
-//     console.log('Everything done.');
-//   } catch (error) {
-//     console.error('Oh no, something went wrong!');
-//     await Payload.db.rollbackTransaction(transactionID);
-//   }
-// };
-
-// allOrNothingJob()
 
 module.exports = {
   updateStoreAppDesignDetail, 

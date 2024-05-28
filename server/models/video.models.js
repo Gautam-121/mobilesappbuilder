@@ -1,3 +1,4 @@
+const { uid } = require("uid")
 
 const Video = {
   slug: "video",
@@ -5,6 +6,11 @@ const Video = {
     useAsTitle: "title",
   },
   fields: [
+    {
+      name: "id",
+      type: "text",
+      unique: true
+    },
     {
       name: "title",
       type: "text",
@@ -42,7 +48,16 @@ const Video = {
       type: "checkbox",
       defaultValue: true
     },
-  ]
+  ],
+  hooks:{
+    beforeChange: [
+      (args) => {
+        if (args.operation === 'create') {
+          args.data.id = uid(); // Generate a unique ID using nanoid
+        }
+      }
+    ]
+  }
 };
 
 module.exports = Video;

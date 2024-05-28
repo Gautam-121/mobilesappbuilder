@@ -91,7 +91,7 @@ const getHomePageByWeb = asyncHandler(async (req, res, next) => {
     depth: req.query?.depth || 0
   });
 
-  if (!isSelectedTheme.docs[0]) {
+  if (isSelectedTheme.docs.length == 0) {
     return next(
       new ApiError(
         `store not found with id: ${req.shop_id}`,
@@ -173,7 +173,7 @@ const updateHomePage = asyncHandler(async (req, res, next) => {
     depth: req.query?.depth || 0 
   });
 
-  if (!isSelectedTheme.docs[0]) {
+  if (isSelectedTheme.docs.length == 0) {
     return next(
       new ApiError(
         `store not found with id: ${req.shop_id}`, 

@@ -8,7 +8,7 @@ const {
   getHomePage,
   updateHomePage,
   getHomePageByWeb,
-} = require("../controllers/homes.controller.js");
+} = require("../controllers/homeScreen.controller.js");
 const {
   getProduct,
   getCollection,
@@ -22,14 +22,10 @@ const {
   getBrandingApp,
   getBrandingAppWeb,
   updateBrandingApp,
-} = require("../controllers/baranding.controller.js");
+} = require("../controllers/appBranding.controller.js");
 const {
   updateProductScreenDetail,
-  createCartDetailPage,
-  createAccountDetailPage,
-  getOtherScreenPageDetailByWeb,
   getProductScreenDetails,
-  getAccountScreen,
   getProductScreenDetailByWeb
 } = require("../controllers/productScreen.controller.js");
 const {
@@ -49,7 +45,6 @@ const {
 } = require("../controllers/theme.Controller.js");
 const {
   getFirebaseAccessToken,
-  // updateServerKey,
   sendNotification,
   createCustomer,
   createSegment,
@@ -60,6 +55,15 @@ const {
   getSegmentById,
   getAllcustomer
 } = require("../controllers/firebase.controller.js")
+const {
+  getAccountScreen,
+  getAccountScreenForWeb,
+  updateAccountScreen,
+  createAboutUs,
+  getAboutUs,
+  getAboutUsByWeb,
+  updateAboutUs
+} = require("../controllers/accountScreen.controller.js")
 
 const {
   createCart,
@@ -123,8 +127,6 @@ router.delete("/api/firebase/segment/:segmentId" , verifyRequest , deleteSegment
 
 router.get("/api/firebase/firebase-access-token", verifyRequest ,  getFirebaseAccessToken)
 
-// router.put("/api/firebase/server-key", verifyRequest , updateServerKey)
-
 router.post("/api/firebase/send-notification"  , verifyRequest ,   sendNotification)
 
 /*----------------------------HomePageRouter-------------------------------------------------- */
@@ -169,15 +171,17 @@ router.put("/api/product/screen/:themeId"  , verifyRequest ,  updateProductScree
 
 router.get("/api/account/:shopId" , getAccountScreen)
 
-/*--------------------------OtherScreenRouting-------------------------------------- */
+router.get("/api/account/screen/:themeId" , verifyRequest ,  getAccountScreenForWeb)
 
+router.put("/api/account/screen/:themeId" , verifyRequest , updateAccountScreen)
 
-router.get("/api/other/screen/:themeId", verifyRequest , getOtherScreenPageDetailByWeb);
+router.post("/api/aboutUs/page"  , verifyRequest , createAboutUs)
 
-router.post("/api/createCartDetail", createCartDetailPage);
+router.get("/api/aboutUs/page" , verifyRequest , getAboutUsByWeb)
 
-router.post("/api/createAccountDetail", createAccountDetailPage);
+router.get("/api/aboutUs/:shopId" , getAboutUs)
 
+router.put("/api/aboutUs/page"  , verifyRequest , updateAboutUs)
 
 /*--------------------------TabMenuRouting--------------------------------------------*/
 

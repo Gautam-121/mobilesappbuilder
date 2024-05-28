@@ -157,7 +157,18 @@ const updateTabMenu = asyncHandler( async(req , res , next) => {
     }
   })
 
-  
+  const redirectPageValues  = setting.map(item => item.redirect_page)
+  const duplicate = redirectPageValues.filter( (val , index) => redirectPageValues.indexOf(val) !== index)
+
+  if(duplicate.length > 0){
+    return next(
+      new ApiError(
+        "redirect_page values must be unique",
+        400
+      )
+    )
+  }
+
   const isSelectedTheme = await Payload.find({
     collection: 'Store',
     where: { 

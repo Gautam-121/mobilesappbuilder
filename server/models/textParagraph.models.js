@@ -1,3 +1,4 @@
+const { uid } = require("uid")
 
 const TextParagraph = {
   slug: "textParagraph",
@@ -6,6 +7,11 @@ const TextParagraph = {
   },
   fields: [
     {
+      name: "id",
+      type: "text",
+      unique: true
+    },
+    {
       name : "content",
       label: "Content",
       type: "text",
@@ -13,6 +19,15 @@ const TextParagraph = {
       maxLength: 500,
     },
   ],
+  hooks:{
+    beforeChange: [
+      (args) => {
+        if (args.operation === 'create') {
+          args.data.id = uid(); // Generate a unique ID using nanoid
+        }
+      }
+    ]
+  }
 };
 
 module.exports = TextParagraph;

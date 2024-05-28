@@ -23,7 +23,7 @@ const getBrandingApp = asyncHandler(async (req, res, next) => {
     depth: req.query?.depth || 0
   })
 
-  if(!store.docs[0]){
+  if(store.docs.length == 0){
     return next(
       new ApiError(
         `Shop not found with id: ${req.params.shopId}`,
@@ -85,7 +85,7 @@ const getBrandingAppWeb = asyncHandler(async (req, res, next) => {
       depth: req.query?.depth || 0
     })
   
-    if(!isSelectedTheme.docs[0]){
+    if(isSelectedTheme.docs.length == 0){
       return next(
         new ApiError(
           `store not found with id: ${req.shop_id}`,
@@ -157,7 +157,7 @@ const updateBrandingApp = asyncHandler(async (req, res, next) => {
     depth: 0
   })
 
-  if(!isSelectedTheme.docs[0]){
+  if(isSelectedTheme.docs.length == 0){
     return next(
       new ApiError(
         `store not found with id: ${req.shop_id}`,

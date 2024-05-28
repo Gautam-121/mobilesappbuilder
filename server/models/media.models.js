@@ -1,4 +1,3 @@
-
 const Media = {
   slug: "media",
   access: {

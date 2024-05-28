@@ -1,3 +1,4 @@
+const { uid } = require("uid")
 
 const AnnouncementBanner = {
   slug: "announcementBanner",
@@ -5,6 +6,11 @@ const AnnouncementBanner = {
     useAsTitle:"message"
   },
   fields: [
+    {
+      name: "id",
+      type: "text",
+      unique: true
+    },
     {
       name: "message",
       label:"Message",
@@ -31,6 +37,15 @@ const AnnouncementBanner = {
       defaultValue: "None",
     },
   ],
+  hooks:{
+    beforeChange: [
+      (args) => {
+        if (args.operation === 'create') {
+          args.data.id = uid(); // Generate a unique ID using nanoid
+        }
+      }
+    ]
+  }
 };
 
 module.exports = AnnouncementBanner;

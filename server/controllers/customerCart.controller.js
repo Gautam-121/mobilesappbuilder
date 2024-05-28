@@ -24,7 +24,7 @@ const createCart = asyncHandler(async(req , res , next)=>{
         limit: 1
     });
     
-    if (!store.docs[0]) {
+    if (store.docs.length == 0) {
         return next(
           new ApiError(
             `Shop not found with id: ${req.params.shopId}`, 
@@ -133,7 +133,7 @@ const getCartByCustomerId = asyncHandler( async(req , res , next)=>{
         limit: 1
     });
     
-    if (!store.docs[0]) {
+    if (store.docs.length == 0) {
         return next(
           new ApiError(
             `Shop not found with id: ${req.params.shopId}`, 
@@ -218,7 +218,7 @@ const updateCartOfCustomer = asyncHandler(async (req, res, next) => {
     limit: 1,
   });
 
-  if (!store.docs[0]) {
+  if (store.docs.length == 0) {
     return next(
       new ApiError(
         `Shop not found with id: ${req.params.shopId}`, 

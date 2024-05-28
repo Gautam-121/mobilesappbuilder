@@ -1,3 +1,4 @@
+const { uid } = require("uid")
 
 const ProductGroup = {
   slug: "productGroup",
@@ -5,6 +6,11 @@ const ProductGroup = {
     useAsTitle:"title"
   },
   fields: [
+    {
+      name: "id",
+      type: "text",
+      unique: true
+    },
     {
       name: "title",
       label:"Title",
@@ -18,6 +24,15 @@ const ProductGroup = {
       type: "text",
     },
   ],
+  hooks:{
+    beforeChange: [
+      (args) => {
+        if (args.operation === 'create') {
+          args.data.id = uid(); // Generate a unique ID using nanoid
+        }
+      }
+    ]
+  }
 };
 
 module.exports = ProductGroup;

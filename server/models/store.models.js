@@ -1,3 +1,4 @@
+const {  uid } = require("uid")
 
 const Store = {
   slug: "Store",
@@ -5,6 +6,11 @@ const Store = {
     useAsTitle: "shopId",
   },
   fields: [
+    {
+      name: "id",
+      type: "text",
+      unique: true,
+    },
     {
       name: "shopId",
       label: "Shopify Store Id",
@@ -91,46 +97,17 @@ const Store = {
         },
       ]
     },
-    {
-      name: "policies",
-      type: "array",
-      fields: [
-        {
-          name: "type",
-          label: "Type",
-          type: "select",
-          options: [
-            {
-              label: 'PRIVACY POLICY',
-              value: 'PRIVACY_POLICY',
-            },
-            {
-              label: 'CONTACT INFORMATION',
-              value: 'CONTACT_INFORMATION',
-            },
-            {
-              label: 'REFUND POLICY',
-              value: 'REFUND_POLICY',
-            },
-            {
-              label: 'TERMS OF SERVICE',
-              value: 'TERMS_OF_SERVICE',
-            },
-            {
-              label: "SHIPPING POLICY",
-              value: "SHIPPING_POLICY"
-            }
-          ],
-          required:true
-        },
-        {
-          name: "body",
-          type: "text",
-          defaultValue: undefined
+  ],
+  hooks:{
+    beforeChange: [
+        (args) => {      
+          // Generate a new ID if the document is being created
+          if (args.operation === 'create') {
+            args.data.id = uid(); // Generate a unique ID using nanoid
+          }
         },
       ]
-    }
-  ]
+}
 };
 
 module.exports = Store;
