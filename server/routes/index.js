@@ -77,7 +77,7 @@ const router = Router();
 
 router.get("/api/storeDetail/:shopId", getStoreDetail);
 
-router.get("/api/shop/detail" , verifyRequest ,  getStoreDetailByWeb);
+router.get("/api/shop/detail"  ,  getStoreDetailByWeb);
 
 router.put("/api/store/appDesign/theme" , verifyRequest ,   updateStoreAppDesignDetail);
 
@@ -171,7 +171,7 @@ router.put("/api/product/screen/:themeId"  , verifyRequest ,  updateProductScree
 
 router.get("/api/account/:shopId" , getAccountScreen)
 
-router.get("/api/account/screen/:themeId" , verifyRequest ,  getAccountScreenForWeb)
+router.get("/api/account/screen/:themeId"  , verifyRequest,   getAccountScreenForWeb)
 
 router.put("/api/account/screen/:themeId" , verifyRequest , updateAccountScreen)
 

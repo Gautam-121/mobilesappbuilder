@@ -41,12 +41,12 @@ const AccountScreen = {
               value: "wishlist",
             },
             {
-              label: "Shipping Address",
-              value: "shipping_address",
-            },
-            {
               label: "About Us",
               value: "aboutUs",
+            },
+            {
+              label: "Shipping Address",
+              value: "shipping_address",
             },
           ],
         },
@@ -63,8 +63,8 @@ const AccountScreen = {
       type: "group",
       fields: [
         {
-          name: "socialLinks",
-          label: "Social Links",
+          name: "socialMedia",
+          label: "Social Media",
           type: "checkbox",
           defaultValue: true,
         },

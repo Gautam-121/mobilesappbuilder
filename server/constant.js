@@ -193,7 +193,11 @@ const accountScreenDetail = {
       isVisible: true,
     },
     {
-      type: "shipping_address",
+      type: "orders",
+      isVisible: true,
+    },
+    {
+      type: "wishlist",
       isVisible: true,
     },
     {
@@ -201,12 +205,12 @@ const accountScreenDetail = {
       isVisible: true,
     },
     {
-      type: "orders",
+      type: "shipping_address",
       isVisible: true,
     },
   ],
   footer_section: {
-    socialApperance: false,
+    socialMedia: false,
   },
 };
 

@@ -65,7 +65,7 @@ const getAccountScreenForWeb = asyncHandler( async(req , res , next)=> {
   const isSelectedTheme = await Payload.find({
     collection: 'Store',
     where: { 
-      shopId: { equals: req.shop_id },
+      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
       isActive: { equals: true}
     },
     limit: 1,

@@ -68,12 +68,12 @@ const Store = {
           type: "select",
           options: [
             {
-              label: 'Instagram',
-              value: 'instagram',
-            },
-            {
               label: 'Facebook',
               value: 'facebook',
+            },
+            {
+              label: 'Instagram',
+              value: 'instagram',
             },
             {
               label: 'Twitter',
