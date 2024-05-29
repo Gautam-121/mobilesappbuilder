@@ -26,7 +26,7 @@ const uploadImages = asyncHandler(async (req, res, next) => {
     )
   }
 
-  if (!file) {
+  if (!file || file?.length == 0 ) {
     return next(
       new ApiError(
         "file is missing",
@@ -36,6 +36,9 @@ const uploadImages = asyncHandler(async (req, res, next) => {
   }
 
   try {
+
+    console.log("Enter inside it" , file)
+
     const image = await Payload.create({
       collection: "media",
       file: {
@@ -43,8 +46,10 @@ const uploadImages = asyncHandler(async (req, res, next) => {
         mimetype: file[0].mimetype,
         name: file[0].originalname,
         size: file[0].size,
-      }
+      },
     })
+
+    console.log(image)
 
     if(!image){
 
@@ -62,6 +67,8 @@ const uploadImages = asyncHandler(async (req, res, next) => {
     });
 
   } catch (error) {
+
+    console.log(error)
 
     fs.unlinkSync(file[0].path)
     return res.status(500).json({
