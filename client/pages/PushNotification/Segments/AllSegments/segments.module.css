@@ -1,0 +1,27 @@
+.createSegmentForm{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.popupHeader{
+    /* border: 1px solid; */
+    display: flex;
+    justify-content: space-between;
+    padding: 5px;
+}
+.popupHeader div{
+    cursor: pointer;
+}
+.btnDiv{
+    display: flex;
+    justify-content: right;
+    margin-top: 10px;
+}
+.bodyHeader{
+    margin-top: 10px;
+}
+.inputWrapper{
+    width: 95%;
+    margin: auto;
+    margin-top: 10px;
+}

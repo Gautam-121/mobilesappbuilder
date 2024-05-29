@@ -21,9 +21,8 @@ export default function Horizontalproductgrid({
 
   const dragRef = useRef(null);
   useEffect(() => {
-    if(products.length<1){
       fetchProducts();
-    }
+   
   }, [gridItems, componentListArray]);
 
   const getProducts = {

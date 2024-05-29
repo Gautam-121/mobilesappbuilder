@@ -1,0 +1,10 @@
+.cutomerCard{
+    border: 1pxx solid;
+    display: flex;
+    margin-bottom: 5px;
+    gap: 5px;
+    padding: 10px;
+}
+.cutomerCard:hover{
+    background-color: rgb(230, 230, 230);
+}
