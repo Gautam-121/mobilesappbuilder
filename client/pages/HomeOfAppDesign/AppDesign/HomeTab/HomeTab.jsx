@@ -9,13 +9,14 @@ import ComponentsList from '../../../UpdatedCode/componentsList/ComponentsList';
 import MobilePreview from '../../../UpdatedCode/mobilePreview/MobilePreview';
 import useFetch from '../../../../hooks/useFetch';
 import { useSetRecoilState, useRecoilState } from 'recoil';
-import { collectionsAtom, componentListArrayAtom, productsAtom } from '../../../UpdatedCode/recoil/store';
+import { bottomNavbarArrayAtom, collectionsAtom, componentListArrayAtom, productsAtom } from '../../../UpdatedCode/recoil/store';
 import EditPopup from '../../../UpdatedCode/editPopup/EditPopup';
 
 
 const HomeTab = ({themeId}) => {
   const[isLoading, setIsLoading] = useState(false)
   const setComponentListArray = useSetRecoilState(componentListArrayAtom)
+  const setBottomNavbarArray = useSetRecoilState(bottomNavbarArrayAtom)
   const [collections, setCollections] = useRecoilState(collectionsAtom)
   const setProducts = useSetRecoilState(productsAtom)
   const getData = {
@@ -85,6 +86,7 @@ const HomeTab = ({themeId}) => {
     fetchData()
     fetchCollections();
     fetchProducts();
+    fetchBottomNavbar()
   }, [])
 
   useEffect(() => {
@@ -100,10 +102,12 @@ const HomeTab = ({themeId}) => {
       console.log("fetch data triggered");
       setData("");
       const result = await (await fetch(url, options))?.json();
-      // console.log("result", result?.collections);
-      console.log("result", result?.products);
+      console.log("result line 103", result?.products);
       console.log("result", result);
       setData(result);
+      if(result?.data?.setting){
+        setBottomNavbarArray(result.data.setting)
+      }
     };
     return [data, fetchData];
   };
@@ -118,7 +122,10 @@ const HomeTab = ({themeId}) => {
     "/apps/api/getProduct",
     getData
   );
-
+const [responseNavbar, fetchBottomNavbar] = useDataFetcherForShopifyData(
+  [],
+  `/apps/api/bottom/nav/${themeId}`
+)
   useEffect(() => {
     if (responseCollections != undefined) {
       setCollections(responseCollections.collections);

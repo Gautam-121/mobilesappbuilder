@@ -77,7 +77,7 @@ const router = Router();
 
 router.get("/api/storeDetail/:shopId", getStoreDetail);
 
-router.get("/api/shop/detail"  ,  getStoreDetailByWeb);
+router.get("/api/shop/detail"  , verifyRequest , getStoreDetailByWeb);
 
 router.put("/api/store/appDesign/theme" , verifyRequest ,   updateStoreAppDesignDetail);
 

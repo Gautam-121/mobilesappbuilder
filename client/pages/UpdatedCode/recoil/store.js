@@ -67,3 +67,7 @@ export const productsByCollectionAtom = atom({
     default:[]
 })
 
+export const bottomNavbarArrayAtom = atom({
+    key:'bottomNavbarArrayAtom',
+    default:[]
+})

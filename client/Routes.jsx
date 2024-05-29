@@ -28,14 +28,6 @@ const routes = {
   "/app-design/customize/:themeId": ({themeId}) => <AppDesign themeId={themeId} />,
   "/exitframe": () => <ExitFrame />,
   "/exitframe/:shop": ({ shop }) => <ExitFrame shop={shop} />,
-  //Debug Cards
-  // "/debug": () => <DebugIndex />,
-  // "/debug/webhooks": () => <ActiveWebhooks />,
-  // "/debug/data": () => <GetData />,
-  // "/debug/billing": () => <BillingAPI />,
-  // "/createnotification":()=><CreateNotification/>,
-  // '/settings':()=><SettingsPage/>,
-  // '/templates':()=><Templates/>
   //Add your routes here
 };
 

@@ -1,6 +1,6 @@
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import "./monilePreview.css";
-import { componentListArrayAtom, currentIndexAtom } from "../recoil/store";
+import { bottomNavbarArrayAtom, componentListArrayAtom, currentIndexAtom } from "../recoil/store";
 import DraggableAnnouncementBar from "../draggableComponents/DraggableAnnouncementBar";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
@@ -17,16 +17,17 @@ import { useDispatch } from "react-redux";
 import { setEditingStatus } from "../../../store/editStatusSlice";
 
 import { Box, Icon, InlineStack, Spinner, Tooltip } from "@shopify/polaris";
-import { DeleteIcon, EditIcon } from "@shopify/polaris-icons";
+import { CartIcon, CategoriesIcon, DeleteIcon, EditIcon, HomeIcon, SearchIcon, SettingsIcon } from "@shopify/polaris-icons";
 
 export default function MobilePreview({isLoading}) {
   const dispatch = useDispatch();
   const [isEditing, setIsEditing] = useState(false);
   const [currentIndex, setCurrentIndex] = useRecoilState(currentIndexAtom)
+  const bottomNavbarArray = useRecoilValue(bottomNavbarArrayAtom)
   const [componentListArray, setComponentListArray] = useRecoilState(
     componentListArrayAtom
   );
-
+console.log("line 29", bottomNavbarArray)
   // Function to handle click on the edit button of a component
   const handleEditButtonClick = (eleId) => {
     setIsEditing(true);
@@ -280,7 +281,7 @@ console.log("index from", index)
         </div>
 
         <div className="footer-main-mobile-preview-div">
-          <div className="search-footer-icon">&#128269;</div>
+          {/* <div className="search-footer-icon">&#128269;</div>
 
           <div>
             <label htmlFor="home-btn" className="home-footer-icon">
@@ -288,7 +289,39 @@ console.log("index from", index)
             </label>
           </div>
 
-          <div className="cart-footer-icon">&#128722;</div>
+          <div className="cart-footer-icon">&#128722;</div> */}
+          {bottomNavbarArray.map((iconName)=>{
+            if(iconName.redirect_page==="home")
+              return(<Icon
+                source={HomeIcon}
+                tone="base"
+              />)
+              else if(iconName.redirect_page==="search")
+              return(<Icon
+                source={SearchIcon}
+                tone="base"
+              />)
+              else if(iconName.redirect_page==="account")
+              return(<Icon
+                source={SettingsIcon}
+                tone="base"
+              />)
+              else if(iconName.redirect_page==="cart")
+              return(<Icon
+                source={CartIcon}
+                tone="base"
+              />)
+              else if(iconName.redirect_page==="wishlist")
+              return(<Icon
+                source={HomeIcon}
+                tone="base"
+              />)
+              else if(iconName.redirect_page==="categories")
+              return(<Icon
+                source={CategoriesIcon}
+                tone="base"
+              />)
+          })}
         </div>
          </div>
       
