@@ -6,32 +6,32 @@ const createCart = asyncHandler(async(req , res , next)=>{
 
     const { customerId  , customerCartId } = req.body
 
-    if (!req.params.shopId) {
-        return next(
-          new ApiError(
-            "ShopId is missing", 
-            400
-          )
-        );
-    }
+    // if (!req.params.shopId) { // htana
+    //     return next(
+    //       new ApiError(
+    //         "ShopId is missing", 
+    //         400
+    //       )
+    //     );
+    // }
     
-    const store = await Payload.find({
-        collection: "Store",
-        where: {
-          shopId: { equals: `gid://shopify/Shop/${req.params.shopId}` },
-          isActive: { equals: true },
-        },
-        limit: 1
-    });
+    // const store = await Payload.find({ // htana
+    //     collection: "Store",
+    //     where: {
+    //       shopId: { equals: `gid://shopify/Shop/${req.params.shopId}` },
+    //       isActive: { equals: true },
+    //     },
+    //     limit: 1
+    // });
     
-    if (store.docs.length == 0) {
-        return next(
-          new ApiError(
-            `Shop not found with id: ${req.params.shopId}`, 
-            404
-          )
-       );
-    }
+    // if (store.docs.length == 0) { // htana
+    //     return next(
+    //       new ApiError(
+    //         `Shop not found with id: ${req.params.shopId}`, 
+    //         404
+    //       )
+    //    );
+    // }
 
     if(!customerId || !customerCartId){
         return next(
@@ -113,34 +113,34 @@ const createCart = asyncHandler(async(req , res , next)=>{
 
 const getCartByCustomerId = asyncHandler( async(req , res , next)=>{
 
-    const { customerId  , shopId } = req.params
+    const { customerId  } = req.params
 
-    if (!shopId) {
-        return next(
-          new ApiError(
-            "ShopId is missing", 
-            400
-          )
-        );
-    }
+    // if (!shopId) { // htana
+    //     return next(
+    //       new ApiError(
+    //         "ShopId is missing", 
+    //         400
+    //       )
+    //     );
+    // }
     
-    const store = await Payload.find({
-        collection: "Store",
-        where: {
-          shopId: { equals: `gid://shopify/Shop/${shopId}` },
-          isActive: { equals: true },
-        },
-        limit: 1
-    });
+    // const store = await Payload.find({ // htana
+    //     collection: "Store",
+    //     where: {
+    //       shopId: { equals: `gid://shopify/Shop/${shopId}` },
+    //       isActive: { equals: true },
+    //     },
+    //     limit: 1
+    // });
     
-    if (store.docs.length == 0) {
-        return next(
-          new ApiError(
-            `Shop not found with id: ${req.params.shopId}`, 
-            404
-          )
-        );
-      }
+    // if (store.docs.length == 0) { // htana
+    //     return next(
+    //       new ApiError(
+    //         `Shop not found with id: ${req.params.shopId}`, 
+    //         404
+    //       )
+    //     );
+    //   }
 
     if(!customerId){
         return next(
@@ -197,37 +197,37 @@ const getCartByCustomerId = asyncHandler( async(req , res , next)=>{
 
 const updateCartOfCustomer = asyncHandler(async (req, res, next) => {
 
-  const { shopId, customerId } = req.params;
+  const { customerId } = req.params;
   const  { customerCartId } = req.body
 
-  if (!shopId) {
-    return next(
-        new ApiError(
-            "ShopId is missing", 
-            400
-        )
-    );
-  }
+  // if (!shopId) { // htana
+  //   return next(
+  //       new ApiError(
+  //           "ShopId is missing", 
+  //           400
+  //       )
+  //   );
+  // }
 
-  const store = await Payload.find({
-    collection: "Store",
-    where: {
-      shopId: { equals: `gid://shopify/Shop/${req.params.shopId}` },
-      isActive: { equals: true },
-    },
-    limit: 1,
-  });
+  // const store = await Payload.find({ // htana
+  //   collection: "Store",
+  //   where: {
+  //     shopId: { equals: `gid://shopify/Shop/${req.params.shopId}` },
+  //     isActive: { equals: true },
+  //   },
+  //   limit: 1,
+  // });
 
-  if (store.docs.length == 0) {
-    return next(
-      new ApiError(
-        `Shop not found with id: ${req.params.shopId}`, 
-        404
-       )  
-    );
-  }
+  // if (store.docs.length == 0) { // htana
+  //   return next(
+  //     new ApiError(
+  //       `Shop not found with id: ${req.params.shopId}`, 
+  //       404
+  //      )  
+  //   );
+  // }
 
-  if (!customerId) {
+  if (!customerId) { 
     return next(
         new ApiError(
             "customerId is required", 

@@ -125,42 +125,46 @@ const updateProductScreenDetail = asyncHandler( async (req, res, next) => {
 
 const getProductScreenDetails = asyncHandler( async(req , res , next)=> {
 
-  if (!req.params.shopId) {
-    return next(
-      new ApiError(
-        "ShopId is Missing",
-         400
-      )
-    )
-  }
+  // if (!req.params.shopId) { //htana
+  //   return next(
+  //     new ApiError(
+  //       "ShopId is Missing",
+  //        400
+  //     )
+  //   )
+  // }
 
-  const store = await Payload.find({
-    collection: 'Store',
-    where: { 
-      shopId: { equals: `gid://shopify/Shop/${req.params.shopId}` },
-      isActive : { equals: true }
-    },
-    limit: 1,
-    depth: 0
-  })
+  // const store = await Payload.find({ // htana
+  //   collection: 'Store',
+  //   where: { 
+  //     shopId: { equals: `gid://shopify/Shop/${req.params.shopId}` },
+  //     isActive : { equals: true }
+  //   },
+  //   limit: 1,
+  //   depth: 0
+  // })
 
-  if(store.docs.length == 0){
-    return next(
-      new ApiError(
-        `Shop not found with id: ${req.params.shopId}`,
-         404
-      )
-    )
-  }
+  // if(store.docs.length == 0){ // htana
+  //   return next(
+  //     new ApiError(
+  //       `Shop not found with id: ${req.params.shopId}`,
+  //        404
+  //     )
+  //   )
+  // }
 
   const productDetail = await Payload.find({
     collection: "productDetailScreen",
     where: { 
-      shopId: { equals: store.docs[0].id },
+      shopId: { equals: req.user.id  },
     },
     limit: 1,
-    depth: req.query?.depth || 0
+    depth: req.query?.depth || 1
   });
+
+  if(productDetail.docs.length != 0){
+    productDetail.docs[0].shopId = productDetail.docs[0].shopId.shopId
+  }
 
   return res.status(200).json({
     success: true,

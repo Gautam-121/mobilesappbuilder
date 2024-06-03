@@ -5,36 +5,36 @@ const {accountScreenDetail} = require("../constant.js")
 
 const getAccountScreen = asyncHandler( async(req , res , next)=> {
 
-  if (!req.params.shopId) {
-    return next(
-      new ApiError(
-        "ShopId is Missing",
-         400
-      )
-    )
-  }
+  // if (!req.params.shopId) { // htana
+  //   return next(
+  //     new ApiError(
+  //       "ShopId is Missing",
+  //        400
+  //     )
+  //   )
+  // }
 
-  const store = await Payload.find({
-    collection: 'Store',
-    where: { 
-      shopId: { equals: `gid://shopify/Shop/${req.params.shopId}` },
-      isActive : { equals: true }
-    },
-  })
+  // const store = await Payload.find({ // htna
+  //   collection: 'Store',
+  //   where: { 
+  //     shopId: { equals: `gid://shopify/Shop/${req.params.shopId}` },
+  //     isActive : { equals: true }
+  //   },
+  // })
 
-  if(store.docs.length == 0){
-    return next(
-      new ApiError(
-        `Shop not found with id: ${req.params.shopId}`,
-         404
-      )
-    )
-  }
+  // if(store.docs.length == 0){ // htana
+  //   return next(
+  //     new ApiError(
+  //       `Shop not found with id: ${req.params.shopId}`,
+  //        404
+  //     )
+  //   )
+  // }
 
   const accountScreenData = await Payload.find({
     collection: "accountScreen",
     where: { 
-      shopId: { equals: store.docs[0].id },
+      shopId: { equals: req.user.id  } ,
     },
     depth: req.query.depth || 1,
     limit:1
@@ -169,6 +169,10 @@ const updateAccountScreen = asyncHandler( async(req , res , next)=> {
      )
    }
 
+   if(main_section.length < 5){
+    return next(new ApiError("please provide all fields in the main_section", 400))
+   }
+
    if(!footer_section || Object?.values(footer_section)?.length == 0){
      return next(
        new ApiError(
@@ -194,7 +198,7 @@ const updateAccountScreen = asyncHandler( async(req , res , next)=> {
    if(selectedCount.length<3){
      return next(
        new ApiError(
-         "At least 3 field should select to main-portion"
+         "At least 3 field should visible to main-portion"
        )
      )
    }
@@ -448,36 +452,36 @@ const getAboutUsByWeb = asyncHandler( async(req , res , next)=>{
 
 const getAboutUs = asyncHandler( async(req , res , next)=> {
 
-  if (!req.params.shopId) {
-    return next(
-      new ApiError(
-        "ShopId is Missing",
-         400
-      )
-    )
-  }
+  // if (!req.params.shopId) { // htana
+  //   return next(
+  //     new ApiError(
+  //       "ShopId is Missing",
+  //        400
+  //     )
+  //   )
+  // }
 
-  const store = await Payload.find({
-    collection: 'Store',
-    where: { 
-      shopId: { equals: `gid://shopify/Shop/${req.params.shopId}` },
-      isActive : { equals: true }
-    },
-  })
+  // const store = await Payload.find({ // htana
+  //   collection: 'Store',
+  //   where: { 
+  //     shopId: { equals: `gid://shopify/Shop/${req.params.shopId}` },
+  //     isActive : { equals: true }
+  //   },
+  // })
 
-  if(store.docs.length == 0){
-    return next(
-      new ApiError(
-        `Shop not found with id: ${req.params.shopId}`,
-         404
-      )
-    )
-  }
+  // if(store.docs.length == 0){ // htana
+  //   return next(
+  //     new ApiError(
+  //       `Shop not found with id: ${req.params.shopId}`,
+  //        404
+  //     )
+  //   )
+  // }
 
   const aboutUs = await Payload.find({
     collection: "aboutUsSection",
     where: { 
-      shopId: { equals: store.docs[0].id },
+      shopId: { equals: req.user.id  },
     },
     depth: req.query.depth || 1,
     limit:1

@@ -3,6 +3,7 @@ const Cryptr = require("cryptr");
 const cryption = new Cryptr(process.env.ENCRYPTION_STRING);
 const payload = require("payload");
 
+
 const storeSession = async (session , shopId) => {
 
   console.log("Session for", session)
@@ -26,6 +27,15 @@ const storeSession = async (session , shopId) => {
     });
   } 
   else {
+
+    const shop = await payload.find({
+      collection: "Store",
+      where:{
+        shopId: { equals: shopId },
+      },
+      depth: 0
+    })
+
     // Document Created
     await payload.create({
       collection: "Session", // required
@@ -33,7 +43,7 @@ const storeSession = async (session , shopId) => {
         id: session.id,
         token: cryption.encrypt(JSON.stringify(session)),
         shop_domain: session.shop,
-        shopId: shopId,
+        shopId: shop.id,
         isOnline: session.isOnline
       },
     });

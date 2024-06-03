@@ -368,38 +368,41 @@ const updateStoreAppDesignDetail = asyncHandler(  async (req, res, next) => {
 
 const getStoreDetail = asyncHandler( async(req,res,next)=> {
 
-  if (!req.params.shopId) {
-    return next(
-      new ApiError(
-        "shopId is missing",
-        400
-      )
-    )
-  }
+  // if (!req.params.shopId) { // htana
+  //   return next(
+  //     new ApiError(
+  //       "shopId is missing",
+  //       400
+  //     )
+  //   )
+  // }
 
-  const store = await Payload.find({
-    collection: "Store",
-    where: { 
-      shopId: { equals: `gid://shopify/Shop/${req.params.shopId}` },
-      isActive: { equals: true }
-    },
-    limit:1,
-    depth: req.query?.depth || 0
-  });
+  // const store = await Payload.find({ 
+  //   collection: "Store",
+  //   where: { 
+  //     shopId: { equals: req.user.shopId || `gid://shopify/Shop/${req.params.shopId}` },
+  //     isActive: { equals: true }
+  //   },
+  //   limit:1,
+  //   showHiddenFields: false,
+  //   depth: req.query?.depth || 0
+  // });
 
-  if (store.docs.length === 0) {
-    return next(
-      new ApiError(
-        "store not found with id: "+ req.params.shopId,
-        400
-      )
-    )
-  }
+  // if (store.docs.length === 0) {
+  //   return next(
+  //     new ApiError(
+  //       "store not found with id: "+ req.params.shopId,
+  //       400
+  //     )
+  //   )
+  // }
+
+  delete req.user.apiKey
 
   return res.status(200).json({
     success: true,
     message: "shop Details send successfully",
-    data: store.docs[0]
+    data: req.user
   })
 })
 
@@ -423,6 +426,8 @@ const getStoreDetailByWeb = asyncHandler( async(req,res,next)=>{
       )
     )
   }
+
+  delete store.docs[0].apiKey
 
   return res.status(200).json({
     success: true,
@@ -558,6 +563,9 @@ const updateSocialMediaOfStore = asyncHandler( async(req,res,next)=>{
     message:"Data Updated Successfully"
   })
 })
+
+
+
 
 
 module.exports = {

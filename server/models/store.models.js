@@ -59,6 +59,16 @@ const Store = {
       defaultValue: false,
     },
     {
+      name: "apiKey",
+      type: "text",
+      required: true,
+      hidden: false,
+      admin:{
+        readOnly: true,
+        position: "sidebar"
+      }
+    },
+    {
       name: "socialMediaAccount",
       type: "array",
       fields: [

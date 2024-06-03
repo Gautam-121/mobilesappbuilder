@@ -14,6 +14,8 @@ const {
   requestBodyForStorefrontToken,
   TEST_QUERY
 } = require("../constant.js")
+const { v4: uuidv4 } = require('uuid');
+
 
 const authMiddleware = (app) => {
 
@@ -50,7 +52,7 @@ const authMiddleware = (app) => {
       const client = new shopify.clients.Graphql({ session });
       const response = await client.request(TEST_QUERY);
 
-      await sessionHandler.storeSession(session , response?.data?.shop?.id );
+      // await sessionHandler.storeSession(session , response?.data?.shop?.id );
       const { shop } = session;
 
       const isShopAvaialble = await payload.find({
@@ -107,6 +109,7 @@ const authMiddleware = (app) => {
               shopId: response?.data?.shop?.id,
               shopName: response?.data?.shop?.name,
               shopify_domain: session?.shop,
+              apiKey: uuidv4(),
               storefront_access_token:storefrontResponse.data?.storefront_access_token?.access_token,
               isActive: false,
             },
