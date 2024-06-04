@@ -1,3 +1,4 @@
+const { uid } = require("uid")
 
 const Banner = {
   slug: "banner",
@@ -8,6 +9,11 @@ const Banner = {
     useAsTitle:"bannerType"
   },
   fields: [
+    {
+      name: "id",
+      type: "text",
+      unique: true
+    },
     {
       name: "data",
       label:"Banner Slider",
@@ -59,6 +65,15 @@ const Banner = {
       ],
     },
   ],
+  hooks:{
+    beforeChange: [
+      (args) => {
+        if (args.operation === 'create') {
+          args.data.id = uid(); // Generate a unique ID using nanoid
+        }
+      }
+    ]
+  }
 };
 
 module.exports = Banner;

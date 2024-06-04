@@ -1,3 +1,4 @@
+const { uid } = require("uid")
 
 const SocialMedia = {
   slug: "socialMedia",
@@ -5,6 +6,11 @@ const SocialMedia = {
     useAsTitle: "blockTitle",
   },
   fields: [
+    {
+      name: "id",
+      type: "text",
+      unique: true
+    },
     {
       name : "blockTitle",
       label: "Title",
@@ -58,6 +64,15 @@ const SocialMedia = {
       ]
     }
   ],
+  hooks:{
+    beforeChange: [
+      (args) => {
+        if (args.operation === 'create') {
+          args.data.id = uid(); // Generate a unique ID using nanoid
+        }
+      }
+    ]
+  }
 };
 
 module.exports = SocialMedia;

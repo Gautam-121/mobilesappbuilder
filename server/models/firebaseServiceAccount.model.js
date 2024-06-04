@@ -1,9 +1,16 @@
+const { uid } = require("uid")
+
 const FirebaseSeviceAccount = {
     slug: 'firebaseServiceAccount',
     admin: {
         useAsTitle: 'shopId',
     },
     fields: [
+        {
+            name: "id",
+            type: "text",
+            unique: true
+        },
         {
             name: "serviceAccount",
             type: 'json',
@@ -27,6 +34,15 @@ const FirebaseSeviceAccount = {
             required: true
         },
     ],
+    hooks:{
+        beforeChange: [
+          (args) => {
+            if (args.operation === 'create') {
+              args.data.id = uid(); // Generate a unique ID using nanoid
+            }
+          }
+        ]
+      }
 };
 
 module.exports =FirebaseSeviceAccount;

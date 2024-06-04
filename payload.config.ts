@@ -15,22 +15,23 @@ const Banner = require("./server/models/banner.models.js");
 const Categories = require("./server/models/categories.models.js");
 const StoreSession = require("./server/models/session.models.js");
 const Store = require("./server/models/store.models.js");
-const SocialChannel = require("./server/models/socialChannels.models.js");
-const TextParagraph = require("./server/models/textParagraph.models.js");
-const EventTimer = require("./server/models/eventTimer.models.js");
+// const SocialChannel = require("./server/models/socialChannels.models.js");
+// const TextParagraph = require("./server/models/textParagraph.models.js");
+// const EventTimer = require("./server/models/eventTimer.models.js");
 const AnnouncementBanner = require("./server/models/announcementBanner.models.js");
 const Branding = require("./server/models/branding.models.js");
 const HomePage = require("./server/models/home.models.js");
-const Video = require("./server/models/video.models.js");
+// const Video = require("./server/models/video.models.js");
 const TabMenu = require("./server/models/tabNavigation.models.js");
 const ProductPage = require("./server/models/productDetails.models.js");
-const EmptyCartPage = require("./server/models/cartDetail.models.js");
+// const EmptyCartPage = require("./server/models/cartDetail.models.js");
 const AccountPage = require("./server/models/accountDetail.models.js");
 const Theme = require("./server/models/theme.models.js");
 const Media = require("./server/models/media.models.js");
-const Customer =require( "./server/models/customerDetail");
+const Customer =require( "./server/models/customerDetail.models.js");
 const FirebaseServiceAccount =require("./server/models/firebaseServiceAccount.model");
 const CustomerCart = require("./server/models/customerCart.models.js")
+const AboutUs = require("./server/models/aboutUs.models.js")
 
 module.exports = buildConfig({
   serverURL: process.env.PAYLOAD_PUBLIC_EXTERNAL_SERVER_URL,
@@ -52,13 +53,13 @@ module.exports = buildConfig({
     Segment,
     FirebaseServiceAccount,
     AccountPage,
-    EmptyCartPage,
+    // EmptyCartPage,
     ProductPage,
-    SocialChannel,
+    // SocialChannel,
     Branding,
-    Video,
-    TextParagraph,
-    EventTimer,
+    // Video,
+    // TextParagraph,
+    // EventTimer,
     TabMenu,
     HomePage,
     AnnouncementBanner,
@@ -68,7 +69,8 @@ module.exports = buildConfig({
     Categories,
     StoreSession,
     Store,
-    CustomerCart
+    CustomerCart,
+    AboutUs
   ],
   typescript: {
     outputFile: path.resolve(__dirname, "payload-types.ts"),

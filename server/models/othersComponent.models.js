@@ -1,7 +1,13 @@
+const { uid } = require("uid")
 
 const othersComponentConfig = {
   slug: "othersCommon",
   fields: [
+    {
+      name: "id",
+      type: "text",
+      unique: true
+    },
     {
       name: "type",
       type: "select",
@@ -57,6 +63,15 @@ const othersComponentConfig = {
       ]
     }
   ],
+  hooks:{
+    beforeChange: [
+      (args) => {
+        if (args.operation === 'create') {
+          args.data.id = uid(); // Generate a unique ID using nanoid
+        }
+      }
+    ]
+  }
 };
 
 module.exports = othersComponentConfig;

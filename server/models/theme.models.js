@@ -8,6 +8,7 @@ const Theme = {
     {
         name: "id",
         type: "text",
+        unique: true,
         required: true,
     },
     {

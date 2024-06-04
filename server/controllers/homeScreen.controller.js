@@ -4,48 +4,48 @@ const asyncHandler = require("../utils/asyncHandler.js");
 
 const getHomePage = asyncHandler(async (req, res, next) => {
 
-  if (!req.params.shopId) {
-    return next(
-      new ApiError(
-        "ShopId is missing", 
-        400
-      )
-    );
-  }
+  // if (!req.params.shopId) { // htana
+  //   return next(
+  //     new ApiError(
+  //       "ShopId is missing", 
+  //       400
+  //     )
+  //   );
+  // }
 
-  const store = await Payload.find({
-    collection: "Store",
-    where: {
-      shopId: { equals: `gid://shopify/Shop/${req.params.shopId}` },
-      isActive: { equals: true },
-    },
-    limit: 1,
-    depth: req.query?.depth || 0
-  });
+  // const store = await Payload.find({ // htana
+  //   collection: "Store",
+  //   where: {
+  //     shopId: { equals: `gid://shopify/Shop/${req.params.shopId}` },
+  //     isActive: { equals: true },
+  //   },
+  //   limit: 1,
+  //   depth: req.query?.depth || 0
+  // });
 
 
-  if (store.docs.length == 0) {
-    return next(
-      new ApiError(
-        `Shop not found with id: ${req.params.shopId}`, 
-        404
-      )
-    );
-  }
+  // if (store.docs.length == 0) {
+  //   return next(
+  //     new ApiError(
+  //       `Shop not found with id: ${req.params.shopId}`, 
+  //       404
+  //     )
+  //   );
+  // }
 
-  const homeData = await Payload.find({
+  const homeData = await Payload.find({ 
     collection: "homeScreen",
     where: {
-      shopId: { equals: `gid://shopify/Shop/${req.params.shopId}` },
-      themeId: { equals: store.docs[0]?.themeId },
+      shopId: { equals: req.user.id },
+      themeId: { equals: req.user.themeId },
     },
     limit:1
   });
 
-  if (homeData.docs.length === 0) {
+  if (homeData.docs.length === 0) { 
     return next(
       new ApiError(
-        `No data found with shopId: ${req.params.shopId}`, 
+        `No data found with shopId: ${req.user.id}`, 
         400
       )
     );
@@ -84,14 +84,14 @@ const getHomePageByWeb = asyncHandler(async (req, res, next) => {
   const isSelectedTheme = await Payload.find({
     collection: "Store",
     where: {
-      shopId: { equals: req.shop_id },
+      id: { equals: req.shop_id },
       isActive: { equals: true },
     },
     limit: 1,
     depth: req.query?.depth || 0
   });
 
-  if (!isSelectedTheme.docs[0]) {
+  if (isSelectedTheme.docs.length == 0) {
     return next(
       new ApiError(
         `store not found with id: ${req.shop_id}`,
@@ -166,14 +166,14 @@ const updateHomePage = asyncHandler(async (req, res, next) => {
   const isSelectedTheme = await Payload.find({
     collection: "Store",
     where: {
-      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454"},
+      id: { equals: req.shop_id },
       isActive: { equals: true },
     },
     limit: 1,
     depth: req.query?.depth || 0 
   });
 
-  if (!isSelectedTheme.docs[0]) {
+  if (isSelectedTheme.docs.length == 0) {
     return next(
       new ApiError(
         `store not found with id: ${req.shop_id}`, 
@@ -197,7 +197,7 @@ const updateHomePage = asyncHandler(async (req, res, next) => {
   const isExistHomeData = await Payload.find({
     collection: "homeScreen",
     where: {
-      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454"},
+      shopId: { equals: req.shop_id },
       themeId: { equals: req.params.themeId },
     },
     limit:1

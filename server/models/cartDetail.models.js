@@ -1,3 +1,4 @@
+const { uid } = require("uid")
 
 const EmptyCartScreen = {
   slug: "emptyCartScreen",
@@ -5,6 +6,11 @@ const EmptyCartScreen = {
     useAsTitle: "shopId",
   },
   fields: [
+    {
+      name: "id",
+      type: "text",
+      unique: true
+    },
     {
       name: "shopId",
       label:"ShopId",
@@ -63,6 +69,15 @@ const EmptyCartScreen = {
         ]
     }
   ],
+  hooks:{
+    beforeChange: [
+      (args) => {
+        if (args.operation === 'create') {
+          args.data.id = uid(); // Generate a unique ID using nanoid
+        }
+      }
+    ]
+  }
 };
 
 module.exports = EmptyCartScreen;

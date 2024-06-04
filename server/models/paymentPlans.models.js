@@ -1,10 +1,16 @@
-
+const { uid } = require("uid")
+ 
 const activeStoresConfig = {
   slug: "paymentPlans",
   admin: {
     useAsTitle: "shopName",
   },
   fields: [
+    {
+      name: "id",
+      type: "text",
+      unique: true
+    },
     {
       name: "shopName",
       type: "text",
@@ -26,4 +32,13 @@ const activeStoresConfig = {
       defaultValue: false,
     }
   ],
+  hooks:{
+    beforeChange: [
+      (args) => {
+        if (args.operation === 'create') {
+          args.data.id = uid(); // Generate a unique ID using nanoid
+        }
+      }
+    ]
+  }
 };
