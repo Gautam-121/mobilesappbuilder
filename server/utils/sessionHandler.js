@@ -28,13 +28,13 @@ const storeSession = async (session , shopId) => {
   } 
   else {
 
-    const shop = await payload.find({
-      collection: "Store",
-      where:{
-        shopId: { equals: shopId },
-      },
-      depth: 0
-    })
+    // const shop = await payload.find({
+    //   collection: "Store",
+    //   where:{
+    //     shopId: { equals: shopId },
+    //   },
+    //   depth: 0
+    // })
 
     // Document Created
     await payload.create({
@@ -43,7 +43,7 @@ const storeSession = async (session , shopId) => {
         id: session.id,
         token: cryption.encrypt(JSON.stringify(session)),
         shop_domain: session.shop,
-        shopId: shop.id,
+        shopId: shopId,
         isOnline: session.isOnline
       },
     });

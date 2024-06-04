@@ -55,10 +55,12 @@ const authMiddleware = (app) => {
       // await sessionHandler.storeSession(session , response?.data?.shop?.id );
       const { shop } = session;
 
+      const shopId = response?.data?.shop?.id  ? response?.data?.shop?.id.match(/\d+$/)[0] : ""
+
       const isShopAvaialble = await payload.find({
         collection: "Store",
         where: {
-          shopId: { equals: response?.data?.shop?.id },
+          id: { equals: shopId },
         },
       });
 
@@ -79,7 +81,7 @@ const authMiddleware = (app) => {
         await payload.update({
           collection: "Store",
           where: {
-            shopId: { equals: response?.data?.shop?.id },
+            id: { equals: shopId },
           },
           data: {
             storefront_access_token:storefrontResponse.data?.storefront_access_token?.access_token,
@@ -106,7 +108,7 @@ const authMiddleware = (app) => {
           await payload.create({
             collection: "Store", // required
             data: {
-              shopId: response?.data?.shop?.id,
+              id: shopId,
               shopName: response?.data?.shop?.name,
               shopify_domain: session?.shop,
               apiKey: uuidv4(),
@@ -171,32 +173,33 @@ const authMiddleware = (app) => {
       const client = new shopify.clients.Graphql({ session });
       const response = await client.request(TEST_QUERY);
 
-      await sessionHandler.storeSession(session , response?.data?.shop?.id);
+      console.log(response?.data?.shop?.id)
 
+      const shopId = response?.data?.shop?.id  ? response?.data?.shop?.id.match(/\d+$/)[0] : ""
+
+      await sessionHandler.storeSession(session , shopId);
 
       const host = req.query.host;
       const { shop } = session;
 
-      const result = await payload.find({
-        collection: "Store",
-        where: {
-          shopId: { equals: response?.data?.shop?.id },
-        },
-      });
+      // const result = await payload.find({
+      //   collection: "Store",
+      //   where: {
+      //     id: { equals: shopId },
+      //   },
+      // });
 
-      if (result.docs?.length != 0) {
+      // console.log(result.docs)
+
         await payload.update({
           collection: "Store",
-          where: {
-            shopId: { equals: response?.data?.shop?.id },
-          },
+          id: shopId ,
           data: {
             email: session?.onlineAccessInfo?.associated_user?.email,
             owner: session?.onlineAccessInfo?.associated_user?.first_name + " " + session?.onlineAccessInfo?.associated_user?.last_name,
             isActive: true,
           },
         });
-      }
 
       // Redirect to app with shop parameter upon auth
       res.redirect(`/?shop=${shop}&host=${host}`);

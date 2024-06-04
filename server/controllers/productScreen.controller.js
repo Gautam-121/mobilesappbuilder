@@ -16,19 +16,19 @@ const updateProductScreenDetail = asyncHandler( async (req, res, next) => {
     )
   }
 
-  if (!req.params.themeId) {
-    return next(
-      new ApiError(
-        "ThemeId is missing",
-         400
-      )
-    )
-  }
+  // if (!req.params.themeId) {
+  //   return next(
+  //     new ApiError(
+  //       "ThemeId is missing",
+  //        400
+  //     )
+  //   )
+  // }
 
   const isSelectedTheme = await Payload.find({
     collection: 'Store',
     where: { 
-      shopId: { equals: req.shop_id},
+      id: { equals: req.shop_id},
       isActive: { equals: true}
     },
     limit: 1,
@@ -44,14 +44,14 @@ const updateProductScreenDetail = asyncHandler( async (req, res, next) => {
     )
   }
 
-  if(!isSelectedTheme.docs[0]?.themeId || isSelectedTheme.docs[0]?.themeId != req.params.themeId ){
-    return next(
-      new ApiError(
-        "Params is not matched with store themeId",
-        400
-      )
-    )
-  }
+  // if(!isSelectedTheme.docs[0]?.themeId || isSelectedTheme.docs[0]?.themeId != req.params.themeId ){
+  //   return next(
+  //     new ApiError(
+  //       "Params is not matched with store themeId",
+  //       400
+  //     )
+  //   )
+  // }
 
   const isProductDetailForThemeExist = await Payload.find({
     collection: "productDetailScreen",
@@ -159,12 +159,8 @@ const getProductScreenDetails = asyncHandler( async(req , res , next)=> {
       shopId: { equals: req.user.id  },
     },
     limit: 1,
-    depth: req.query?.depth || 1
+    depth: req.query?.depth || 0
   });
-
-  if(productDetail.docs.length != 0){
-    productDetail.docs[0].shopId = productDetail.docs[0].shopId.shopId
-  }
 
   return res.status(200).json({
     success: true,
@@ -175,19 +171,19 @@ const getProductScreenDetails = asyncHandler( async(req , res , next)=> {
 
 const getProductScreenDetailByWeb = asyncHandler( async(req , res , next)=>{
 
-  if (!req.params.themeId) {
-    return next(
-      new ApiError(
-        "ThemeId is missing",
-         400
-      )
-    )
-  }
+  // if (!req.params.themeId) {
+  //   return next(
+  //     new ApiError(
+  //       "ThemeId is missing",
+  //        400
+  //     )
+  //   )
+  // }
   
   const isSelectedTheme = await Payload.find({
     collection: 'Store',
     where: { 
-      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454"  },
+      id: { equals: req.shop_id },
       isActive: { equals: true}
     },
     limit: 1,
@@ -203,14 +199,14 @@ const getProductScreenDetailByWeb = asyncHandler( async(req , res , next)=>{
     )
   }
 
- if(!isSelectedTheme.docs[0]?.themeId || isSelectedTheme.docs[0]?.themeId != req.params.themeId ){
-    return next(
-      new ApiError(
-        "Params is not matched with store themeId",
-         400
-      )
-    )
- }
+//  if(!isSelectedTheme.docs[0]?.themeId || isSelectedTheme.docs[0]?.themeId != req.params.themeId ){
+//     return next(
+//       new ApiError(
+//         "Params is not matched with store themeId",
+//          400
+//       )
+//     )
+//  }
 
  const productDetail = await Payload.find({
   collection: "productDetailScreen",
@@ -218,12 +214,8 @@ const getProductScreenDetailByWeb = asyncHandler( async(req , res , next)=>{
     shopId: { equals: isSelectedTheme.docs[0].id },
   },
   limit: 1,
-  depth: req.query?.depth || 1
+  depth: req.query?.depth || 0
 });
-
-if(productDetail.docs.length > 0){
-  productDetail.docs[0].shopId = productDetail.docs[0].shopId.shopId
-}
 
   return res.status(200).json({
     success: true,

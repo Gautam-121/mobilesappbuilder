@@ -17,7 +17,7 @@ const getTabMenuDataByWeb = asyncHandler( async (req, res, next) => {
   const isSelectedTheme = await Payload.find({
     collection: 'Store',
     where: { 
-      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
+      id: { equals: req.shop_id  },
       isActive: { equals: true}
     },
     limit:1,
@@ -45,7 +45,7 @@ const getTabMenuDataByWeb = asyncHandler( async (req, res, next) => {
   const tabData = await Payload.find({
     collection: "bottomMenuPannel",
     where: {
-      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
+      shopId: { equals: req.shop_id  },
       themeId: { equals: req.params.themeId },
     },
     limit: 1,
@@ -101,7 +101,7 @@ const getTabMenu = asyncHandler( async (req, res, next) => {
   const tabData = await Payload.find({ // htana
     collection: "bottomMenuPannel",
     where: { 
-      shopId: { equals: req.user.shopId  },
+      shopId: { equals: req.user.id  },
       themeId: { equals: req.user.themeId }
     },
     limit:1,
@@ -172,7 +172,7 @@ const updateTabMenu = asyncHandler( async(req , res , next) => {
   const isSelectedTheme = await Payload.find({
     collection: 'Store',
     where: { 
-      shopId: { equals: req.shop_id },
+      id: { equals: req.shop_id },
       isActive: { equals: true}
     },
     limit: 1,

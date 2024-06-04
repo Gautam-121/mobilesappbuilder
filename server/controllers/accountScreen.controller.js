@@ -36,13 +36,10 @@ const getAccountScreen = asyncHandler( async(req , res , next)=> {
     where: { 
       shopId: { equals: req.user.id  } ,
     },
-    depth: req.query.depth || 1,
+    depth: req.query.depth || 0,
     limit:1
   });
 
-  if(accountScreenData.docs.length > 0){
-    accountScreenData.docs[0].shopId = accountScreenData.docs[0].shopId.shopId
-  }
 
   return res.status(200).json({
     success: true,
@@ -53,19 +50,19 @@ const getAccountScreen = asyncHandler( async(req , res , next)=> {
 
 const getAccountScreenForWeb = asyncHandler( async(req , res , next)=> {
 
-  if (!req.params.themeId) {
-    return next(
-      new ApiError(
-        "ThemeId is missing",
-         400
-      )
-    )
-  }
+  // if (!req.params.themeId) {
+  //   return next(
+  //     new ApiError(
+  //       "ThemeId is missing",
+  //        400
+  //     )
+  //   )
+  // }
 
   const isSelectedTheme = await Payload.find({
     collection: 'Store',
     where: { 
-      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
+      id: { equals: req.shop_id  },
       isActive: { equals: true}
     },
     limit: 1,
@@ -81,14 +78,14 @@ const getAccountScreenForWeb = asyncHandler( async(req , res , next)=> {
     )
   }
 
-  if(!isSelectedTheme.docs[0]?.themeId || isSelectedTheme.docs[0]?.themeId != req.params.themeId ){
-    return next(
-      new ApiError(
-        "Params is not matched with store themeId",
-         400
-      )
-    )
- }
+//   if(!isSelectedTheme.docs[0]?.themeId || isSelectedTheme.docs[0]?.themeId != req.params.themeId ){
+//     return next(
+//       new ApiError(
+//         "Params is not matched with store themeId",
+//          400
+//       )
+//     )
+//  }
 
   const accountScreenData = await Payload.find({
     collection: "accountScreen",
@@ -96,12 +93,9 @@ const getAccountScreenForWeb = asyncHandler( async(req , res , next)=> {
       shopId: { equals: isSelectedTheme.docs[0].id },
     },
     limit: 1,
-    depth: req.query?.depth || 1
+    depth: req.query?.depth || 0
   });
 
-  if(accountScreenData.docs.length > 0){
-    accountScreenData.docs[0].shopId = accountScreenData.docs[0].shopId.shopId
-  }
 
   return res.status(200).json({
     success: true,
@@ -112,19 +106,19 @@ const getAccountScreenForWeb = asyncHandler( async(req , res , next)=> {
 
 const updateAccountScreen = asyncHandler( async(req , res , next)=> {
 
-    if (!req.params.themeId) {
-      return next(
-        new ApiError(
-          "ThemeId is missing",
-           400
-        )
-      )
-    }
+    // if (!req.params.themeId) {
+    //   return next(
+    //     new ApiError(
+    //       "ThemeId is missing",
+    //        400
+    //     )
+    //   )
+    // }
   
     const isSelectedTheme = await Payload.find({
       collection: 'Store',
       where: { 
-        shopId: { equals: req.shop_id },
+        id: { equals: req.shop_id },
         isActive: { equals: true}
       },
       limit: 1,
@@ -140,14 +134,14 @@ const updateAccountScreen = asyncHandler( async(req , res , next)=> {
       )
     }
   
-    if(!isSelectedTheme.docs[0]?.themeId || isSelectedTheme.docs[0]?.themeId != req.params.themeId ){
-      return next(
-        new ApiError(
-          "Params is not matched with store themeId",
-           400
-        )
-      )
-   }
+  //   if(!isSelectedTheme.docs[0]?.themeId || isSelectedTheme.docs[0]?.themeId != req.params.themeId ){
+  //     return next(
+  //       new ApiError(
+  //         "Params is not matched with store themeId",
+  //          400
+  //       )
+  //     )
+  //  }
 
    const { main_section , footer_section } = req.body
 
@@ -329,7 +323,7 @@ const createAboutUs = asyncHandler( async(req , res , next)=>{
   const isSelectedTheme = await Payload.find({
     collection: 'Store',
     where: { 
-      shopId: { equals: req.shop_id },
+      id: { equals: req.shop_id },
       isActive: { equals: true}
     },
     limit: 1,
@@ -379,7 +373,7 @@ const createAboutUs = asyncHandler( async(req , res , next)=>{
       image: image,
       description: description
     },
-    depth: 1
+    depth: 0
   })
 
   if(!aboutUs){
@@ -391,7 +385,6 @@ const createAboutUs = asyncHandler( async(req , res , next)=>{
     )
   }
 
-  aboutUs.shopId = aboutUs.shopId.shopId
 
   return res.status(200).json({
     success: true,
@@ -405,7 +398,7 @@ const getAboutUsByWeb = asyncHandler( async(req , res , next)=>{
   const isSelectedTheme = await Payload.find({
     collection: 'Store',
     where: { 
-      shopId: { equals: req.shop_id },
+      id: { equals: req.shop_id },
       isActive: { equals: true}
     },
     limit: 1,
@@ -427,7 +420,7 @@ const getAboutUsByWeb = asyncHandler( async(req , res , next)=>{
       shopId: { equals: isSelectedTheme.docs[0].id },
     },
     limit: 1,
-    depth: req.query?.depth || 1
+    depth: req.query?.depth || 0
   });
 
   if(aboutUs.docs.length == 0){
@@ -439,9 +432,6 @@ const getAboutUsByWeb = asyncHandler( async(req , res , next)=>{
     )
   }
 
-  if(aboutUs.docs.length > 0){
-    aboutUs.docs[0].shopId = aboutUs.docs[0].shopId.shopId
-  }
 
   return res.status(200).json({
     success: true,
@@ -483,7 +473,7 @@ const getAboutUs = asyncHandler( async(req , res , next)=> {
     where: { 
       shopId: { equals: req.user.id  },
     },
-    depth: req.query.depth || 1,
+    depth: req.query.depth || 0,
     limit:1
   });
 
@@ -494,10 +484,6 @@ const getAboutUs = asyncHandler( async(req , res , next)=> {
         404
       )
     )
-  }
-
-  if(aboutUs.docs.length > 0){
-    aboutUs.docs[0].shopId = aboutUs.docs[0].shopId.shopId
   }
 
   return res.status(200).json({
@@ -514,7 +500,7 @@ const updateAboutUs = asyncHandler( async(req , res , next)=>{
   const isSelectedTheme = await Payload.find({
     collection: 'Store',
     where: { 
-      shopId: { equals: req.shop_id  },
+      id: { equals: req.shop_id  },
       isActive: { equals: true}
     },
     limit: 1,

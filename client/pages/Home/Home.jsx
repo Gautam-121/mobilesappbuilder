@@ -61,6 +61,8 @@ const Home = () => {
     method: "PUT",
     body: JSON.stringify({ themeId: selectedThemeId }),
   };
+
+
   const getOptions = {
     headers: {
       Accept: "application/json",

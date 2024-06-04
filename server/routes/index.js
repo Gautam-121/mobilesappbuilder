@@ -163,17 +163,17 @@ router.get("/api/theme/:themeId" , verifyRequest ,  getThemeById);
 
 router.get("/api/productDetail", apiKeyAuth ,  getProductScreenDetails)
 
-router.get("/api/product/screen/:themeId"  , verifyRequest ,  getProductScreenDetailByWeb)
+router.get("/api/product/screen"  , verifyRequest ,  getProductScreenDetailByWeb)
 
-router.put("/api/product/screen/:themeId"  , verifyRequest ,  updateProductScreenDetail);
+router.put("/api/product/screen"  , verifyRequest ,  updateProductScreenDetail);
 
 /*-------------------------AccountScreen---------------------------------------*/
 
 router.get("/api/account" , apiKeyAuth , getAccountScreen)
 
-router.get("/api/account/screen/:themeId"  , verifyRequest,   getAccountScreenForWeb)
+router.get("/api/account/screen"  , verifyRequest,   getAccountScreenForWeb)
 
-router.put("/api/account/screen/:themeId" , verifyRequest , updateAccountScreen)
+router.put("/api/account/screen" , verifyRequest , updateAccountScreen)
 
 router.post("/api/aboutUs/page"  , verifyRequest , createAboutUs)
 

@@ -8,11 +8,6 @@ const Store = {
   fields: [
     {
       name: "id",
-      type: "text",
-      unique: true,
-    },
-    {
-      name: "shopId",
       label: "Shopify Store Id",
       type: "text",
       unique: true,
@@ -108,16 +103,6 @@ const Store = {
       ]
     },
   ],
-  hooks:{
-    beforeChange: [
-        (args) => {      
-          // Generate a new ID if the document is being created
-          if (args.operation === 'create') {
-            args.data.id = uid(); // Generate a unique ID using nanoid
-          }
-        },
-      ]
-}
 };
 
 module.exports = Store;

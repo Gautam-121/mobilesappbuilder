@@ -33,10 +33,11 @@ const getBrandingApp = asyncHandler(async (req, res, next) => {
   //   )
   // }
 
+
   const brandingData = await Payload.find({
     collection: "branding",
     where: {
-      shopId: { equals: req.user.shopId },
+      shopId: { equals: req.user.id },
       themeId: { equals: req.user.themeId }
     },
     limit:1,
@@ -46,7 +47,7 @@ const getBrandingApp = asyncHandler(async (req, res, next) => {
   if (brandingData.docs.length === 0) {
     return next(
       new ApiError(
-        `No data found with shopId: ${req.params.shopId}`,
+        `No data found with shopId: ${req.user.id}`,
          400
       )
     )
@@ -79,7 +80,7 @@ const getBrandingAppWeb = asyncHandler(async (req, res, next) => {
     const isSelectedTheme = await Payload.find({
       collection: 'Store',
       where: { 
-        shopId: { equals: req.shop_id},
+        id: { equals: req.shop_id},
         isActive: { equals: true}
       },
       limit:1,
@@ -151,7 +152,7 @@ const updateBrandingApp = asyncHandler(async (req, res, next) => {
   const isSelectedTheme = await Payload.find({
     collection: 'Store',
     where: { 
-      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
+      id : { equals: req.shop_id  },
       isActive: { equals: true }
     },
     limit: 1,
@@ -179,7 +180,7 @@ const updateBrandingApp = asyncHandler(async (req, res, next) => {
   const isExistbrandingData = await Payload.find({
     collection: "branding",
     where: {
-      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454"  },
+      shopId: { equals: req.shop_id },
       themeId: { equals: req.params.themeId },
     },
     limit: 1,

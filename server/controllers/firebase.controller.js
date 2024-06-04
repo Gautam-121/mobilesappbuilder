@@ -160,7 +160,7 @@ const createFirebaseToken = async (req, res, next) => {
     const store = await Payload.find({
       collection: 'Store',
       where: {
-        shopId: { equals: req.shop_id},
+        id: { equals: req.shop_id},
         isActive: { equals: true }
       },
       limit: 1
@@ -333,7 +333,7 @@ const getFirebaseAccessToken = asyncHandler(async (req, res,next) => {
   const store = await Payload.find({
     collection: 'Store',
     where: {
-      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
+      id: { equals: req.shop_id  },
       isActive: { equals: true }
     },
     limit: 1
@@ -351,7 +351,7 @@ const getFirebaseAccessToken = asyncHandler(async (req, res,next) => {
     collection: "firebaseServiceAccount",
     where: {
       // id: { equals: id },
-      shopId: { equals: store.docs[0].id || req.shop_id }
+      shopId: { equals: req.shop_id }
     }
   });
 
@@ -377,7 +377,7 @@ const sendNotification = asyncHandler(async (req, res, next) => {
   const store = await Payload.find({
     collection: 'Store',
     where: {
-      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454"  },
+      id: { equals: req.shop_id   },
       isActive: { equals: true }
     },
     limit: 1
@@ -405,7 +405,7 @@ const sendNotification = asyncHandler(async (req, res, next) => {
     collection: "customers",
     where: {
       // id: { equals: id },
-      shopId: { equals: store.docs[0].id || req.shop_id }
+      shopId: { equals: store.docs[0].id  }
     }
   });
 
@@ -436,7 +436,7 @@ const sendNotification = asyncHandler(async (req, res, next) => {
   const storeFirebaseAccessToken = await Payload.find({
     collection: 'firebaseServiceAccount',
     where: {
-      shopId: { equals: store.docs[0].id || req.shop_id || "gid://shopify/Shop/81447387454" }
+      shopId: { equals: store.docs[0].id  }
     }
   });
 
@@ -593,7 +593,7 @@ const getAllcustomer = asyncHandler(async (req, res, next) => {
   const store = await Payload.find({
     collection: 'Store',
     where: {
-      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
+      id: { equals: req.shop_id  },
       isActive: { equals: true }
     },
     limit: 1
@@ -611,7 +611,7 @@ const getAllcustomer = asyncHandler(async (req, res, next) => {
   const customerUnderStore = await Payload.find({
     collection: "customers",
     where: {
-      shopId: { equals: store.docs[0].id || req?.shop_id }
+      shopId: { equals: store.docs[0].id  }
     },
     depth: req.query?.depth || 0,
     page: req.query?.page || 1,
@@ -634,7 +634,7 @@ const createSegment = asyncHandler(async (req, res, next) => {
   const store = await Payload.find({
     collection: 'Store',
     where: {
-      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
+      id: { equals: req.shop_id  },
       isActive: { equals: true }
     },
     limit: 1
@@ -663,7 +663,7 @@ const createSegment = asyncHandler(async (req, res, next) => {
     collection: "segments",
     where: {
       segmentName: { equals: segmentName },
-      shopId: { equals: store.docs[0].id || req.shop_id }
+      shopId: { equals: store.docs[0].id }
     }
   });
 
@@ -682,7 +682,7 @@ const createSegment = asyncHandler(async (req, res, next) => {
       collection: "segments",
       data: {
         segmentName: segmentName,
-        shopId: store.docs[0].id || req.shop_id,
+        shopId: store.docs[0].id ,
         customer: req.body?.customer || [],
       },
       depth: 0
@@ -718,7 +718,7 @@ const getSegment = asyncHandler(async (req, res, next) => {
   const store = await Payload.find({
     collection: 'Store',
     where: {
-      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
+      id: { equals: req.shop_id },
       isActive: { equals: true }
     },
     limit: 1
@@ -733,11 +733,10 @@ const getSegment = asyncHandler(async (req, res, next) => {
     )
   }
 
-
   const segment = await Payload.find({
     collection: "segments",
     where: {
-      shopId: { equals: store.docs[0].id || req.shop_id }
+      shopId: { equals: store.docs[0].id }
     },
     depth: req.query?.depth || 0,
     page: req.query?.page || 1,
@@ -757,7 +756,7 @@ const getSegmentById = asyncHandler(async (req, res, next) => {
   const store = await Payload.find({
     collection: 'Store',
     where: {
-      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
+      id: { equals: req.shop_id },
       isActive: { equals: true }
     },
     limit: 1
@@ -785,7 +784,7 @@ const getSegmentById = asyncHandler(async (req, res, next) => {
     collection: "segments",
     where: {
       id: { equals: req.params?.segmentId },
-      shopId: { equals: store.docs[0].id || req.shop_id }
+      shopId: { equals: store.docs[0].id  }
     },
     depth: req.query?.depth || 0
   })
@@ -813,7 +812,7 @@ const updateSegment = asyncHandler(async (req, res, next) => {
   const store = await Payload.find({
     collection: 'Store',
     where: {
-      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
+      id: { equals: req.shop_id },
       isActive: { equals: true }
     },
     limit: 1
@@ -850,7 +849,7 @@ const updateSegment = asyncHandler(async (req, res, next) => {
     collection: "segments",
     where: {
       id: { equals: req.params?.segmentId },
-      shopId: { equals: store.docs[0].id || req.shop_id }
+      shopId: { equals: store.docs[0].id  }
     }
   })
 
@@ -869,7 +868,7 @@ const updateSegment = asyncHandler(async (req, res, next) => {
       collection: "segments",
       where: {
         id: { equals: req.params?.segmentId },
-        shopId: { equals: store.docs[0].id || req.shop_id }
+        shopId: { equals: store.docs[0].id }
       },
       data: req.body,
       depth: 0
@@ -900,7 +899,7 @@ const deleteSegment = asyncHandler(async (req, res, next) => {
   const store = await Payload.find({
     collection: 'Store',
     where: {
-      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
+      id: { equals: req.shop_id },
       isActive: { equals: true }
     },
     limit: 1
@@ -928,7 +927,7 @@ const deleteSegment = asyncHandler(async (req, res, next) => {
     collection: "segments",
     where: {
       id: { equals: req.params?.segmentId },
-      shopId: { equals: store.docs[0].id || req.shop_id }
+      shopId: { equals: store.docs[0].id }
     }
   })
 
@@ -947,7 +946,7 @@ const deleteSegment = asyncHandler(async (req, res, next) => {
       collection: "segments",
       where: {
         id: { equals: req.params?.segmentId },
-        shopId: { equals: store.docs[0].id || req.shop_id },
+        shopId: { equals: store.docs[0].id },
       },
     });
 
@@ -988,7 +987,7 @@ const updateServerKey = asyncHandler(async (req, res) => {
   const store = await Payload.find({
     collection: 'Store',
     where: {
-      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
+      id: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
       isActive: { equals: true }
     },
   })
@@ -1005,7 +1004,7 @@ const updateServerKey = asyncHandler(async (req, res) => {
   const storeData = await Payload.update({
     collection: "Store",
     where: {
-      shopId: { equals: req?.shop_id }
+      id: { equals: req?.shop_id }
     },
     data: {
       serverKey: serverKey,

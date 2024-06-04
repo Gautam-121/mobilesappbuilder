@@ -22,7 +22,7 @@ const getProduct = asyncHandler( async (req, res , next) => {
   const store = await Payload.find({
     collection: 'Store',
     where: { 
-      shopId: { equals: req.shop_id},
+      id: { equals: req.shop_id},
       isActive: { equals : true}
     },
     limit: 1,
@@ -75,7 +75,7 @@ const getCollection = asyncHandler( async (req, res, next) => {
   const store = await Payload.find({
     collection: 'Store',
     where: { 
-      shopId: { equals: req.shop_id  },
+      id: { equals: req.shop_id  },
       isActive: { equals : true}
     },
     limit: 1,
@@ -139,7 +139,7 @@ const getProductByCollectionId = asyncHandler( async (req, res, next) => {
   const store = await Payload.find({
     collection: 'Store',
     where: { 
-      shopId: { equals: req.shop_id  },
+      id: { equals: req.shop_id  },
       isActive: { equals : true}
     },
     limit: 1,
@@ -194,7 +194,7 @@ const updateShopPolicies = asyncHandler(async (req, res , next) => {
   const store = await Payload.find({
     collection: 'Store',
     where: { 
-      shopId: { equals: req.shop_id },
+      id: { equals: req.shop_id },
       isActive: { equals: true}
     },
     limit:1
@@ -284,7 +284,7 @@ const metafieldByProductId = asyncHandler( async(req,res,next)=>{
   const storeExist = await Payload.find({
     collection: 'Store',
     where: { 
-      shopId: { equals: req.params?.id || "gid://shopify/Shop/81447387454" },
+      id: { equals: req.params?.id || "gid://shopify/Shop/81447387454" },
       isActive: { equals: true}
     },
   })
@@ -358,7 +358,7 @@ const getAllSegment = asyncHandler( async (req, res , next) => {
   const store = await Payload.find({
     collection: 'Store',
     where: { 
-      shopId: { equals: req.shop_id  },
+      id: { equals: req.shop_id  },
       isActive: { equals : true}
     },
   })
@@ -409,7 +409,7 @@ const getShopPolicies = asyncHandler( async(req,res,next)=>{
   const store = await Payload.find({
     collection: 'Store',
     where: { 
-      shopId: { equals: req.shop_id  },
+      id: { equals: req.shop_id  },
       isActive: { equals : true}
     },
   })

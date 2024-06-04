@@ -34,7 +34,7 @@ const updateStoreAppDesignDetail = asyncHandler(  async (req, res, next) => {
   let UserStoreData = await Payload.find({
     collection: "Store",
     where: {
-      shopId: { equals: req.shop_id },
+      id: { equals: req.shop_id },
       isActive: { equals : true }
     },
     limit: 1,
@@ -77,7 +77,7 @@ const updateStoreAppDesignDetail = asyncHandler(  async (req, res, next) => {
         UserStoreData = await Payload.update({
           collection: "Store",
           where: {
-            shopId: { equals: req.shop_id },
+            id: { equals: req.shop_id },
           },
           data: {
             themeId: themeId
@@ -344,7 +344,7 @@ const updateStoreAppDesignDetail = asyncHandler(  async (req, res, next) => {
     UserStoreData = await Payload.update({
       req: { transactionID },
       collection: "Store",
-      id: UserStoreData.docs[0].id,
+      id: req.shop_id,
       data: req.body,
     });
 
@@ -411,7 +411,7 @@ const getStoreDetailByWeb = asyncHandler( async(req,res,next)=>{
   const store = await Payload.find({
     collection: 'Store',
     where: { 
-      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
+      id: { equals: req.shop_id  },
       isActive: { equals : true }
     },
     limit:1,
@@ -444,7 +444,7 @@ const updateSocialMediaOfStore = asyncHandler( async(req,res,next)=>{
   const store = await Payload.find({
     collection: 'Store',
     where: { 
-      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
+      id: { equals: req.shop_id },
       isActive: { equals: true}
     },
     limit:1,
@@ -538,7 +538,7 @@ const updateSocialMediaOfStore = asyncHandler( async(req,res,next)=>{
 
     const data = await Payload.update({
      collection: "Store",
-     id: store.docs[0].id,
+     id: req.shop_id,
      data:{
        socialMediaAccount: socialMedia
      },
