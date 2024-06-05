@@ -11,7 +11,6 @@ import useFetch from "../../../../hooks/useFetch";
 export default function Horizontalproductgrid({
   gridItems,
   text,
-  addComponents,
   handleEdit,
   draggable,
 }) {
@@ -21,9 +20,10 @@ export default function Horizontalproductgrid({
 
   const dragRef = useRef(null);
   useEffect(() => {
+    console.log("Grid items from HPG", gridItems);
       fetchProducts();
    
-  }, [gridItems, componentListArray]);
+  }, [gridItems.data.productGroupId]);
 
   const getProducts = {
     headers: {
@@ -32,7 +32,7 @@ export default function Horizontalproductgrid({
     },
     method: "GET",
   };
-  console.log("Grid items from HPG", gridItems);
+ 
 
   const useDataFetcherForShopifyData = (initialState, url, options) => {
     const [data, setData] = useState(initialState);

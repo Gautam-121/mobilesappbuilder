@@ -16,8 +16,11 @@ export default function SegmentSelector() {
     useRecoilState(selectedSegmentsAtom);
   const [segStyle, setSegStyle] = useRecoilState(segStyleAtom);
   const setIsAlertVisible = useSetRecoilState(isAlertVisibleAtom);
+
+
   const handleSelect = (event, newValue) => {
     //Automcomplete function to display selected segments as tags
+    console.log(newValue)
     setSelectedSegments(newValue);
     setSegStyle({});
     setIsAlertVisible;
@@ -41,13 +44,13 @@ export default function SegmentSelector() {
       setData("");
       const result = await (await fetch(url, options)).json();
       console.log("result", result);
-      setSegmentsData(result.segments)
+      setSegmentsData(result.data.docs)
     }
     return [data, fetchData];
   };
   const [responseSegments, fetchSegments] = useDataFetcher(
     [],
-    "/apps/api/shopify/segment",
+    "/apps/api/firebase/segment",
     getData
   );
   useEffect(() => {
@@ -59,7 +62,7 @@ export default function SegmentSelector() {
       <Autocomplete
         id="auto"
         onChange={handleSelect}
-        options={segmentsData.length==0?["Loading..."]:segmentsData?.map((ele) => ele.name)}
+        options={segmentsData.length==0?["Loading..."]:segmentsData?.map((ele) => ele.segmentName)}
         getOptionLabel={(option) => option}
         // multiple
         value={selectedSegments}
