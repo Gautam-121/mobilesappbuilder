@@ -26,7 +26,7 @@ const [dataForBackend, setDataForBackend] = useState([])
 const [loading, setLoading] = useState(false)
 
 useEffect(()=>{
- 
+ console.log("line 29 AppDesign", componentListArray)
  let modifiedArray = componentListArray.map((item)=>{
     if (item.featureType === "banner") {
       // Modify the objects inside the data array
@@ -47,7 +47,7 @@ useEffect(()=>{
         },
       };
     } 
-    else if(item.featureType === "announcement"||item.featureType === "productGroup"){
+    else if(item.featureType === "announcement"||item.featureType === "productGroup"||item.featureType === "categories"){
       let newObj = {}
       console.log("object before sending data", item)
     if(item.isNew){
