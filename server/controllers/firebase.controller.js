@@ -372,7 +372,7 @@ const getFirebaseAccessToken = asyncHandler(async (req, res,next) => {
 
 const sendNotification = asyncHandler(async (req, res, next) => {
 
-  const { title, body, click_action, type } = req.body;
+  const { title, body, click_action, type , segmentId } = req.body;
 
   const store = await Payload.find({
     collection: 'Store',
@@ -401,7 +401,13 @@ const sendNotification = asyncHandler(async (req, res, next) => {
     )
   }
 
-  const allCustomer = await Payload.find({
+  const allCustomer = segmentId ? await Payload.find({
+    collection: "segments",
+    where: {
+      id: { equals: segmentId },
+      shopId: { equals: store.docs[0].id  }
+    }
+  }) : await Payload.find({
     collection: "customers",
     where: {
       // id: { equals: id },
@@ -419,7 +425,7 @@ const sendNotification = asyncHandler(async (req, res, next) => {
   }
 
   // return res.status(200).send(allCustomer)
-  const firebaseTokens = allCustomer.docs?.flatMap(customer => customer?.firebaseTokens?.map(token => token?.firebaseToken));
+  const firebaseTokens = segmentId ? allCustomer.docs.customer?.flatMap(custom => custom?.firebaseTokens?.map(token => token?.firebaseToken)) : allCustomer.docs?.flatMap(customer => customer?.firebaseTokens?.map(token => token?.firebaseToken));
 
   if(!firebaseTokens || firebaseTokens.length == 0){
     return next(
@@ -501,6 +507,9 @@ const sendNotification = asyncHandler(async (req, res, next) => {
       access_token_auth: true
     }
   };
+
+  topicName = segmentId ? allCustomer.docs[0].segmentNamereplace(/\W+/g, '_') : topicName
+
   try {
     const subscribeTopic = await axios.post(
       subscribeTopicApiEndpoint,
