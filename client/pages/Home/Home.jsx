@@ -17,14 +17,12 @@ import { selectTheme } from "../../store/themeSlice";
 import { useAppBridge } from "@shopify/app-bridge-react";
 import { Fullscreen } from "@shopify/app-bridge/actions";
 
-import axios from "axios";
-import { duration } from "@mui/material";
-
 const Home = () => {
   //if appDesignPageRefreshedState then enter fullsccreen
   const [details, setDetails] = useState(null);
   const [selectedThemeId, setSelectedThemeId] = useState("");
   const [updatedAt, setUpdatedAt] = useState("");
+  const [isThemeLoaded, setIsThemeLoaded] = useState(true)
   const isAppDesignPageRefreshed = useSelector(
     (state) => state.appDesignPageRefreshedSlice
   );
@@ -46,9 +44,7 @@ const Home = () => {
   const app = useAppBridge();
 
   const fullscreen = Fullscreen.create(app);
-
-  const fetch = useFetch();
-
+  
   const [themeData, setThemeData] = useState();
 
   const [selectedTheme, setSelectedTheme] = useState();
@@ -144,6 +140,7 @@ const Home = () => {
   );
   useEffect(() => {
     if (responseForThemeId === "UserStoreData Update Successfully") {
+      setIsThemeLoaded(true)
       shopify.toast.show("Theme Updated", {
         duration: 5000,
       });
@@ -154,6 +151,7 @@ const Home = () => {
     if (selectedThemeId) {
       console.log("setThemeId called", selectedThemeId);
       setThemeId();
+      setIsThemeLoaded(false)
     }
   }, [selectedThemeId]);
 
@@ -226,7 +224,7 @@ const Home = () => {
         </button>
       </div>
 
-      {selectedThemeId && (
+      {selectedThemeId &&  isThemeLoaded &&(
         <div className="selected-theme-main-div">
           <SelectedTheme selectedTheme={selectedTheme} />
         </div>

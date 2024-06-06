@@ -24,6 +24,7 @@ import ProductSelector from "../Components/ProductSelector/ProductSelection";
 import useFetch from "../../../hooks/useFetch";
 import { InfoIcon } from "@shopify/polaris-icons";
 import CategorySelection from "../Components/CategorySelector/CategorySelector";
+import SegmentSelector from "../Components/segmentSelector/SegmentSelector";
 
 export default function CreateNotification({type}) {
   
@@ -133,8 +134,8 @@ let actionUrl=""
     window.scroll(0, 0);
   }, [notificationMessagePost]);
 
-  let result = {};
-
+  let segId = ""
+useEffect(()=>console.log( selectedSegments),[selectedSegments])
   const handleSend = () => {
     //form validations to make sure that all the details have been entered
     // if(template === "product notification"){
@@ -162,11 +163,12 @@ let actionUrl=""
       setMessageStyle({ border: "1px solid red" });
     } else {
       //Code that would be executed if there are no errors in the input
-      // for (let i = 0; i < segmentsData.length; i++) {
-      //   if (segmentsData[i].name == selectedSegments) {
-      //     result = { name: segmentsData[i].name, id: segmentsData[i].id };
-      //   }
-      // }
+      for (let i = 0; i < segmentsData.length; i++) {
+        if (segmentsData[i].segmentName == selectedSegments) {
+          segId = segmentsData[i].id;
+          console.log(segId, segmentsData)
+        }
+      }
       if(type==="productNotification"){
         actionUrl = `https://productID?productID=${selectedProductId}`;
       }
@@ -175,12 +177,12 @@ let actionUrl=""
       }
       else
       actionUrl = click_action;
-      console.log(result);
+      // console.log(result);
 
       setNotificationMessage({
         title: title,
         body: message,
-        // segments: result,
+        segmentId: segId,
         click_action: actionUrl,
         type:type
       });
@@ -244,7 +246,7 @@ let actionUrl=""
             {isAlertVisible && <ErrorBanner alertMessage={alertMessage} />}
             {type === "productNotification" && <ProductSelector />}
             {type === "categoryNotification" && <CategorySelection />}
-            {/* <SegmentSelector onFilteredDataChange={handleFilteredDataChange} /> */}
+            <SegmentSelector onFilteredDataChange={handleFilteredDataChange} />
             {type === "basicNotification" &&   <div className="titleSection">
               <label htmlFor="">Action URL</label>
               <div className="inputWrapper">

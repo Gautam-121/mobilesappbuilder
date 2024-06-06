@@ -45,7 +45,7 @@ const createCart = asyncHandler(async(req , res , next)=>{
     const customerExist = await Payload.find({
         collection: "customers",
         where:{
-            id: { equals: `gid://shopify/Customer/${customerId}`}
+            id: { equals: `${customerId}`}
         },
         limit:1,
         depth:1
@@ -64,7 +64,7 @@ const createCart = asyncHandler(async(req , res , next)=>{
     const existingCart = await Payload.find({
         collection: "cutomerCart",
         where:{
-            customerId: { equals: `gid://shopify/Customer/${customerId}`}
+            customerId: { equals: `${customerId}`}
         },
         limit: 1,
         depth: 0
@@ -84,7 +84,7 @@ const createCart = asyncHandler(async(req , res , next)=>{
       const newCart = await Payload.create({
           collection: "cutomerCart",
           data:{
-              customerId: `gid://shopify/Customer/${customerId}`,
+              customerId: `${customerId}`,
               customerCartId: customerCartId
           },
           depth: 0
@@ -154,7 +154,7 @@ const getCartByCustomerId = asyncHandler( async(req , res , next)=>{
     const customerExist = await Payload.find({
         collection: "customers",
         where:{
-            id: { equals: `gid://shopify/Customer/${customerId}`}
+            id: { equals: `${customerId}`}
         },
         limit:1,
         depth:1
@@ -173,7 +173,7 @@ const getCartByCustomerId = asyncHandler( async(req , res , next)=>{
     const cart = await Payload.find({
         collection: "cutomerCart",
         where:{
-            customerId: { equals: `gid://shopify/Customer/${customerId}`}
+            customerId: { equals: `${customerId}`}
         },
         limit: 1,
         depth: 0
@@ -239,7 +239,7 @@ const updateCartOfCustomer = asyncHandler(async (req, res, next) => {
   const customerExist = await Payload.find({
     collection: "customers",
     where: {
-      id: { equals: `gid://shopify/Customer/${customerId}` },
+      id: { equals: `${customerId}` },
     },
     limit: 1,
     depth: 1,
@@ -258,7 +258,7 @@ const updateCartOfCustomer = asyncHandler(async (req, res, next) => {
   const cart = await Payload.find({
     collection: "cutomerCart",
     where: {
-      customerId: { equals: `gid://shopify/Customer/${customerId}` },
+      customerId: { equals: `${customerId}` },
     },
     limit: 1,
     depth: 0,

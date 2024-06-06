@@ -3,7 +3,7 @@ const getAccessToken = require("../utils/firebaseJwtToken.js")
 const Payload = require("payload");
 const axios = require('axios')
 const asyncHandler = require("../utils/asyncHandler")
-const {
+let {
   subscribeTopicApiEndpoint,
   sendNotificationApiEndpoint,
   topicName
@@ -58,7 +58,7 @@ const createCustomer = asyncHandler(async (req, res, next) => {
     let customerExist = await Payload.find({
       collection: 'customers',
       where: {
-        id: { equals: `gid://shopify/Customer/${id}` },
+        id: { equals: `${id}` },
         shopId: { equals: req.user.id },
         or: [
           { 'deviceIds.deviceId': { equals: deviceId } },
@@ -81,7 +81,7 @@ const createCustomer = asyncHandler(async (req, res, next) => {
      customerExist = await Payload.find({
       collection: 'customers',
       where: {
-        id: { equals: `gid://shopify/Customer/${id}` },
+        id: { equals: `${id}` },
         shopId: { equals: req.user.id  },
       }
     });
@@ -124,7 +124,7 @@ const createCustomer = asyncHandler(async (req, res, next) => {
       const customerInfo = await Payload.create({
         collection: "customers",
         data: {
-          id: `gid://shopify/Customer/${id}`,
+          id: `${id}`,
           customerName: customerName,
           deviceIds: [{ deviceId: deviceId }], // Ensure to match the schema structure
           deviceTypes: [{ deviceType: deviceType }], // Ensure to match the schema structure
@@ -383,6 +383,8 @@ const sendNotification = asyncHandler(async (req, res, next) => {
     limit: 1
   });
 
+  console.log(segmentId)
+
   if (store.docs.length == 0) {
     return next(
       new ApiError(
@@ -406,7 +408,8 @@ const sendNotification = asyncHandler(async (req, res, next) => {
     where: {
       id: { equals: segmentId },
       shopId: { equals: store.docs[0].id  }
-    }
+    },
+    depth: 1
   }) : await Payload.find({
     collection: "customers",
     where: {
@@ -425,7 +428,7 @@ const sendNotification = asyncHandler(async (req, res, next) => {
   }
 
   // return res.status(200).send(allCustomer)
-  const firebaseTokens = segmentId ? allCustomer.docs.customer?.flatMap(custom => custom?.firebaseTokens?.map(token => token?.firebaseToken)) : allCustomer.docs?.flatMap(customer => customer?.firebaseTokens?.map(token => token?.firebaseToken));
+  const firebaseTokens = segmentId ? allCustomer.docs[0].customer?.flatMap(custom => custom?.firebaseTokens?.map(token => token?.firebaseToken)) : allCustomer.docs?.flatMap(customer => customer?.firebaseTokens?.map(token => token?.firebaseToken));
 
   if(!firebaseTokens || firebaseTokens.length == 0){
     return next(
@@ -508,7 +511,7 @@ const sendNotification = asyncHandler(async (req, res, next) => {
     }
   };
 
-  topicName = segmentId ? allCustomer.docs[0].segmentNamereplace(/\W+/g, '_') : topicName
+  topicName = segmentId ? allCustomer.docs[0].segmentName.replace(/\W+/g, '_') : topicName
 
   try {
     const subscribeTopic = await axios.post(
@@ -524,7 +527,7 @@ const sendNotification = asyncHandler(async (req, res, next) => {
     if (subscribeTopic?.data?.results[0]?.error) {
       return next(
         new ApiError(
-          `${subscribeTopic?.data?.results[0]?.error} firebaseTokens are not linked to your firebase account`,
+          `${subscribeTopic?.data?.results[0]?.error} , firebaseTokens are not linked to your firebase account`,
           401
         )
       )
