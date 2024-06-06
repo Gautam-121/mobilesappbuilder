@@ -16,6 +16,7 @@ const isDev = process.env.NODE_ENV === "dev";
 const root = process.cwd();
 const app = express();
 
+console.log("App Running")
 app.use(cors());
 app.disable("x-powered-by");
 applyAuthMiddleware(app);
