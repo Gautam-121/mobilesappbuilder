@@ -473,7 +473,7 @@ const getAboutUs = asyncHandler( async(req , res , next)=> {
     where: { 
       shopId: { equals: req.user.id  },
     },
-    depth: req.query.depth || 0,
+    depth: req.query.depth || 1,
     limit:1
   });
 
@@ -485,6 +485,8 @@ const getAboutUs = asyncHandler( async(req , res , next)=> {
       )
     )
   }
+
+  aboutUs.docs[0].shopId = aboutUs.docs[0].shopId.id
 
   return res.status(200).json({
     success: true,
