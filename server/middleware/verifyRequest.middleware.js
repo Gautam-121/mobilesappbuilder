@@ -30,7 +30,7 @@ const verifyRequest = async (req, res, next) => {
 
       res.locals.user_session = session;
       req.shop = session.shop;
-      req.shop_id = response?.data?.shop?.id;
+      req.shop_id = response?.data?.shop?.id.match(/\d+$/)[0] ;
       req.accessToken = session.accessToken;
 
       return next();

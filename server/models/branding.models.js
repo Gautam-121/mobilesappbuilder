@@ -1,3 +1,4 @@
+const { uid } = require("uid")
 
 const Branding = {
   slug: "branding",
@@ -5,6 +6,11 @@ const Branding = {
     useAsTitle:"shopId"
   },
   fields: [
+    {
+      name: "id",
+      type: "text",
+      unique: true
+    },
     {
       name: "shopId",
       label:"ShopId",
@@ -97,6 +103,15 @@ const Branding = {
       defaultValue: "#FFFFFF",
     },
   ],
+  hooks:{
+    beforeChange: [
+      (args) => {
+        if (args.operation === 'create') {
+          args.data.id = uid(); // Generate a unique ID using nanoid
+        }
+      }
+    ]
+  }
 };
 
 module.exports = Branding;

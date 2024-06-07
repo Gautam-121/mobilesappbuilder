@@ -1,3 +1,4 @@
+const { uid } = require("uid");
 
 const AccountScreen = {
   slug: "accountScreen",
@@ -6,69 +7,79 @@ const AccountScreen = {
   },
   fields: [
     {
-      name:"shopId",
-      label:"ShopId",
-      type:"text",
-      defaultValue: "Apprikart"
+      name: "id",
+      type: "text",
+      unique: true,
     },
     {
-      name: "themeId",
-      label: "Theme",
+      name: "shopId",
+      label: "ShopId",
       type: "relationship",
-      relationTo: "theme",
-      // required: true
+      relationTo: "Store",
+      required: true,
+      unique: true
     },
     {
       name: "main_section",
-      label:"Main-Portion",
-      type: "group",
-      fields:[
+      label: "Main-Portion",
+      type: "array",
+      fields: [
         {
-            name:"profile",
-            label:"Profile",
-            type:"checkbox",
-            defaultValue:true
+          name: "type",
+          type: "select",
+          options: [
+            {
+              label: "Profile",
+              value: "profile",
+            },
+            {
+              label: "Orders",
+              value: "orders",
+            },
+            {
+              label: "Wishlist",
+              value: "wishlist",
+            },
+            {
+              label: "About Us",
+              value: "aboutUs",
+            },
+            {
+              label: "Shipping Address",
+              value: "shipping_address",
+            },
+          ],
         },
         {
-            name:"orders",
-            label:"Orders",
-            type:"checkbox",
-            defaultValue:true
-        },
-        {
-          name:"wishlist",
-          label:"Wishlist",
-          type:"checkbox",
-          defaultValue:true
-        },
-        {
-          name: "shipping_address",
-          label: "Shipping Address",
+          name: "isVisible",
           type: "checkbox",
-          defaultValue: true
+          defaultValue: false,
         },
-        {
-          name: "aboutUs",
-          label: "About Us",
-          type: "checkbox",
-          defaultValue: true
-        }
-      ]
+      ],
     },
     {
       name: "footer_section",
       label: "Footer-Section",
       type: "group",
-      fields:[
+      fields: [
         {
-          name: "socialApperance",
-          label: "Social Apperance",
+          name: "socialMedia",
+          label: "Social Media",
           type: "checkbox",
-          defaultValue: true
-        }
-      ]
-    }
+          defaultValue: true,
+        },
+      ],
+    },
   ],
+  hooks: {
+    beforeChange: [
+      (args) => {
+        if (args.operation === "create") {
+          args.data.id = uid(); // Generate a unique ID using nanoid
+        }
+      },
+    ],
+  },
 };
 
 module.exports = AccountScreen;

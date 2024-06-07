@@ -17,7 +17,7 @@ const getTabMenuDataByWeb = asyncHandler( async (req, res, next) => {
   const isSelectedTheme = await Payload.find({
     collection: 'Store',
     where: { 
-      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
+      id: { equals: req.shop_id  },
       isActive: { equals: true}
     },
     limit:1,
@@ -45,7 +45,7 @@ const getTabMenuDataByWeb = asyncHandler( async (req, res, next) => {
   const tabData = await Payload.find({
     collection: "bottomMenuPannel",
     where: {
-      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
+      shopId: { equals: req.shop_id  },
       themeId: { equals: req.params.themeId },
     },
     limit: 1,
@@ -70,39 +70,39 @@ const getTabMenuDataByWeb = asyncHandler( async (req, res, next) => {
 
 const getTabMenu = asyncHandler( async (req, res, next) => {
 
-  if (!req.params.shopId) {
-    return next(
-      new ApiError(
-        "shopId is missing",
-         400
-      )
-    )
-  }
+  // if (!req.params.shopId) { // htana
+  //   return next(
+  //     new ApiError(
+  //       "shopId is missing",
+  //        400
+  //     )
+  //   )
+  // }
 
-  const store = await Payload.find({
-    collection: 'Store',
-    where: { 
-      shopId: { equals: `gid://shopify/Shop/${req.params.shopId}` },
-      isActive: { equals: true}
-    },
-    limit: 1,
-    depth: 0
-  })
+  // const store = await Payload.find({ // htana
+  //   collection: 'Store',
+  //   where: { 
+  //     shopId: { equals: `gid://shopify/Shop/${req.params.shopId}` },
+  //     isActive: { equals: true}
+  //   },
+  //   limit: 1,
+  //   depth: 0
+  // })
 
-  if(store.docs.length == 0){
-    return next(
-      new ApiError(
-        `Shop not found with id: ${req.params.shopId}`,
-         404
-      )
-    )
-  }
+  // if(store.docs.length == 0){ // htana
+  //   return next(
+  //     new ApiError(
+  //       `Shop not found with id: ${req.params.shopId}`,
+  //        404
+  //     )
+  //   )
+  // }
 
-  const tabData = await Payload.find({
+  const tabData = await Payload.find({ // htana
     collection: "bottomMenuPannel",
     where: { 
-      shopId: { equals: `gid://shopify/Shop/${req.params.shopId}` },
-      themeId: { equals: store.docs[0]?.themeId}
+      shopId: { equals: req.user.id  },
+      themeId: { equals: req.user.themeId }
     },
     limit:1,
     depth: 0,
@@ -157,11 +157,22 @@ const updateTabMenu = asyncHandler( async(req , res , next) => {
     }
   })
 
-  
+  const redirectPageValues  = setting.map(item => item.redirect_page)
+  const duplicate = redirectPageValues.filter( (val , index) => redirectPageValues.indexOf(val) !== index)
+
+  if(duplicate.length > 0){
+    return next(
+      new ApiError(
+        "redirect_page values must be unique",
+        400
+      )
+    )
+  }
+
   const isSelectedTheme = await Payload.find({
     collection: 'Store',
     where: { 
-      shopId: { equals: req.shop_id },
+      id: { equals: req.shop_id },
       isActive: { equals: true}
     },
     limit: 1,

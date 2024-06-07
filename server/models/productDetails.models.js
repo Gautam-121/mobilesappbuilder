@@ -1,3 +1,4 @@
+const { uid } = require("uid")
 
 const ProductDetailScreen = {
   slug: "productDetailScreen",
@@ -6,22 +7,32 @@ const ProductDetailScreen = {
   },
   fields: [
     {
-        name: "shopId",
-        label: "ShopId",
+        name: "id",
         type: "text",
-        defaultValue: "Apprikart",
-        access:{
-            read : ()=>true,
-            create: ()=>false, // Prevent creating a new value
-        }
-    },
-    {
-        name: "themeId",
-        label: "Theme",
-        type: 'relationship',
-        relationTo: "theme",
         unique: true
     },
+    {
+        name: "shopId",
+        label: "ShopId",
+        type: "relationship",
+        relationTo: "Store",
+        required: true,
+        unique: true
+        // type: "text",
+        // defaultValue: "Apprikart",
+        // access:{
+        //     read : ()=>true,
+        //     create: ()=>false, // Prevent creating a new value
+        // }
+    },
+    // {
+    //     name: "themeId",
+    //     label: "Theme",
+    //     type: 'relationship',
+    //     relationTo: "theme",
+    //     unique: true,
+    //     required: true
+    // },
     {
       name: "actions",
       label: "Actions",
@@ -126,6 +137,16 @@ const ProductDetailScreen = {
         ]
     }
   ],
+  hooks:{
+    beforeChange: [
+        (args) => {      
+          // Generate a new ID if the document is being created
+          if (args.operation === 'create') {
+            args.data.id = uid(); // Generate a unique ID using nanoid
+          }
+        },
+      ]
+}
 };
 
 module.exports = ProductDetailScreen;

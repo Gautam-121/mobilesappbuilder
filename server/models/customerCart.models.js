@@ -1,3 +1,4 @@
+const {  uid } = require("uid")
 
 const customerCart = {
     slug: "cutomerCart",
@@ -5,6 +6,11 @@ const customerCart = {
       useAsTitle: "customerId",
     },
     fields: [
+        {
+          name: "id",
+          type: "text",
+          unique: true,
+        },
         {
             name: "customerId",
             type: "relationship",
@@ -17,6 +23,16 @@ const customerCart = {
             required: true
         }
     ],
+    hooks:{
+        beforeChange: [
+            (args) => {      
+              // Generate a new ID if the document is being created
+              if (args.operation === 'create') {
+                args.data.id = uid(); // Generate a unique ID using nanoid
+              }
+            },
+          ]
+    }
   };
   
   module.exports = customerCart;

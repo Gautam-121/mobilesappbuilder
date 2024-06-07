@@ -1,3 +1,4 @@
+const { uid } = require("uid")
 
 const Categories = {
   slug: "categories",
@@ -5,6 +6,11 @@ const Categories = {
     useAsTitle: "title",
   },
   fields: [
+    {
+      name: "id",
+      type: "text",
+      unique: true
+    },
     {
       name: "data",
       label:"Categories",
@@ -36,6 +42,15 @@ const Categories = {
       ],
     },
   ],
+  hooks:{
+    beforeChange: [
+      (args) => {
+        if (args.operation === 'create') {
+          args.data.id = uid(); // Generate a unique ID using nanoid
+        }
+      }
+    ]
+  }
 };
 
 module.exports = Categories;

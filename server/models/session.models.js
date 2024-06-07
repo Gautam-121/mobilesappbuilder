@@ -27,15 +27,15 @@ const Session = {
     {
       name: "shopId",
       label: "Shopify Shop Id",
-      type: "text",
-      required: true
+      type: "relationship",
+      relationTo: "Store"
     },
     {
       name: "isOnline",
       label: "Is Online",
       type: "checkbox",
       required: true
-    }
+    },    
   ],
 };
 

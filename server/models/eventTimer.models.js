@@ -1,3 +1,4 @@
+const { uid } = require("uid")
 
 const EventTimer = {
   slug: "eventTimer",
@@ -5,6 +6,11 @@ const EventTimer = {
     useAsTitle: "title"
   },
   fields: [
+    {
+      name: "id",
+      type: "text",
+      unique: true
+    },
     {
       name: "title",
       label: "Block Title",
@@ -92,6 +98,15 @@ const EventTimer = {
       ],
     },
   ],
+  hooks:{
+    beforeChange: [
+      (args) => {
+        if (args.operation === 'create') {
+          args.data.id = uid(); // Generate a unique ID using nanoid
+        }
+      }
+    ]
+  }
 };
 
 module.exports = EventTimer;

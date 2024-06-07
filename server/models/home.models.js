@@ -1,3 +1,4 @@
+const { uid } = require("uid")
 
 const homeScreen = {
   slug: "homeScreen",
@@ -6,11 +7,16 @@ const homeScreen = {
   },
   fields: [
     {
+      name: "id",
+      type: "text",
+      unique: true
+    },
+    {
       name: "themeId",
       label: "Theme",
       type: "relationship",
       relationTo: "theme",
-      // required: true
+      required: true
     },
     {
       name: "shopId",
@@ -57,22 +63,22 @@ const homeScreen = {
               label: 'Categories',
               value: 'categories',
             },
-            {
-              label: 'Countdown',
-              value: 'countdown',
-            },
-            {
-              label: 'Social Channel',
-              value: 'social_channel',
-            },
-            {
-              label: 'Text Paragraph',
-              value: 'text_paragraph',
-            },
-            {
-              label: 'Video',
-              value: 'video',
-            },
+            // {
+            //   label: 'Countdown',
+            //   value: 'countdown',
+            // },
+            // {
+            //   label: 'Social Channel',
+            //   value: 'social_channel',
+            // },
+            // {
+            //   label: 'Text Paragraph',
+            //   value: 'text_paragraph',
+            // },
+            // {
+            //   label: 'Video',
+            //   value: 'video',
+            // },
           ],
           required: true,
         },
@@ -106,11 +112,20 @@ const homeScreen = {
           type: 'relationship',
           hasMany: false,
           required: true,
-          relationTo: ["announcementBanner" ,"banner" , "categories" ,"productGroup" , "eventTimer", "socialMedia" ,"textParagraph" , "video"]
+          relationTo: ["announcementBanner" ,"banner" , "categories" ,"productGroup" ] // "eventTimer", "socialMedia" ,"textParagraph" , "video"
         },
       ],
     }
   ],
+  hooks:{
+    beforeChange: [
+      (args) => {
+        if (args.operation === 'create') {
+          args.data.id = uid(); // Generate a unique ID using nanoid
+        }
+      }
+    ]
+  }
 };
 
 module.exports = homeScreen;

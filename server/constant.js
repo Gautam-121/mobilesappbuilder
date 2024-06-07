@@ -181,109 +181,64 @@ const TEST_QUERY = `
       id
     }
 }`;
-const otherScreen = {
-  "data": {
-      "productDetail": {
-          "actions": {
-              "basic": {
-                  "wishlist": true,
-                  "share": true,
-                  "cart": true
-              },
-              "advanced": {
-                  "rating_and_reviews": {
-                      "visibility": true
-                  },
-                  "recommendation": {
-                      "visibility": true,
-                      "image_adjustment": "cover",
-                      "content": "You may also like"
-                  },
-                  "recent_viewed_products": {
-                      "visibility": false,
-                      "content": "Recently viewed",
-                      "image_adjustment": "cover"
-                  },
-                  "contact_information": {
-                      "visibility": true,
-                      "title": "Contact with us",
-                      "channels": [
-                          {
-                              "title": "Facebook",
-                              "url": null,
-                              "visibility": true
-                          },
-                          {
-                              "title": "X",
-                              "url": null,
-                              "visibility": true
-                          },
-                          {
-                              "title": "Instagram",
-                              "url": null,
-                              "visibility": true
-                          },
-                          {
-                              "title": "YouTube",
-                              "url": null,
-                              "visibility": true
-                          },
-                          {
-                              "title": "TikTok",
-                              "url": null,
-                              "visibility": true
-                          }
-                      ]
-                  }
-              }
-          },
-          "faster_checkout": {
-              "buy_now": false
-          }
-      },
-      "search": {
-          "visibility": false,
-          "groups": []
-      },
-      "cart": {
-          "empty_state_illustration": {
-              "image_url": "https:\/\/static-mobile.onecommerce.io\/images\/icon\/1701773380_icon-cart.png"
-          },
-          "empty_state_texts": {
-              "title": "Nothing added to cart yet",
-              "subtitle": "It's quite lonely here, isn't it? Why don't we continue shopping?"
-          },
-          "empty_state_button": {
-              "call_to_action_text": "Continue shopping",
-              "redirect_to": "home"
-          }
-      },
-      "account": {
-          "header_bar": {
-              "cart": true,
-              "settings": true
-          },
-          "main_section": [
-              {
-                  "type": "orders",
-                  "visibility": true
-              },
-              {
-                  "type": "personal_information",
-                  "visibility": true
-              },
-              {
-                  "type": "shipping_address",
-                  "visibility": true
-              }
-          ]
-      }
-  }
-}
 
 const scopes = ['https://www.googleapis.com/auth/firebase.messaging'];
 
 const topicName = "notify"
+
+const accountScreenDetail = {
+  main_section: [
+    {
+      type: "profile",
+      isVisible: true,
+    },
+    {
+      type: "orders",
+      isVisible: true,
+    },
+    {
+      type: "wishlist",
+      isVisible: true,
+    },
+    {
+      type: "aboutUs",
+      isVisible: true,
+    },
+    {
+      type: "shipping_address",
+      isVisible: true,
+    },
+  ],
+  footer_section: {
+    socialMedia: false,
+  },
+};
+
+const productDetailScreen = {
+  actions: {
+    basic: {
+      wishlist: true,
+      share: true,
+      cart: true,
+    },
+    advanced: {
+      rating_and_reviews: {
+        isVisible: false,
+      },
+      recommendation: {
+        isVisible: true,
+        content: "You may also like",
+      },
+      recent_viewed_products: {
+        isVisible: true,
+        content: "Recently viewed",
+      },
+    },
+  },
+  faster_checkout: {
+    buy_now: false,
+  }
+};
 
 module.exports = {
     graphqlQueryForProducts,
@@ -293,7 +248,6 @@ module.exports = {
     requestBodyForStorefrontToken,
     TEST_QUERY,
     graphqlQueryForSegments,
-    otherScreen,
     customerSegmentBulkQuery,
     operationQuery,
     subscribeTopicApiEndpoint,
@@ -301,5 +255,7 @@ module.exports = {
     unsuscribeTopicApiEndpoint,
     shopPolicyUpdateMutation,
     scopes,
-    topicName
+    topicName,
+    accountScreenDetail,
+    productDetailScreen
 }

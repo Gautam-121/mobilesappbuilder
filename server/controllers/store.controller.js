@@ -34,7 +34,7 @@ const updateStoreAppDesignDetail = asyncHandler(  async (req, res, next) => {
   let UserStoreData = await Payload.find({
     collection: "Store",
     where: {
-      shopId: { equals: req.shop_id },
+      id: { equals: req.shop_id },
       isActive: { equals : true }
     },
     limit: 1,
@@ -77,7 +77,7 @@ const updateStoreAppDesignDetail = asyncHandler(  async (req, res, next) => {
         UserStoreData = await Payload.update({
           collection: "Store",
           where: {
-            shopId: { equals: req.shop_id },
+            id: { equals: req.shop_id },
           },
           data: {
             themeId: themeId
@@ -142,23 +142,23 @@ const updateStoreAppDesignDetail = asyncHandler(  async (req, res, next) => {
     limit:1
   });
 
-  const accountData = await Payload.find({
-    collection: "accountScreen",
-    where:{
-      themeId: { equals: themeId},
-      shopId: { equals: "Apprikart"}
-    },
-    limit: 1
-  })
+  // const accountData = await Payload.find({
+  //   collection: "accountScreen",
+  //   where:{
+  //     themeId: { equals: themeId},
+  //     shopId: { equals: "Apprikart"}
+  //   },
+  //   limit: 1
+  // })
 
-  const productData = await Payload.find({
-    collection: "productDetailScreen",
-    where:{
-      themeId: { equals: themeId},
-      shopId: { equals: "Apprikart"}
-    },
-    limit: 1
-  })
+  // const productData = await Payload.find({
+  //   collection: "productDetailScreen",
+  //   where:{
+  //     themeId: { equals: themeId},
+  //     shopId: { equals: "Apprikart"}
+  //   },
+  //   limit: 1
+  // })
 
   // Start Transaction
   const transactionID = await Payload.db.beginTransaction()
@@ -302,16 +302,16 @@ const updateStoreAppDesignDetail = asyncHandler(  async (req, res, next) => {
       },
     });
   
-    await Payload.create({
-      req: { transactionID },
-      collection: "accountScreen",
-      data: {
-        main_section: accountData.docs[0]?.main_section,
-        footer_section: accountData.docs[0]?.footer_section,
-        shopId: req.shop_id ,
-        themeId: themeId,
-      },
-    });
+    // await Payload.create({
+    //   req: { transactionID },
+    //   collection: "accountScreen",
+    //   data: {
+    //     main_section: accountData.docs[0]?.main_section,
+    //     footer_section: accountData.docs[0]?.footer_section,
+    //     shopId: req.shop_id ,
+    //     themeId: themeId,
+    //   },
+    // });
   
   
     brandingData.docs[0].app_title_text.app_name = UserStoreData?.docs[0]?.shopName;
@@ -330,21 +330,21 @@ const updateStoreAppDesignDetail = asyncHandler(  async (req, res, next) => {
       },
     });
   
-    await Payload.create({
-      req: { transactionID },
-      collection: "productDetailScreen",
-      data: {
-        actions: productData.docs[0]?.actions,
-        faster_checkout: productData.docs[0]?.faster_checkout,
-        shopId: req.shop_id ,
-        themeId: themeId,
-      },
-    });
+    // await Payload.create({
+    //   req: { transactionID },
+    //   collection: "productDetailScreen",
+    //   data: {
+    //     actions: productData.docs[0]?.actions,
+    //     faster_checkout: productData.docs[0]?.faster_checkout,
+    //     shopId: req.shop_id ,
+    //     themeId: themeId,
+    //   },
+    // });
   
     UserStoreData = await Payload.update({
       req: { transactionID },
       collection: "Store",
-      id: UserStoreData.docs[0].id,
+      id: req.shop_id,
       data: req.body,
     });
 
@@ -368,38 +368,41 @@ const updateStoreAppDesignDetail = asyncHandler(  async (req, res, next) => {
 
 const getStoreDetail = asyncHandler( async(req,res,next)=> {
 
-  if (!req.params.shopId) {
-    return next(
-      new ApiError(
-        "shopId is missing",
-        400
-      )
-    )
-  }
+  // if (!req.params.shopId) { // htana
+  //   return next(
+  //     new ApiError(
+  //       "shopId is missing",
+  //       400
+  //     )
+  //   )
+  // }
 
-  const store = await Payload.find({
-    collection: "Store",
-    where: { 
-      shopId: { equals: `gid://shopify/Shop/${req.params.shopId}` },
-      isActive: { equals: true }
-    },
-    limit:1,
-    depth: req.query?.depth || 0
-  });
+  // const store = await Payload.find({ 
+  //   collection: "Store",
+  //   where: { 
+  //     shopId: { equals: req.user.shopId || `gid://shopify/Shop/${req.params.shopId}` },
+  //     isActive: { equals: true }
+  //   },
+  //   limit:1,
+  //   showHiddenFields: false,
+  //   depth: req.query?.depth || 0
+  // });
 
-  if (store.docs.length === 0) {
-    return next(
-      new ApiError(
-        "store not found with id: "+ req.params.shopId,
-        400
-      )
-    )
-  }
+  // if (store.docs.length === 0) {
+  //   return next(
+  //     new ApiError(
+  //       "store not found with id: "+ req.params.shopId,
+  //       400
+  //     )
+  //   )
+  // }
+
+  delete req.user.apiKey
 
   return res.status(200).json({
     success: true,
     message: "shop Details send successfully",
-    data: store.docs[0]
+    data: req.user
   })
 })
 
@@ -408,7 +411,7 @@ const getStoreDetailByWeb = asyncHandler( async(req,res,next)=>{
   const store = await Payload.find({
     collection: 'Store',
     where: { 
-      shopId: { equals: req.shop_id },
+      id: { equals: req.shop_id  },
       isActive: { equals : true }
     },
     limit:1,
@@ -423,6 +426,8 @@ const getStoreDetailByWeb = asyncHandler( async(req,res,next)=>{
       )
     )
   }
+
+  delete store.docs[0].apiKey
 
   return res.status(200).json({
     success: true,
@@ -439,7 +444,7 @@ const updateSocialMediaOfStore = asyncHandler( async(req,res,next)=>{
   const store = await Payload.find({
     collection: 'Store',
     where: { 
-      shopId: { equals: req.shop_id || "gid://shopify/Shop/81447387454" },
+      id: { equals: req.shop_id },
       isActive: { equals: true}
     },
     limit:1,
@@ -533,7 +538,7 @@ const updateSocialMediaOfStore = asyncHandler( async(req,res,next)=>{
 
     const data = await Payload.update({
      collection: "Store",
-     id: store.docs[0].id,
+     id: req.shop_id,
      data:{
        socialMediaAccount: socialMedia
      },
@@ -561,35 +566,7 @@ const updateSocialMediaOfStore = asyncHandler( async(req,res,next)=>{
 
 
 
-// const allOrNothingJob = async () => {
 
-//   console.log(Payload)
-
-//   const transactionID = await Payload.db.beginTransaction();
-
-//   try {
-//     await Payload.create({
-//       req: { transactionID },
-//       collection: 'my-collection',
-//       data: { /* your data */ }
-//     });
-
-//     await Payload.update({
-//       req: { transactionID },
-//       collection: 'another-collection',
-//       id: 'some-id',
-//       data: { /* your data */ }
-//     });
-
-//     await Payload.db.commitTransaction(transactionID);
-//     console.log('Everything done.');
-//   } catch (error) {
-//     console.error('Oh no, something went wrong!');
-//     await Payload.db.rollbackTransaction(transactionID);
-//   }
-// };
-
-// allOrNothingJob()
 
 module.exports = {
   updateStoreAppDesignDetail, 

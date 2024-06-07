@@ -17,13 +17,12 @@ import { selectTheme } from "../../store/themeSlice";
 import { useAppBridge } from "@shopify/app-bridge-react";
 import { Fullscreen } from "@shopify/app-bridge/actions";
 
-import axios from "axios";
-
 const Home = () => {
   //if appDesignPageRefreshedState then enter fullsccreen
-  const [details, setDetails] = useState(null)
-  const [selectedThemeId, setSelectedThemeId] = useState("")
-  const [updatedAt, setUpdatedAt] = useState("")
+  const [details, setDetails] = useState(null);
+  const [selectedThemeId, setSelectedThemeId] = useState("");
+  const [updatedAt, setUpdatedAt] = useState("");
+  const [isThemeLoaded, setIsThemeLoaded] = useState(true)
   const isAppDesignPageRefreshed = useSelector(
     (state) => state.appDesignPageRefreshedSlice
   );
@@ -42,15 +41,10 @@ const Home = () => {
     }
   }, [isAppDesignPageRefreshed]);
 
-
   const app = useAppBridge();
 
   const fullscreen = Fullscreen.create(app);
-
-  const fetch = useFetch();
-
-
-
+  
   const [themeData, setThemeData] = useState();
 
   const [selectedTheme, setSelectedTheme] = useState();
@@ -61,8 +55,10 @@ const Home = () => {
       "Content-Type": "application/json",
     },
     method: "PUT",
-    body: JSON.stringify({themeId:selectedThemeId}),
+    body: JSON.stringify({ themeId: selectedThemeId }),
   };
+
+
   const getOptions = {
     headers: {
       Accept: "application/json",
@@ -81,32 +77,29 @@ const Home = () => {
         const result = await (await fetch(url, options)).json();
         console.log("shop details", result);
         console.log("all themes", result);
-        setDetails(result)
-        if(result.data.themeId){
-          setSelectedThemeId(result.data.themeId)
-          setUpdatedAt(result.data.updatedAt)
-          const date = new Date(result.data.updatedAt)
-          console.log("date", date.toLocaleString())
+        setDetails(result);
+        if (result.data.themeId) {
+          setSelectedThemeId(result.data.themeId);
+          setUpdatedAt(result.data.updatedAt);
+          const date = new Date(result.data.updatedAt);
+          console.log("date", date.toLocaleString());
         }
-        if(result.data.docs){
-          setThemeData(result.data.docs)
+        if (result.data.docs) {
+          setThemeData(result.data.docs);
         }
-  
       } catch (error) {
         console.error("Error while fetching data:", error);
         // Handle error here, such as setting an error state or displaying a message to the user
       } finally {
-        
       }
     };
     return [data, fetchData];
   };
-  useEffect(()=>{
-    const currentTheme = themeData?.find((ele)=>ele.id===selectedThemeId)
-    console.log("currentTheme", currentTheme, themeData)
-    setSelectedTheme(currentTheme)
-  },[selectedThemeId, themeData])
-
+  useEffect(() => {
+    const currentTheme = themeData?.find((ele) => ele.id === selectedThemeId);
+    console.log("currentTheme", currentTheme, themeData);
+    setSelectedTheme(currentTheme);
+  }, [selectedThemeId, themeData]);
 
   const useDataFetcherForThemeId = (initialState, url, options) => {
     const [data, setData] = useState(initialState);
@@ -117,26 +110,25 @@ const Home = () => {
       try {
         const result = await (await fetch(url, options)).json();
         console.log("shop details", result);
-  
+        if (result.message === "UserStoreData Update Successfully") {
+          setData(result.message);
+        }
       } catch (error) {
         console.error("Error while fetching data:", error);
         // Handle error here, such as setting an error state or displaying a message to the user
       } finally {
-        
       }
     };
     return [data, fetchData];
   };
 
-
-
   const [responseDetails, getShopDetails] = useDataFetcherForShopDetails(
     "",
     "/apps/api/shop/detail",
     getOptions
-  )
+  );
 
-  const [responseFromServer, setThemeId] = useDataFetcherForThemeId(
+  const [responseForThemeId, setThemeId] = useDataFetcherForThemeId(
     "",
     "/apps/api/store/appDesign/theme",
     postOptions
@@ -145,20 +137,27 @@ const Home = () => {
     "",
     "/apps/api/theme",
     getOptions
-  )
-
-  useEffect(()=>{
-
-    if(selectedThemeId){
-      console.log("setThemeId called", selectedThemeId)
-      setThemeId()
+  );
+  useEffect(() => {
+    if (responseForThemeId === "UserStoreData Update Successfully") {
+      setIsThemeLoaded(true)
+      shopify.toast.show("Theme Updated", {
+        duration: 5000,
+      });
     }
-    },[selectedThemeId])
-  
+  }, [responseForThemeId]);
 
   useEffect(() => {
-    getShopDetails()
-    getAllThemes()
+    if (selectedThemeId) {
+      console.log("setThemeId called", selectedThemeId);
+      setThemeId();
+      setIsThemeLoaded(false)
+    }
+  }, [selectedThemeId]);
+
+  useEffect(() => {
+    getShopDetails();
+    getAllThemes();
   }, []);
 
   const cards = [
@@ -220,15 +219,16 @@ const Home = () => {
           </div>
         </div>
 
-        <button className="submission-btn" 
-        >
+        <button className="submission-btn">
           <FaWandMagicSparkles /> App Submission
         </button>
       </div>
 
-      <div className="selected-theme-main-div">
-        <SelectedTheme selectedTheme={selectedTheme} />
-      </div>
+      {selectedThemeId &&  isThemeLoaded &&(
+        <div className="selected-theme-main-div">
+          <SelectedTheme selectedTheme={selectedTheme} />
+        </div>
+      )}
 
       <div className="themes-main-container-div">
         <div className="the-texts-main-div">
@@ -281,7 +281,12 @@ const Home = () => {
                         >
                           Publish
                         </button> */}
-                        <button className="card-buttons" onClick={()=>setSelectedThemeId(res?.id)}>Select Theme</button>
+                        <button
+                          className="card-buttons"
+                          onClick={() => setSelectedThemeId(res?.id)}
+                        >
+                          Select Theme
+                        </button>
                       </div>
 
                       <span>
