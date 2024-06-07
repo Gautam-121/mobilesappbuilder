@@ -178,6 +178,10 @@ export default function ComponentsList() {
               return null; // If featureType doesn't match any case, render nothing
           }
         })}
+
+        <div>
+              
+        </div>
       </div>
     </div>
   );

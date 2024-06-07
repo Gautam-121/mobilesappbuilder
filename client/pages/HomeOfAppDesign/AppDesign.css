@@ -143,9 +143,6 @@
 .appdesign-body-main-div {
     display: flex;
     align-items: start;
-    margin-left: 10px;
-    margin-right: 10px;
-    gap: 15px;
     background-color: rgba(241, 241, 241, 1);
 }
 
@@ -171,12 +168,13 @@
     justify-content: space-around;
     align-items: center;
     text-align: center;
-    gap: 10px;
+    gap: 12px;
     margin-top: 10px;
+    padding: 20px;
 }
 
 .appdesign-icon-btn:hover {
-    background-color: #ebebeb;
+    background-color: white;
     border: none;
     border-radius: 8px;
 }
@@ -185,10 +183,19 @@
     text-align: center;
     padding: 10px;
     cursor: pointer;
+    background-color: #dbdbdb;
+    border: none;
+    border-radius: 8px;
+}
+
+
+.product-icon{
+    width: 20px;
+    height: 40px;
 }
 
 .appdesign-icon-btn.active {
-    background-color: #ebebeb;
+    background-color: white;
     border: none;
     border-radius: 8px;
 }

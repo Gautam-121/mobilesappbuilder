@@ -453,10 +453,11 @@ const StoreConfigurations = () => {
                         :
 
                         <div className='branding-main-div'>
-                            <strong className='branding-text'>Branding</strong>
 
                             <div className='branding-second-child-main-div'>
                                 <div className='branding-second-child-left-main-div'>
+                                <strong className='branding-text'>Branding</strong>
+
                                     <div className='branding-second-child-inner-div'>
                                         <div className='appname-div'>
                                             <label>App name</label>
@@ -548,6 +549,11 @@ const StoreConfigurations = () => {
                                             </div>
                                         </div>
                                     </div>
+
+                                    <div>
+                                        <Button variant="primary" onClick={() => window.alert("clicked")}>Save</Button>
+                                    </div>
+
                                 </div>
 
                                 {/* ------------------ right side column ----------------- */}
@@ -579,11 +585,11 @@ const StoreConfigurations = () => {
                                                     color={colors.headerFooterBackground}
                                                     onChange={(color) => handleColorChange('headerFooterBackground', color)}
                                                 />
-
-
                                             </div>
                                         </div>
+                                    </div>
 
+                                    <div className='branding-second-child-inner-div'>
                                         <div className='appname-div'>
 
                                             <label>Header/Footer icon color</label>
@@ -600,7 +606,6 @@ const StoreConfigurations = () => {
                                     </div>
 
 
-
                                     <div className='branding-second-child-inner-div'>
                                         <div className='appname-div'>
                                             <label>Header/Footer icons size</label>
@@ -609,6 +614,7 @@ const StoreConfigurations = () => {
                                             </div>
                                         </div>
                                     </div>
+
 
                                     <div className='branding-second-child-inner-div'>
                                         <div className='appname-div'>
@@ -623,9 +629,7 @@ const StoreConfigurations = () => {
                                         </div>
                                     </div>
 
-                                    <div>
-                                        <Button variant="primary" onClick={() => window.alert("clicked")}>Save</Button>
-                                    </div>
+                                    
                                 </div>
                             </div>
                         </div>
