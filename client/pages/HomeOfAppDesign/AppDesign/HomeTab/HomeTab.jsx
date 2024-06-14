@@ -103,7 +103,7 @@ const HomeTab = ({themeId}) => {
       setData("");
       const result = await (await fetch(url, options))?.json();
       console.log("result line 103", result?.products);
-      console.log("result", result);
+      console.log("result line 106", result);
       setData(result);
       if(result?.data?.setting){
         setBottomNavbarArray(result.data.setting)

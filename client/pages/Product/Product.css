@@ -12,7 +12,8 @@
 
 
   /* header design*/
-.header-main-mobile-preview-div {
+.header-main-mobile-preview-div-product {
+  /* min-height: 100%; */
     position: sticky;
     top: 0;
     display: flex;
@@ -30,7 +31,18 @@
     padding-bottom: 10px;
   }
 
-
+  .header-main-mobile-preview-div {
+    /* For WebKit-based browsers */
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  
+    /* For Firefox */
+    scrollbar-width: none;
+  
+    /* For Internet Explorer/Edge */
+    -ms-overflow-style: none;
+  }
   .menu {
     display: none;
   }
@@ -62,22 +74,25 @@
   
   /* footer design */
   
-  .footer-main-mobile-preview-div {
+  .footer-main-mobile-preview-div-product{
+    padding: 6px;
     position: sticky;
-    bottom: 0;
+    bottom: 0px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    padding-left: 20px;
+    
+    /* padding-left: 20px;
     padding-right: 18px;
-    padding-top: 12px;
-    padding-bottom: 2px;
+    padding-top: 12px;*/
+    padding-top: 10px;
+    padding-bottom: 10px; 
     width: 100%;
     background-color: white;
     border-bottom-left-radius: 50px;
     border-bottom-right-radius: 50px;
-    border-bottom: 8px solid white;
+    /* border-bottom: 8px solid white; */
     z-index: 100;
   }
   
@@ -92,4 +107,156 @@
   
   .cart-footer-icon {
     cursor: pointer;
+  }
+  .header-title{
+    /* text-align: center; */
+    display: flex;
+    /* justify-content: center; */
+  }
+  .main-content{
+    /* border: 1px solid red; */
+    min-height: 90%;
+    background-color: white;
+  }
+  .edit-section-product{
+    position: absolute;
+    max-height: 84%;
+    right: 0px;
+    background-color: white;
+    width: 30%;
+    /* padding: 10px; */
+    box-shadow: 1px 1px 4px rgb(0, 0, 0, 0.30);
+    overflow-y: scroll;
+  }
+  .products-details-page-container{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    /* gap:25rem; */
+    /* border:1px solid */
+
+  }
+  .top-navbar{
+    border-bottom: 1px solid rgba(0, 0, 0, 0.355);
+    padding: 10px;
+    padding-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    background-color: white;
+    z-index: 10  }
+  Icon{
+    position: relative;
+  }
+  .navbar-right-section{
+    display: flex;
+    gap: 10px;
+  }
+  .checkbox-section-one{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .head-edit-section{
+    padding: 10px;
+  }
+  .basic-icon-section{
+    /* border: 1px solid; */
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    gap: 10px;
+  }
+  .checkbox-section-one{
+    /* border: 1px solid red; */
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px;
+  }
+  .edit-section-body{
+    padding: 10px;
+  }
+  .edit-section-basic{
+    display: flex;
+    justify-content: space-between;
+  }
+  .productImg{
+    width: 100%;
+    padding: 5px;
+  }
+  .whishlist-icon{
+    position: absolute;
+    border-radius: 50%;
+    background-color: white;
+    top:15.5rem;
+    right: 0.7rem;
+    padding: 3px;
+  }
+  .title-section{
+    display: flex;
+    padding: 5px;
+    padding:10px
+  }
+  .priceSection{
+    /* border: 1px solid; */
+  }
+  .priceSection span{
+    font-size: smaller;
+    display: block;
+    width: 100%;
+    text-align: right;
+    margin-bottom: -5px;
+
+
+  }
+  .desciption-section{
+    padding: 10px;
+    /* border: 1px solid; */
+    padding-top: 0px;
+  }
+  .btn-section{
+    /* border: 1px solid; */
+    display: flex;
+    padding: 5px;
+    gap: 5px;
+  }
+  .btn-section button{
+    width: 100%;
+    background-color: #73026C;
+    color: white;
+    border-radius: 7px;
+    padding: 10px;
+    border: none;
+    font-size: smaller;
+  }
+  .productCard img{
+    width: 90%;
+
+  }
+  .productCard{
+    min-width: 5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 5px;
+  }
+  .related-products{
+    display: flex;
+  }
+  .related-products-section{
+    padding: 10px;
+  }
+  .input-header{
+    font-weight: bold;
+    font-size: 12px;
+  }
+
+  .input-section{
+    padding: 5px;
+    margin-top: -10px;
+
+
   }

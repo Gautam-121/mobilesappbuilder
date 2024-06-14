@@ -17,7 +17,7 @@ import { useDispatch } from "react-redux";
 import { setEditingStatus } from "../../../store/editStatusSlice";
 
 import { Box, Icon, InlineStack, Spinner, Tooltip } from "@shopify/polaris";
-import { CartIcon, CategoriesIcon, DeleteIcon, EditIcon, HomeIcon, SearchIcon, SettingsIcon } from "@shopify/polaris-icons";
+import { CartIcon, CategoriesIcon, DeleteIcon, EditIcon, HeartIcon, HomeIcon, SearchIcon, SettingsIcon } from "@shopify/polaris-icons";
 
 export default function MobilePreview({isLoading}) {
   const dispatch = useDispatch();
@@ -313,7 +313,7 @@ console.log("index from", index)
               />)
               else if(iconName.redirect_page==="wishlist")
               return(<Icon
-                source={HomeIcon}
+                source={HeartIcon}
                 tone="base"
               />)
               else if(iconName.redirect_page==="categories")

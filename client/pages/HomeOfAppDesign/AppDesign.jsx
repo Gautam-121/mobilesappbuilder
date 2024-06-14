@@ -90,13 +90,13 @@ const AppDesign = ({ themeId }) => {
       content: "Home",
       accessibilityLabel: "All customers",
       panelID: "all-customers-content-1",
-      contentBody: <HomeTab />,
+      contentBody: <HomeTab themeId={themeId} />,
     },
     {
       id: "accepts-marketing-2",
       content: "Product page",
       panelID: "accepts-marketing-content-2",
-      contentBody: <Product />,
+      contentBody: <Product/>,
     },
     {
       id: "repeat-customers-3",
