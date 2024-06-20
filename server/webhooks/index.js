@@ -2,6 +2,7 @@
 const { DeliveryMethod } = require('@shopify/shopify-api');
 const shopify = require('../utils/shopifyConfig.js');
 const appUninstallHandler = require('./app_uninstalled.js');
+const { customerDataRequest , customerRedact , shopRedact} = require("../controllers/gdpr.js")
 
 /*
   Template for adding new topics:
@@ -24,6 +25,21 @@ const webhookRegistrar = async () => {
       deliveryMethod: DeliveryMethod.Http,
       callbackUrl: "/webhooks/app_uninstalled",
       callback: appUninstallHandler,
+    },
+    SHOP_REDACT: {
+      deliveryMethod: DeliveryMethod.Http,
+      callbackUrl: "/gdpr/shop_redact",
+      callback: shopRedact,
+    },
+    CUSTOMERS_REDACT: {
+      deliveryMethod: DeliveryMethod.Http,
+      callbackUrl: "/gdpr/customers_redact",
+      callback: customerRedact,
+    },
+    CUSTOMERS_DATA_REQUEST: {
+      deliveryMethod: DeliveryMethod.Http,
+      callbackUrl: "/gdpr/customers_data_request",
+      callback: customerDataRequest,
     },
   });
 };

@@ -56,8 +56,7 @@ const Customer = {
                 }
             ],
             required: true
-        },
-        
+        }, 
         {
             name: "shopId",
             type: "relationship",
