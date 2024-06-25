@@ -75,10 +75,10 @@ const homeScreen = {
             //   label: 'Text Paragraph',
             //   value: 'text_paragraph',
             // },
-            // {
-            //   label: 'Video',
-            //   value: 'video',
-            // },
+            {
+              label: 'Video',
+              value: 'video',
+            }
           ],
           required: true,
         },
@@ -112,7 +112,7 @@ const homeScreen = {
           type: 'relationship',
           hasMany: false,
           required: true,
-          relationTo: ["announcementBanner" ,"banner" , "categories" ,"productGroup" ] // "eventTimer", "socialMedia" ,"textParagraph" , "video"
+          relationTo: ["announcementBanner" ,"banner" , "categories" ,"productGroup","video"] // "eventTimer", "socialMedia" ,"textParagraph" , "video"
         },
       ],
     }

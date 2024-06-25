@@ -21,7 +21,7 @@ const Store = require("./server/models/store.models.js");
 const AnnouncementBanner = require("./server/models/announcementBanner.models.js");
 const Branding = require("./server/models/branding.models.js");
 const HomePage = require("./server/models/home.models.js");
-// const Video = require("./server/models/video.models.js");
+const Video = require("./server/models/video.models.js");
 const TabMenu = require("./server/models/tabNavigation.models.js");
 const ProductPage = require("./server/models/productDetails.models.js");
 // const EmptyCartPage = require("./server/models/cartDetail.models.js");
@@ -57,7 +57,7 @@ module.exports = buildConfig({
     ProductPage,
     // SocialChannel,
     Branding,
-    // Video,
+    Video,
     // TextParagraph,
     // EventTimer,
     TabMenu,
