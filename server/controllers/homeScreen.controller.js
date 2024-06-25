@@ -435,9 +435,7 @@ const updateHomePage = asyncHandler(async (req, res, next) => {
           const video = await Payload.create({
             req:{transactionID},
             collection: "video",
-            data: {
-              data: datas[index]?.data,
-            },
+            data: datas[index]?.data,
           });
 
           datas[index].data = {
