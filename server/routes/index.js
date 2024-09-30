@@ -3,6 +3,15 @@ const verifyRequest = require("../middleware/verifyRequest.middleware.js");
 const apiKeyAuth = require("../middleware/apiKeyAuth.middleware.js")
 const { uploadImages } = require("../controllers/ImageUpload.controller.js");
 const multer = require("multer")
+const {
+  validateUpdateHomePage,
+  validateupdateSocialMediaOfStore,
+  validateUpdateTabMenu,
+  validateUpdateProductScreen,
+  validateUpdateBrandingApp,
+  validateCreateCustomerFirebase,
+  validateUpdateAccountPage
+} = require("../validations/validation.js")
 
 const {
   getHomePage,
@@ -81,7 +90,7 @@ router.get("/api/shop/detail"  , verifyRequest , getStoreDetailByWeb);
 
 router.put("/api/store/appDesign/theme" , verifyRequest ,   updateStoreAppDesignDetail);
 
-router.put("/api/store/social-media" , verifyRequest ,  updateSocialMediaOfStore)
+router.put("/api/store/social-media" , verifyRequest ,  validateupdateSocialMediaOfStore ,  updateSocialMediaOfStore)
 
 /*---------------------------ShopifyRouter-------------------------------------------------- */
 
@@ -109,7 +118,7 @@ router.put("/api/shopify/update-shop-policies" , verifyRequest ,  updateShopPoli
 
 /*----------------------------FirebaseRouting-------------------------------------------------*/
 
-router.post("/api/firebase/customerDetail", apiKeyAuth , createCustomer)
+router.post("/api/firebase/customerDetail" , apiKeyAuth ,  validateCreateCustomerFirebase ,  createCustomer)
 
 router.get("/api/firebase/customer", verifyRequest ,  getAllcustomer)
 
@@ -135,7 +144,7 @@ router.get("/api/getHomePage", apiKeyAuth , getHomePage);
 
 router.get("/api/getHomePageByShop/:themeId" , verifyRequest ,   getHomePageByWeb);
 
-router.put("/api/updateHomePage/:themeId"  , verifyRequest ,  updateHomePage);
+router.put("/api/updateHomePage/:themeId" , verifyRequest , validateUpdateHomePage , updateHomePage);
 
 /*--------------------------BrandingPageRouter--------------------------------------------------*/
 
@@ -150,6 +159,7 @@ router.get(
 router.put(
   "/api/branding/theme/:themeId",
   verifyRequest,
+  validateUpdateBrandingApp,
   updateBrandingApp
 );
 
@@ -165,7 +175,7 @@ router.get("/api/productDetail", apiKeyAuth ,  getProductScreenDetails)
 
 router.get("/api/product/screen"  , verifyRequest ,  getProductScreenDetailByWeb)
 
-router.put("/api/product/screen"  , verifyRequest ,  updateProductScreenDetail);
+router.put("/api/product/screen"  , verifyRequest , validateUpdateProductScreen ,  updateProductScreenDetail);
 
 /*-------------------------AccountScreen---------------------------------------*/
 
@@ -173,7 +183,7 @@ router.get("/api/account" , apiKeyAuth , getAccountScreen)
 
 router.get("/api/account/screen"  , verifyRequest,   getAccountScreenForWeb)
 
-router.put("/api/account/screen" , verifyRequest , updateAccountScreen)
+router.put("/api/account/screen"   , validateUpdateAccountPage , updateAccountScreen)
 
 router.post("/api/aboutUs/page"  , verifyRequest , createAboutUs)
 
@@ -189,7 +199,7 @@ router.get("/api/bottom/menu", apiKeyAuth , getTabMenu);
 
 router.get("/api/bottom/nav/:themeId" , verifyRequest ,  getTabMenuDataByWeb)
 
-router.put("/api/bottom/nav/:themeId" , verifyRequest ,  updateTabMenu)
+router.put("/api/bottom/nav/:themeId"  , validateUpdateTabMenu ,  updateTabMenu)
 
 /*--------------------------UploadImages-----------------------------------------------*/
 
@@ -202,7 +212,7 @@ router.get("/api/getData", (req, res) => {
 
 /*------------------------------CustomerCart---------------------------------------------------------- */
 
-router.post("/api/customer/cart", apiKeyAuth, createCart)
+router.post("/api/customer/cart", apiKeyAuth ,  createCart)
 
 router.get("/api/customer/:customerId/cart" , apiKeyAuth, getCartByCustomerId)
 

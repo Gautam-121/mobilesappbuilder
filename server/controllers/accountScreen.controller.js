@@ -1,7 +1,8 @@
 const Payload = require("payload")
 const ApiError = require("../utils/ApiError.js");
 const asyncHandler = require("../utils/asyncHandler.js");
-const {accountScreenDetail} = require("../constant.js")
+const {accountScreenDetail} = require("../constant.js");
+const { validationResult } = require("express-validator");
 
 const getAccountScreen = asyncHandler( async(req , res , next)=> {
 
@@ -114,6 +115,12 @@ const updateAccountScreen = asyncHandler( async(req , res , next)=> {
     //     )
     //   )
     // }
+
+    const errors = validationResult(req)
+
+    if(!errors.isEmpty()){
+      return res.status(400).json({errors:errors.array({onlyFirstError : true})})
+    }
   
     const isSelectedTheme = await Payload.find({
       collection: 'Store',
@@ -145,38 +152,38 @@ const updateAccountScreen = asyncHandler( async(req , res , next)=> {
 
    const { main_section , footer_section } = req.body
 
-   if(!main_section || !Array.isArray(main_section)){
-     return next(
-       new ApiError(
-         "main-sectin should be array ",
-         400
-       )
-     )
-   }
+  //  if(!main_section || !Array.isArray(main_section)){
+  //    return next(
+  //      new ApiError(
+  //        "main-sectin should be array ",
+  //        400
+  //      )
+  //    )
+  //  }
 
-   if(main_section.length == 0){
-     return next(
-       new ApiError(
-         "main-section should not be empty",
-          400
-       )
-     )
-   }
+  //  if(main_section.length == 0){
+  //    return next(
+  //      new ApiError(
+  //        "main-section should not be empty",
+  //         400
+  //      )
+  //    )
+  //  }
 
-   if(main_section.length < 5){
-    return next(new ApiError("please provide all fields in the main_section", 400))
-   }
+  //  if(main_section.length < 5){
+  //   return next(new ApiError("please provide all fields in the main_section", 400))
+  //  }
 
-   if(!footer_section || Object?.values(footer_section)?.length == 0){
-     return next(
-       new ApiError(
-         "footer_section should not be empty",
-         400
-       )
-     )
-   }
+  //  if(!footer_section || Object?.values(footer_section)?.length == 0){
+  //    return next(
+  //      new ApiError(
+  //        "footer_section should not be empty",
+  //        400
+  //      )
+  //    )
+  //  }
 
-   if(footer_section.socialLinks){
+   if(footer_section.socialMedia){
     if(isSelectedTheme.docs[0].socialMediaAccount.length  == 0){
       return next(
         new ApiError(
@@ -187,38 +194,38 @@ const updateAccountScreen = asyncHandler( async(req , res , next)=> {
     }
    }
 
-   const selectedCount = main_section.filter(item => item.isVisible)
+  //  const selectedCount = main_section.filter(item => item.isVisible)
 
-   if(selectedCount.length<3){
-     return next(
-       new ApiError(
-         "At least 3 field should visible to main-portion"
-       )
-     )
-   }
+  //  if(selectedCount.length<3){
+  //    return next(
+  //      new ApiError(
+  //        "At least 3 field should visible to main-portion"
+  //      )
+  //    )
+  //  }
 
-   main_section.forEach((item)=>{
-    if(!["profile","orders","wishlist","shipping_address","aboutUs"].includes(item?.type)){
-      return next(
-        new ApiError(
-          "profile, orders, wishlist,shipping_address,aboutUs this are enum value only it contain",
-          400
-        )
-      )
-    }
-  })
+  //  main_section.forEach((item)=>{
+  //   if(!["profile","orders","wishlist","shipping_address","aboutUs"].includes(item?.type)){
+  //     return next(
+  //       new ApiError(
+  //         "profile, orders, wishlist,shipping_address,aboutUs this are enum value only it contain",
+  //         400
+  //       )
+  //     )
+  //   }
+  // })
 
-  const redirectPageValues  = main_section.map(item => item.type)
-  const duplicate = redirectPageValues.filter( (val , index) => redirectPageValues.indexOf(val) !== index)
+  // const redirectPageValues  = main_section.map(item => item.type)
+  // const duplicate = redirectPageValues.filter( (val , index) => redirectPageValues.indexOf(val) !== index)
 
-  if(duplicate.length > 0){
-    return next(
-      new ApiError(
-        "type values must be unique",
-        400
-      )
-    )
-  }
+  // if(duplicate.length > 0){
+  //   return next(
+  //     new ApiError(
+  //       "type values must be unique",
+  //       400
+  //     )
+  //   )
+  // }
 
    if(main_section.some(item=> (item.type == "aboutUs" && item.isVisible))){
 
@@ -234,7 +241,7 @@ const updateAccountScreen = asyncHandler( async(req , res , next)=> {
      if(isAboutUsDataExist.docs.length == 0){
        return next(
          new ApiError(
-           "Please send the AboutUs Data"
+           "Please update the AboutUs Data"
          )
        )
      }
@@ -343,6 +350,15 @@ const createAboutUs = asyncHandler( async(req , res , next)=>{
   return next(
     new ApiError(
       "Please provide all mandatory field",
+       400
+    )
+  )
+ }
+
+ if(typeof description !== "string"){
+  return next(
+    new ApiError(
+      "description must be a string ",
        400
     )
   )
@@ -521,7 +537,16 @@ const updateAboutUs = asyncHandler( async(req , res , next)=>{
  if(!image && !description){
   return next(
     new ApiError(
-      "Please provide at field for update",
+      "Please provide at least one field for update",
+       400
+    )
+  )
+ }
+
+ if(description && typeof description !== "string"){
+  return next(
+    new ApiError(
+      "description must be a string ",
        400
     )
   )

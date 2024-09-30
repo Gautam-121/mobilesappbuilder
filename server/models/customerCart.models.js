@@ -1,4 +1,4 @@
-const {  uid } = require("uid")
+const { v4: uuidv4 } = require('uuid');
 
 const customerCart = {
     slug: "cutomerCart",
@@ -28,7 +28,7 @@ const customerCart = {
             (args) => {      
               // Generate a new ID if the document is being created
               if (args.operation === 'create') {
-                args.data.id = uid(); // Generate a unique ID using nanoid
+                args.data.id = uuidv4(); // Generate a unique ID using nanoid
               }
             },
           ]

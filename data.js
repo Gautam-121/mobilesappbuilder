@@ -203,4 +203,128 @@ const decrypt = "059dd3f93225fecb3f97b84f4c8c6f9d83df55e3614ae0a888678c0804d3cd8
 const decryptedToken = cryption.decrypt(decrypt);
 console.log("Decrypted Token:", decryptedToken);
 
+const express = require('express');
+const { body, validationResult } = require('express-validator');
 
+const app = express();
+app.use(express.json());
+
+app.post('/submit-data', [
+  // Validate each item in the datas array
+  body('datas').isArray().withMessage('datas should be an array'),
+  body('datas.*.isVisible').isBoolean().withMessage('isVisible should be a boolean'),
+  body('datas.*.featureType')
+    .exists().withMessage('featureType is required')
+    .isString().withMessage('featureType should be a string')
+    .isIn(['banner', 'announcement', 'productGroup', 'categories', 'video']).withMessage('featureType should be "banner", "announcement", "productGroup", "categories", or "video"'),
+
+  body('datas.*.layoutType')
+    .exists().withMessage('layoutType is required')
+    .isString().withMessage('layoutType should be a string')
+    .isIn(['horizontal', 'vertical', 'horizontal_grid', 'vertical_grid']).withMessage('layoutType should be "horizontal", "vertical", "horizontal_grid", or "vertical_grid"'),
+
+
+  // Validate specific feature types
+  body('datas.*.data').custom((value, { req, path }) => {
+    const index = path.match(/\d+/)[0]; // Extract index from path
+    const featureType = req.body.datas[index].featureType;
+
+    if (featureType === 'banner') {
+        return Promise.all([
+          body(`${path}.id`).optional().custom(value => value === null || typeof value === 'string' && req.check('id').isUUID().withMessage('id should be a valid UUID')).run(req),
+          body(`${path}.data`).isArray().withMessage('data should be an array').run(req),
+          body(`${path}.data.*.isVisible`).isBoolean().withMessage('isVisible should be a boolean').run(req),
+          body(`${path}.data.*.bannerType`).isString().isIn(['marketing', 'product', 'category']).withMessage('bannerType should be "marketing", "product", or "category"').run(req),
+          body(`${path}.data.*.actionUrl`).custom((value, { req, path }) => {
+            const bannerType = req.body.datas[index].data.find(item => item.bannerType === 'product' || item.bannerType === 'category');
+            if (bannerType && (value === null || typeof value !== 'string')) {
+              throw new Error('actionUrl is required and should be a string for "product" and "category" banner types');
+            }
+            return true;
+          }).run(req),
+          body(`${path}.data.*.imageUrl`).exists().withMessage('imageUrl is required').run(req)
+        ]);
+      }
+
+    if (featureType === 'announcement') {
+      return Promise.all([
+        body(`${path}.id`).optional().custom(value => value === null || typeof value === 'string' && req.check('id').isUUID().withMessage('id should be a valid UUID')).run(req),
+        body(`${path}.message`).exists().withMessage('message is required').isString().withMessage('message should be a string').run(req),
+        body(`${path}.textColor`).optional().isHexColor().withMessage('textColor should be a hex color').run(req),
+        body(`${path}.backgroundColor`).optional().isHexColor().withMessage('backgroundColor should be a hex color').run(req),
+        body(`${path}.animationType`).optional().isString().withMessage('animationType should be a string').run(req)
+      ]);
+    }
+
+    if (featureType === 'productGroup') {
+      return Promise.all([
+        body(`${path}.id`).optional().custom(value => value === null || typeof value === 'string' && req.check('id').isUUID().withMessage('id should be a valid UUID')).run(req),
+        body(`${path}.title`).isString().isLength({ max: 30 }).withMessage('title should be a string and not more than 30 characters').run(req),
+        body(`${path}.productGroupId`).exists().withMessage('productGroupId is required').isString().withMessage('productGroupId should be a string').run(req)
+      ]);
+    }
+
+    if (featureType === 'categories') {
+      return Promise.all([
+        body(`${path}.id`).optional().custom(value => value === null || typeof value === 'string' && req.check('id').isUUID().withMessage('id should be a valid UUID')).run(req),
+        body(`${path}.data`).isArray().withMessage('data should be an array').run(req),
+        body(`${path}.data.*.title`).exists().withMessage("title is required").isString().withMessage('title should be a string').run(req),
+        body(`${path}.data.*.imageUrl`).optional().isString().withMessage('imageUrl should be a string').run(req),
+        body(`${path}.data.*.collection_id`).exists().withMessage("collection_id is required").isString().withMessage('collection_id should be a string').run(req)
+      ]);
+    }
+
+    if (featureType === 'video') {
+      return Promise.all([
+        body(`${path}.id`).optional().custom(value => value === null || typeof value === 'string' && req.check('id').isUUID().withMessage('id should be a valid UUID')).run(req),
+        body(`${path}.title`).exists().withMessage("title is required").isString().withMessage('title should be a string').run(req),
+        body(`${path}.videoUrl`).exists().withMessage("videoUrl is required").optional().isURL().withMessage('videoUrl should be a valid URL').run(req),
+        body(`${path}.mute`).optional().isBoolean().withMessage('mute should be a boolean').run(req),
+        body(`${path}.autoPlay`).optional().isBoolean().withMessage('autoPlay should be a boolean').run(req),
+        body(`${path}.fullWidth`).optional().isBoolean().withMessage('fullWidth should be a boolean').run(req),
+        body(`${path}.loop`).optional().isBoolean().withMessage('loop should be a boolean').run(req),
+        body(`${path}.showPlayback`).optional().isBoolean().withMessage('showPlayback should be a boolean').run(req)
+      ]);
+    }
+
+    return true;
+  })
+  
+], (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  res.send('Data is valid');
+});
+
+app.listen(3000, () => {
+  console.log('Server is running on port 3000');
+});
+
+
+
+
+
+$.ajax({
+    url:
+      "https://toyota-lakshya-onlineassessment.in/api/get_next_question/?login_id=" +
+      lakshya_id +
+      "&assessment_id=" +
+      assessment_id +
+      "",
+    type: "GET",
+    data: "json",
+    success: function (data) {
+      var obj = data.question;
+      var question_id = obj.id;
+      //   var times = data.elapsed_time;
+    }})
+
+
+fetch("https://toyota-lakshya-onlineassessment.in/api/get_next_question/?login_id=" +
+      lakshya_id +
+      "&assessment_id=" +
+      assessment_id +
+      "")

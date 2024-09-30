@@ -1,6 +1,7 @@
 const Payload = require("payload");
 const ApiError = require("../utils/ApiError.js");
 const asyncHandler = require("../utils/asyncHandler.js");
+const { validationResult } = require("express-validator");
 
 
 const getTabMenuDataByWeb = asyncHandler( async (req, res, next) => {
@@ -126,7 +127,12 @@ const getTabMenu = asyncHandler( async (req, res, next) => {
 
 const updateTabMenu = asyncHandler( async(req , res , next) => {
 
+  const errors = validationResult(req)
   const setting = req.body?.setting
+
+  if(!errors.isEmpty()){
+    return res.status(400).json({errors: errors.array({onlyFirstError: true})})
+  }
 
   if (!req.params.themeId) {
     return next(
@@ -137,37 +143,37 @@ const updateTabMenu = asyncHandler( async(req , res , next) => {
     )
   }
 
-  if(!setting || !Array.isArray(setting) || setting.length < 3 || setting.length > 5){
-    return next(
-      new ApiError(
-        "bottom navigation menu should be minimum 3 and max 5",
-        400
-      )
-    )
-  }
+  // if(!setting || !Array.isArray(setting) || setting.length < 3 || setting.length > 5){
+  //   return next(
+  //     new ApiError(
+  //       "bottom navigation menu should be minimum 3 and max 5",
+  //       400
+  //     )
+  //   )
+  // }
 
-  setting.forEach((key)=>{
-    if(!["home" , "search" , "cart" , "account" , "wishlist" , "categories" ].includes(key?.redirect_page)){
-      return next(
-        new ApiError(
-          "home , search, cart, account, wishlist, categories this are enum value only it contain",
-          400
-        )
-      )
-    }
-  })
+  // setting.forEach((key)=>{
+  //   if(!["home" , "search" , "cart" , "account" , "wishlist" , "categories" ].includes(key?.redirect_page)){
+  //     return next(
+  //       new ApiError(
+  //         "home , search, cart, account, wishlist, categories this are enum value only it contain",
+  //         400
+  //       )
+  //     )
+  //   }
+  // })
 
-  const redirectPageValues  = setting.map(item => item.redirect_page)
-  const duplicate = redirectPageValues.filter( (val , index) => redirectPageValues.indexOf(val) !== index)
+  // const redirectPageValues  = setting.map(item => item.redirect_page)
+  // const duplicate = redirectPageValues.filter( (val , index) => redirectPageValues.indexOf(val) !== index)
 
-  if(duplicate.length > 0){
-    return next(
-      new ApiError(
-        "redirect_page values must be unique",
-        400
-      )
-    )
-  }
+  // if(duplicate.length > 0){
+  //   return next(
+  //     new ApiError(
+  //       "redirect_page values must be unique",
+  //       400
+  //     )
+  //   )
+  // }
 
   const isSelectedTheme = await Payload.find({
     collection: 'Store',

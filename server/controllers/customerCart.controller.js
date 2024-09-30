@@ -42,6 +42,15 @@ const createCart = asyncHandler(async(req , res , next)=>{
         )
     }
 
+    if(typeof customerCartId !== "string"){
+      return next(
+        new ApiError(
+            "customerCardId should be a string",
+            400 
+        )
+      )
+    }
+
     const customerExist = await Payload.find({
         collection: "customers",
         where:{
@@ -273,10 +282,10 @@ const updateCartOfCustomer = asyncHandler(async (req, res, next) => {
     );
   }
 
-  if(!customerCartId){
+  if(!customerCartId || typeof customerCartId !== "string"){
     return next(
         new ApiError(
-            "cart id is missing",
+            "cart id must be a string",
              400
         )
     )

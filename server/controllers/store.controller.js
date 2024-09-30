@@ -16,6 +16,7 @@ const {
   isValidWhatsAppUrl,
   isValidYoutubeUrl
 } = require("../utils/validator.js")
+const { validationResult } = require("express-validator")
 
 
 const updateStoreAppDesignDetail = asyncHandler(  async (req, res, next) => {
@@ -367,38 +368,7 @@ const updateStoreAppDesignDetail = asyncHandler(  async (req, res, next) => {
 })
 
 const getStoreDetail = asyncHandler( async(req,res,next)=> {
-
-  // if (!req.params.shopId) { // htana
-  //   return next(
-  //     new ApiError(
-  //       "shopId is missing",
-  //       400
-  //     )
-  //   )
-  // }
-
-  // const store = await Payload.find({ 
-  //   collection: "Store",
-  //   where: { 
-  //     shopId: { equals: req.user.shopId || `gid://shopify/Shop/${req.params.shopId}` },
-  //     isActive: { equals: true }
-  //   },
-  //   limit:1,
-  //   showHiddenFields: false,
-  //   depth: req.query?.depth || 0
-  // });
-
-  // if (store.docs.length === 0) {
-  //   return next(
-  //     new ApiError(
-  //       "store not found with id: "+ req.params.shopId,
-  //       400
-  //     )
-  //   )
-  // }
-
   delete req.user.apiKey
-
   return res.status(200).json({
     success: true,
     message: "shop Details send successfully",
@@ -438,8 +408,13 @@ const getStoreDetailByWeb = asyncHandler( async(req,res,next)=>{
 })
 
 const updateSocialMediaOfStore = asyncHandler( async(req,res,next)=>{
-   
+
+  const errors = validationResult(req)  
   const socialMedia = req.body?.socialMedia
+
+  if(!errors.isEmpty()){
+    return res.status(400).json({ errors: errors.array({onlyFirstError: true}) });
+  }
 
   const store = await Payload.find({
     collection: 'Store',
@@ -459,37 +434,37 @@ const updateSocialMediaOfStore = asyncHandler( async(req,res,next)=>{
     )
   }
 
-  if(!socialMedia || !Array.isArray(socialMedia) || socialMedia.length == 0){
-    return next(
-      new ApiError(
-        "Please Provide all mandatory fields",
-        400
-      )
-    )
-  }
+  // if(!socialMedia || !Array.isArray(socialMedia) || socialMedia.length == 0){
+  //   return next(
+  //     new ApiError(
+  //       "Please Provide all mandatory fields",
+  //       400
+  //     )
+  //   )
+  // }
 
-  socialMedia.forEach(policy => {
+  // socialMedia.forEach(policy => {
 
-    const { title, profileUrl } = policy;
+  //   const { title, profileUrl } = policy;
 
-    if (!title || !profileUrl) {
-      return next(
-        new ApiError(
-          "missing required field title and profileUrl",
-           400
-        )
-      )
-    }
-  })
+  //   if (!title || !profileUrl) {
+  //     return next(
+  //       new ApiError(
+  //         "missing required field title and profileUrl",
+  //          400
+  //       )
+  //     )
+  //   }
+  // })
 
-  if(socialMedia.some(account => !(["instagram","facebook","twitter","youTube","whatsApp"].includes(account?.title)))){
-    return next(
-      new ApiError(
-        "title should be only instagram facebook twitter youTube whatsApp",
-        400
-      )
-    )
-  }
+  // if(socialMedia.some(account => !(["instagram","facebook","twitter","youTube","whatsApp"].includes(account?.title)))){
+  //   return next(
+  //     new ApiError(
+  //       "title should be only instagram facebook twitter youTube whatsApp",
+  //       400
+  //     )
+  //   )
+  // }
 
   socialMedia.forEach(account=>{
     if(account.title == "instagram" && !isValidInstagramUrl(account.profileUrl)){

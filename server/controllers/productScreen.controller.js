@@ -1,11 +1,17 @@
 const Payload = require("payload")
 const ApiError = require("../utils/ApiError.js");
 const asyncHandler = require("../utils/asyncHandler.js");
-const {productDetailScreen} = require("../constant.js")
+const {productDetailScreen} = require("../constant.js");
+const { validationResult } = require("express-validator");
 
 const updateProductScreenDetail = asyncHandler( async (req, res, next) => {
 
+  const errors = validationResult(req)
   const data = req.body?.data;
+
+  if(!errors.isEmpty()){
+    return res.status(400).json({errors: errors.array({onlyFirstError: true})})
+  }
 
   if(!data){
     return next(

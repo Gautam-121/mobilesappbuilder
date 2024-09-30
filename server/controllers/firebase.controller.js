@@ -7,11 +7,17 @@ let {
   subscribeTopicApiEndpoint,
   sendNotificationApiEndpoint,
   topicName
-} = require("../constant")
+} = require("../constant");
+const { validationResult } = require("express-validator");
 
 const createCustomer = asyncHandler(async (req, res, next) => {
 
   const customerData = req.body;
+  const errors = validationResult(req)
+
+  if(!errors.isEmpty()){
+    return res.status(400).json({errors: errors.array({onlyFirstError: true})})
+  }
 
   // Check if all required fields are provided
   const { id, customerName, deviceId, deviceType, firebaseToken } = customerData;
@@ -156,6 +162,15 @@ const createFirebaseToken = async (req, res, next) => {
   try {
 
     const { serviceAccount } = req.body;
+
+    if(!serviceAccount){
+      return next(
+        new ApiError(
+          `ServiceAccount is required`,
+          404
+        )
+      );
+    }
 
     const store = await Payload.find({
       collection: 'Store',
@@ -641,7 +656,7 @@ const getAllcustomer = asyncHandler(async (req, res, next) => {
 
 const createSegment = asyncHandler(async (req, res, next) => {
 
-  const { segmentName } = req.body
+  const { segmentName , customer } = req.body
 
   const store = await Payload.find({
     collection: 'Store',
@@ -668,6 +683,15 @@ const createSegment = asyncHandler(async (req, res, next) => {
         400
       )
     )
+  }
+
+  if(customer && !Array.isArray(customer)){
+    return next(
+      new ApiError(
+        "customer field should be array",
+        400
+      )
+    ) 
   }
 
   // Check if segmentName already exists for the store
@@ -816,7 +840,6 @@ const getSegmentById = asyncHandler(async (req, res, next) => {
     message: "Data send successfully",
   })
 
-
 })
 
 const updateSegment = asyncHandler(async (req, res, next) => {
@@ -846,6 +869,24 @@ const updateSegment = asyncHandler(async (req, res, next) => {
         400
       )
     )
+  }
+
+  if(req.body.segmentName && typeof req.body.segmentName !== "string"){
+    return next(
+      new ApiError(
+        "segmentName should be a string",
+        400
+      )
+    )
+  }
+
+  if(req.body.customer && !Array.isArray(req.body.customer)){
+    return next(
+      new ApiError(
+        "customer field should be array",
+        400
+      )
+    ) 
   }
 
   if (!req.params?.segmentId) {

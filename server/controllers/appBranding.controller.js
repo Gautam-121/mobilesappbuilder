@@ -1,6 +1,7 @@
 const Payload = require("payload");
 const ApiError = require("../utils/ApiError.js");
 const asyncHandler = require("../utils/asyncHandler.js");
+const { validationResult } = require("express-validator");
 
 const getBrandingApp = asyncHandler(async (req, res, next) => {
 
@@ -140,6 +141,12 @@ const getBrandingAppWeb = asyncHandler(async (req, res, next) => {
 
 const updateBrandingApp = asyncHandler(async (req, res, next) => {
 
+  const errors = validationResult(req)
+
+  if(!errors.isEmpty()){
+    return res.status(400).json({errors: errors.array({onlyFirstError: true})})
+  }
+  
   if (!req.params.themeId) {
     return next(
       new ApiError(

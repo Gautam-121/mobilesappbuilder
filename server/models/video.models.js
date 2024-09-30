@@ -1,4 +1,4 @@
-const { uid } = require("uid")
+const { v4: uuidv4 } = require('uuid');
 
 const Video = {
   slug: "video",
@@ -15,13 +15,13 @@ const Video = {
       name: "title",
       type: "text",
       label: "Block Title",
-      defaultValue: undefined
+      required: true,
     },
     {
       name: "videoUrl",
       type: "text",
       label: "URL",
-      defaultValue: undefined
+      required: true,
     },
     {
       name: "mute",
@@ -53,7 +53,7 @@ const Video = {
     beforeChange: [
       (args) => {
         if (args.operation === 'create') {
-          args.data.id = uid(); // Generate a unique ID using nanoid
+          args.data.id = uuidv4();; // Generate a unique ID using nanoid
         }
       }
     ]
@@ -61,3 +61,6 @@ const Video = {
 };
 
 module.exports = Video;
+
+
+

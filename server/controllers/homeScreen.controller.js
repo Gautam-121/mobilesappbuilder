@@ -1,37 +1,9 @@
 const Payload = require("payload");
 const ApiError = require("../utils/ApiError.js");
 const asyncHandler = require("../utils/asyncHandler.js");
+const { validationResult } = require("express-validator")
 
 const getHomePage = asyncHandler(async (req, res, next) => {
-
-  // if (!req.params.shopId) { // htana
-  //   return next(
-  //     new ApiError(
-  //       "ShopId is missing", 
-  //       400
-  //     )
-  //   );
-  // }
-
-  // const store = await Payload.find({ // htana
-  //   collection: "Store",
-  //   where: {
-  //     shopId: { equals: `gid://shopify/Shop/${req.params.shopId}` },
-  //     isActive: { equals: true },
-  //   },
-  //   limit: 1,
-  //   depth: req.query?.depth || 0
-  // });
-
-
-  // if (store.docs.length == 0) {
-  //   return next(
-  //     new ApiError(
-  //       `Shop not found with id: ${req.params.shopId}`, 
-  //       404
-  //     )
-  //   );
-  // }
 
   const homeData = await Payload.find({ 
     collection: "homeScreen",
@@ -151,6 +123,11 @@ const getHomePageByWeb = asyncHandler(async (req, res, next) => {
 });
 
 const updateHomePage = asyncHandler(async (req, res, next) => {
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array({onlyFirstError: true}) });
+  }
 
   const { datas } = req.body;
 

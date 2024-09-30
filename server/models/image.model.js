@@ -1,4 +1,4 @@
-const { uid } = require("uid");
+const { v4: uuidv4 } = require('uuid');
 
 const Image = {
   slug: "image",
@@ -57,7 +57,7 @@ const Image = {
     beforeChange: [
       (args) => {
         if (args.operation === "create") {
-          args.data.id = uid(); // Generate a unique ID using nanoid
+          args.data.id = uuidv4(); // Generate a unique ID using nanoid
         }
       },
     ],
